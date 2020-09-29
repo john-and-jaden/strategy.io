@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
+    public float zoomSpeed = 1f;
+    public float minZoom = 2f;
+    public float maxZoom = 20f;
 
     void Update()
     {
-        
+        float scrollDir = -Input.mouseScrollDelta.y;
+        Camera.main.orthographicSize += scrollDir * zoomSpeed * Time.deltaTime;
     }
 }
