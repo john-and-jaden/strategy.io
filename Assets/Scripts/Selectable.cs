@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Selectable
+public interface ISelectable
 {
-    
+    bool Selected { get; set; }
 }
