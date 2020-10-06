@@ -12,5 +12,6 @@ public class CameraController : MonoBehaviour
     {
         float scrollDir = -Input.mouseScrollDelta.y;
         Camera.main.orthographicSize += scrollDir * zoomSpeed * Time.deltaTime;
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollDir * zoomSpeed * Time.deltaTime, minZoom, maxZoom);
     }
 }
