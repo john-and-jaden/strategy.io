@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unit : MonoBehaviour, ISelectable
 {
     public float moveSpeed = 1f;
+    public float selectDistance;
 
     public bool Selected { get; set; }
 
@@ -12,6 +13,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     void Start()
     {
+        targetPos = transform.position;
         Selected = true;
     }
 
@@ -23,6 +25,23 @@ public class Unit : MonoBehaviour, ISelectable
             if (Input.GetButtonDown("Fire2"))
             {
                 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            }
+        }
+        else
+        {
+            // Select this object on left-click
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                float clickDist = Vector2.Distance(transform.position, mousePos);
+                if (clickDist < selectDistance)
+                {
+                    Selected = true;
+                }
+                else
+                {
+                    Selected = false;
+                }
             }
         }
 
