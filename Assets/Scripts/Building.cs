@@ -7,12 +7,12 @@ public class Building : Selectable
     // Start is called before the first frame update
     void Start()
     {
-        
+        SpawnIndicators();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateIndicators();
     }
 }

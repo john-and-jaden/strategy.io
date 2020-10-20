@@ -57,7 +57,7 @@ public class SelectionController : MonoBehaviour
         {
             // Get nearest object within range of cursor
             Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
-            Selectable nearest = GetNearest(FilterSelectables(overlapResults), mousePos);
+            Selectable nearest = GetNearestSelectable(FilterSelectables(overlapResults), mousePos);
             if (nearest)
             {
                 hoverTargets.Add(nearest);
@@ -87,21 +87,26 @@ public class SelectionController : MonoBehaviour
             isBoxSelectActive = false;
             boxSelectIndicator.enabled = false;
 
-            // Cancel previous selections
-            for (int i = 0; i < selection.Count; i++)
+            // Cancel previous selections if not holding shift
+            if (!Input.GetKey(KeyCode.LeftShift))
             {
-                selection[i].SetSelected(false);
+                for (int i = 0; i < selection.Count; i++)
+                {
+                    selection[i].SetSelected(false);
+                }
+                selection.Clear();
             }
 
             // Add hover targets to selection list
-            selection.Clear();
-            if (ContainsUnits(hoverTargets))
+            if (ContainsType<Unit>(hoverTargets))
             {
                 selection.AddRange(FilterType<Unit>(hoverTargets));
+                selection = selection.Distinct().ToList();
             }
             else
             {
                 selection.AddRange(FilterType<Building>(hoverTargets));
+                selection = selection.Distinct().ToList();
             }
 
             // Update selection states
@@ -119,28 +124,33 @@ public class SelectionController : MonoBehaviour
 
     private List<Selectable> FilterSelectables(List<Collider2D> colliders)
     {
-        return colliders.Where(x => {
+        return colliders.Where(c => {
             Selectable s;
-            return x.TryGetComponent<Selectable>(out s);
+            return c.TryGetComponent<Selectable>(out s);
         }).Select(x => {
             return x.GetComponent<Selectable>();
         }).ToList();
     }
 
-    private bool ContainsUnits(List<Selectable> selectables)
+    private bool ContainsType<T>(List<Selectable> selectables) where T : Selectable
     {
         return selectables.Any(s => {
-            Unit unit;
-            return s.TryGetComponent<Unit>(out unit);
+            T t;
+            return s.TryGetComponent<T>(out t);
         });
     }
 
     private List<T> FilterType<T>(List<Selectable> selectables) where T : Selectable
     {
-        return selectables.Select(s => s.GetComponent<T>()).ToList();
+        return selectables.Where(x => {
+            T t;
+            return x.TryGetComponent<T>(out t);
+        }).Select(x => {
+            return x.GetComponent<T>();
+        }).ToList();
     }
 
-    private Selectable GetNearest(List<Selectable> selectables, Vector2 targetPos)
+    private Selectable GetNearestSelectable(List<Selectable> selectables, Vector2 targetPos)
     {
         int nearestIdx = -1;
         float smallestDist = selectDistance * selectDistance + 1;

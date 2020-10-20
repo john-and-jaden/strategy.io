@@ -16,6 +16,8 @@ public abstract class Selectable : MonoBehaviour
     {
         hoverIndicator = Instantiate(hoverIndicatorPrefab);
         selectIndicator = Instantiate(selectIndicatorPrefab);
+        hoverIndicator.transform.position = transform.position;
+        selectIndicator.transform.position = transform.position;
     }
 
     protected void UpdateIndicators()
