@@ -11,7 +11,7 @@ public class SelectionController : MonoBehaviour
     public LayerMask selectionMask;
 
     private ContactFilter2D selectionFilter;
-    private List<Selectable> selectionTargets;
+    private List<Selectable> selection;
     private List<Selectable> hoverTargets;
     private List<Collider2D> overlapResults;
     private SpriteRenderer boxSelectIndicator;
@@ -22,7 +22,7 @@ public class SelectionController : MonoBehaviour
     {
         selectionFilter = new ContactFilter2D();
         selectionFilter.layerMask = selectionMask;
-        selectionTargets = new List<Selectable>();
+        selection = new List<Selectable>();
         hoverTargets = new List<Selectable>();
         overlapResults = new List<Collider2D>();
         boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab);
@@ -87,22 +87,34 @@ public class SelectionController : MonoBehaviour
             isBoxSelectActive = false;
             boxSelectIndicator.enabled = false;
 
-            // Cancel previous selection
-            for (int i = 0; i < selectionTargets.Count; i++)
+            // Cancel previous selections
+            for (int i = 0; i < selection.Count; i++)
             {
-                selectionTargets[i].SetSelected(false);
+                selection[i].SetSelected(false);
             }
 
             // Add hover targets to selection list
-            selectionTargets.Clear();
-            selectionTargets.AddRange(hoverTargets);
-
-            // Update selection state
-            for (int i = 0; i < selectionTargets.Count; i++)
+            selection.Clear();
+            if (ContainsUnits(hoverTargets))
             {
-                selectionTargets[i].SetSelected(true);
+                selection.AddRange(FilterType<Unit>(hoverTargets));
+            }
+            else
+            {
+                selection.AddRange(FilterType<Building>(hoverTargets));
+            }
+
+            // Update selection states
+            for (int i = 0; i < selection.Count; i++)
+            {
+                selection[i].SetSelected(true);
             }
         }
+    }
+
+    public List<T> GetSelectionOfType<T>() where T : Selectable
+    {
+        return selection.Select(s => s.GetComponent<T>()).ToList();
     }
 
     private List<Selectable> FilterSelectables(List<Collider2D> colliders)
@@ -113,6 +125,19 @@ public class SelectionController : MonoBehaviour
         }).Select(x => {
             return x.GetComponent<Selectable>();
         }).ToList();
+    }
+
+    private bool ContainsUnits(List<Selectable> selectables)
+    {
+        return selectables.Any(s => {
+            Unit unit;
+            return s.TryGetComponent<Unit>(out unit);
+        });
+    }
+
+    private List<T> FilterType<T>(List<Selectable> selectables) where T : Selectable
+    {
+        return selectables.Select(s => s.GetComponent<T>()).ToList();
     }
 
     private Selectable GetNearest(List<Selectable> selectables, Vector2 targetPos)
