@@ -8,22 +8,22 @@ public class CameraController : MonoBehaviour
     public float minZoom = 5f;
     public float maxZoom = 15f;
 
-    public float sideMoveSpeed = 0.025f;
-
     void Update()
     {
-        // Scrolling
+        // Keep a record of the mouse position before scrolling
+        Vector2 mouseViewportCoordinates = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        Vector2 mouseWorldCoodinates = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Scroll
         float scrollDir = -Input.mouseScrollDelta.y;
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollDir * zoomSpeed * Time.deltaTime, minZoom, maxZoom);
-        bool isWithinZoomBounds = Camera.main.orthographicSize < maxZoom && Camera.main.orthographicSize > minZoom;
 
-        if (isWithinZoomBounds) {
-            // Moving camera while scrolling
-            Vector3 mousePositionWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float distanceMouseCenter = Vector3.Distance(mousePositionWorld, transform.position);
-            // doing distanceMouseCenter + 1 because otherwise log outputs negative values
-            float finalSideMoveSpeed = -scrollDir * Mathf.Log(distanceMouseCenter + 1) * Mathf.Log(Camera.main.orthographicSize) * sideMoveSpeed;
-            transform.position = Vector3.MoveTowards(transform.position, mousePositionWorld, finalSideMoveSpeed);
-        }
+        // Move camera towards mouse while scrolling
+        float cameraHeight = Camera.main.orthographicSize * 2;
+        Vector2 topRightWorldCoordinates = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
+        Vector2 bottomLeftWorldCoordinates = Camera.main.ScreenToWorldPoint(Vector2.zero);
+        Vector2 cameraDimensionsWorld = topRightWorldCoordinates - bottomLeftWorldCoordinates;
+        transform.position = mouseWorldCoodinates - cameraDimensionsWorld * (mouseViewportCoordinates - Vector2.one * 0.5f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, -10);
     }
 }
