@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5188b8c9517ba674d8b245837e6c7fda
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - hoverIndicatorPrefab: {fileID: 8694489509828249487, guid: d2890a4cec30af3449391b0d55f96207,
+      type: 3}
+  - selectIndicatorPrefab: {fileID: 1919610854626468484, guid: 7998739ef2cef4242bac97161b1fce17,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
