@@ -121259,10 +121259,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aab82ac44c34924d84a69735cd6cb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 10
   minZoom: 5
   maxZoom: 15
-  sideMoveSpeed: 10
+  scrollVelocityDampener: 0.08
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

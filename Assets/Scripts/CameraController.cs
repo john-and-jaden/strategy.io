@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float zoomSpeed = 0.05f;
     public float minZoom = 5f;
     public float maxZoom = 15f;
+    public float scrollVelocityDampener = 0.8f;
+    private float scrollVelocity = 0f;
 
     void Update()
     {
@@ -15,8 +16,8 @@ public class CameraController : MonoBehaviour
         Vector2 mouseWorldCoodinates = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Scroll
-        float scrollDir = -Input.mouseScrollDelta.y;
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollDir * zoomSpeed * Time.deltaTime, minZoom, maxZoom);
+        scrollVelocity += -Input.mouseScrollDelta.y;
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollVelocity * Time.deltaTime, minZoom, maxZoom);
 
         // Move camera towards mouse while scrolling
         float cameraHeight = Camera.main.orthographicSize * 2;
@@ -25,5 +26,8 @@ public class CameraController : MonoBehaviour
         Vector2 cameraDimensionsWorld = topRightWorldCoordinates - bottomLeftWorldCoordinates;
         transform.position = mouseWorldCoodinates - cameraDimensionsWorld * (mouseViewportCoordinates - Vector2.one * 0.5f);
         transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
+        // Dampen scrolling
+        scrollVelocity = Mathf.Lerp(scrollVelocity, 0, scrollVelocityDampener);
     }
 }
