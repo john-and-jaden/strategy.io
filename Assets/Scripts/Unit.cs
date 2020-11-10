@@ -5,14 +5,15 @@ using UnityEngine;
 public class Unit : Selectable
 {
     public float moveSpeed = 1f;
-    public float selectDistance;
 
-    private Vector2 targetPos;
+    private Vector3 moveTarget;
+    private float gatherRadiusSqr;
+    private bool isMoving;
 
     void Start()
     {
         SpawnIndicators();
-        targetPos = transform.position;
+        moveTarget = transform.position;
     }
 
     void Update()
@@ -35,11 +36,31 @@ public class Unit : Selectable
         selectIndicator.transform.position = transform.position;
         UpdateIndicators();
 
-        transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        // Update movement
+        if (isMoving)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, moveTarget, moveSpeed * Time.deltaTime);
+            float dist = Vector3.SqrMagnitude(transform.position - moveTarget);
+            if (dist < gatherRadiusSqr)
+            {
+                isMoving = false;
+            }
+        }
     }
 
-    public void SetTargetPos(Vector2 targetPos)
+    public bool IsMoving()
     {
-        this.targetPos = targetPos;
+        return isMoving;
+    }
+
+    public void SetMoveTarget(Vector3 moveTarget)
+    {
+        this.moveTarget = moveTarget;
+        isMoving = true;
+    }
+
+    public void SetGatherRadiusSqr(float gatherRadiusSqr)
+    {
+        this.gatherRadiusSqr = gatherRadiusSqr;
     }
 }
