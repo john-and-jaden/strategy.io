@@ -121261,7 +121261,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minZoom: 5
   maxZoom: 15
-  scrollVelocityDampener: 0.08
+  scrollDampTime: 0.8
+  scrollSensitivity: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
