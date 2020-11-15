@@ -28,9 +28,6 @@ public class CameraController : MonoBehaviour
         bool isScrolling = Mathf.Abs(Input.mouseScrollDelta.y) > scrollThreshold;
         scrollVelocity += -Input.mouseScrollDelta.y * scrollSensitivity;
 
-        // Scroll
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollVelocity * Time.deltaTime, minZoom, maxZoom);
-
         if (isScrolling)
         {
             // Update zoom momentum
@@ -49,6 +46,9 @@ public class CameraController : MonoBehaviour
             // Dampen scrolling
             scrollVelocity = Mathf.Lerp(lastScrollVelocity, 0, scrollDampTimer / scrollDampTime);
         }
+
+        // Zoom the camera
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollVelocity * Time.deltaTime, minZoom, maxZoom);
 
         // Move camera towards target offset from mouse position
         Vector2 scrollTarget = lastMouseWorldPos - cameraWorldDimensions * (lastMouseViewportPos - Vector2.one * 0.5f);
