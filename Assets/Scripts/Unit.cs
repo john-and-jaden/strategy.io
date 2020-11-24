@@ -5,10 +5,13 @@ using UnityEngine;
 public class Unit : Selectable
 {
     public float moveSpeed = 1f;
+    public float softCollisionRadius = 0.5f;
 
     private Vector3 moveTarget;
     private float gatherRadiusSqr;
     private bool isMoving;
+
+    private Collider2D[] softCollisionTargets;
 
     void Start()
     {
@@ -45,6 +48,26 @@ public class Unit : Selectable
             {
                 isMoving = false;
             }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Shift out of the way of moving units
+        if (!isMoving)
+        {
+            Vector3 shiftDir = Vector3.zero;
+
+            // Implement a soft collision radius
+            softCollisionTargets = Physics2D.OverlapCircleAll(transform.position, softCollisionRadius);
+            foreach (Collider2D col in softCollisionTargets)
+            {
+                Vector3 colPos = col.transform.position;
+                Vector3 colDir = (transform.position - colPos).normalized;
+                shiftDir = (shiftDir + colDir).normalized;
+            }
+
+            transform.position += shiftDir * moveSpeed * Time.deltaTime;
         }
     }
 
