@@ -121601,7 +121601,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minZoom: 5
   maxZoom: 25
-  scrollVelocityDampener: 0.08
+  scrollDampTime: 0.3
+  scrollSensitivity: 4
+  scrollThreshold: 0.1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -121629,7 +121631,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
