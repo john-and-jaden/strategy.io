@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
     private float scrollVelocity = 0f;
     private float lastScrollVelocity = 0f;
     private float scrollDampTimer;
-    private Vector2 lastMouseViewportPos;
+    private Vector2 lastMouseViewportPos = new Vector2(0.5f, 0.5f);
     private Vector2 lastMouseWorldPos;
 
     void Update()
