@@ -29,4 +29,9 @@ public class GridController : MonoBehaviour
         );
         tilemap.BoxFill(Vector3Int.zero, groundTile, -width / 2, -height / 2, width / 2, height / 2);
     }
+
+    public Vector2Int GetDimensions()
+    {
+        return new Vector2Int(width, height);
+    }
 }
