@@ -680,7 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minZoom: 5
-  maxZoom: 25
+  maxZoom: 35
   scrollDampTime: 0.3
   scrollSensitivity: 4
   scrollThreshold: 0.1
