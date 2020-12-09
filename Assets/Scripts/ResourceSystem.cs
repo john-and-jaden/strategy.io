@@ -18,10 +18,22 @@ public class ResourceSystem : MonoBehaviour
 
     void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // FOR TESTING
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            AddWood(1);
+        }
+        if (Input.GetKeyDown(KeyCode.W))
         {
             AddStone(1);
-            AddWood(1);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            SpendWood(1);
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SpendStone(1);
         }
     }
 
@@ -35,6 +47,24 @@ public class ResourceSystem : MonoBehaviour
     {
         stone += amount;
         onStoneChanged.Invoke(stone);
+    }
+
+    public void SpendWood(int amount)
+    {
+        if (wood - amount >= 0)
+        {
+            wood -= amount;
+            onWoodChanged.Invoke(wood);
+        }
+    }
+
+    public void SpendStone(int amount)
+    {
+        if (stone - amount >= 0)
+        {
+            stone -= amount;
+            onStoneChanged.Invoke(stone);
+        }
     }
 
     public void AddWoodChangedListener(UnityAction<int> listener)
