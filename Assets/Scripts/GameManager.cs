@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     private static SelectionSystem selectionSystem;
     public static UnitSystem UnitSystem { get { return unitSystem; } }
     private static UnitSystem unitSystem;
+    public static ResourceSystem ResourceSystem { get { return resourceSystem; } }
+    private static ResourceSystem resourceSystem;
 
     private static GameManager instance;
 
@@ -22,5 +24,6 @@ public class GameManager : MonoBehaviour
 
         selectionSystem = GetComponent<SelectionSystem>();
         unitSystem = GetComponent<UnitSystem>();
+        resourceSystem = GetComponent<ResourceSystem>();
     }
 }
