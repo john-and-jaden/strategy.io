@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectionController : MonoBehaviour
+public class SelectionSystem : MonoBehaviour
 {
     public SpriteRenderer boxSelectIndicatorPrefab;
     public float selectDistance = 0.2f;
