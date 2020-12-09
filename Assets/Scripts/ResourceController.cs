@@ -13,7 +13,7 @@ public class ResourceController : MonoBehaviour
         }
     }
     [Tooltip("The maximum amount of resources per cluster from 0 to 10")]
-    [SerializeField] private int clusterRichness;
+    [SerializeField] private int clusterRichness = 5;
     public int ClusterFrequency
     {
         get
@@ -22,7 +22,7 @@ public class ResourceController : MonoBehaviour
         }
     }
     [Tooltip("The frequency of resource clusters on the map from 1 to 10")]
-    [SerializeField] private int clusterFrequency;
+    [SerializeField] private int clusterFrequency = 5;
     public int ClusterSparseness
     {
         get
@@ -31,7 +31,7 @@ public class ResourceController : MonoBehaviour
         }
     }
     [Tooltip("The 'spread' of resources within a cluster from 1 to 10")]
-    [SerializeField] private int clusterSparseness;
+    [SerializeField] private int clusterSparseness = 5;
 
     private List<MonoBehaviour> resources = new List<MonoBehaviour>();
 
@@ -58,8 +58,8 @@ public class ResourceController : MonoBehaviour
         {
             float distanceFromClusterCenterX = Random.Range(-treeNum, treeNum);
             float distanceFromClusterCenterY = Random.Range(-treeNum, treeNum);
-            distanceFromClusterCenterX /= 5 * clusterSparseness;
-            distanceFromClusterCenterY /= 5 * clusterSparseness;
+            distanceFromClusterCenterX *= clusterSparseness / 100f;
+            distanceFromClusterCenterY *= clusterSparseness / 100f;
             resources.Add(Instantiate(resourcePrefab, new Vector3(xPos + distanceFromClusterCenterX, yPos + distanceFromClusterCenterY, 0), Quaternion.identity));
         }
     }
