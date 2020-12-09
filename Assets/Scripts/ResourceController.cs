@@ -14,7 +14,7 @@ public class ResourceController : MonoBehaviour
         }
     }
     [Range(1, 10)]
-    [Tooltip("A multiplier for the maximum amount of resources per cluster from 0 to 10")]
+    [Tooltip("A multiplier for the maximum amount of resources per cluster from 1 to 10")]
     [SerializeField] private int clusterRichness = 5;
     public int ClusterFrequency
     {
@@ -41,8 +41,12 @@ public class ResourceController : MonoBehaviour
     private List<Resource> resources = new List<Resource>();
     float halfWidth;
     float halfHeight;
+    private Transform resourcesParent;
+
     void Start()
     {
+        resourcesParent = new GameObject("Resource Clusters").transform;
+
         halfWidth = GetComponent<GridController>().GetDimensions().x / 2;
         halfHeight = GetComponent<GridController>().GetDimensions().y / 2;
 
@@ -61,13 +65,18 @@ public class ResourceController : MonoBehaviour
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
         int clusterSize = Random.Range(1, clusterRichness * 30);
+
+        string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
+        Transform clusterParent = new GameObject(parentName).transform;
+        clusterParent.parent = resourcesParent;
+
         for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
         {
             float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
-            resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity));
+            resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent));
         }
     }
 }
