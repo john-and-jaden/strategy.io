@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ResourceController : MonoBehaviour
 {
+    // Public vars and serialized fields
     public Tree treePrefab;
     public int ClusterRichness
     {
@@ -12,6 +13,7 @@ public class ResourceController : MonoBehaviour
             return clusterRichness;
         }
     }
+    [Range(1, 10)]
     [Tooltip("The maximum amount of resources per cluster from 0 to 10")]
     [SerializeField] private int clusterRichness = 5;
     public int ClusterFrequency
@@ -21,6 +23,7 @@ public class ResourceController : MonoBehaviour
             return clusterFrequency;
         }
     }
+    [Range(1, 10)]
     [Tooltip("The frequency of resource clusters on the map from 1 to 10")]
     [SerializeField] private int clusterFrequency = 5;
     public int ClusterSparseness
@@ -30,18 +33,23 @@ public class ResourceController : MonoBehaviour
             return clusterSparseness;
         }
     }
+    [Range(1, 10)]
     [Tooltip("The 'spread' of resources within a cluster from 1 to 10")]
     [SerializeField] private int clusterSparseness = 5;
 
+    // Private vars
     private List<MonoBehaviour> resources = new List<MonoBehaviour>();
 
+    int halfWidth;
+    int halfHeight;
     void Start()
     {
-        int halfWidth = (int)GetComponent<GridController>().GetDimensions().x / 2;
-        int halfHeight = (int)GetComponent<GridController>().GetDimensions().y / 2;
-        for (int i = -halfWidth + 1; i < halfWidth + 1; i++)
+        halfWidth = GetComponent<GridController>().GetDimensions().x / 2;
+        halfHeight = GetComponent<GridController>().GetDimensions().y / 2;
+
+        for (int i = -halfWidth; i < halfWidth; i++)
         {
-            for (int j = -halfHeight + 1; j < halfHeight + 1; j++)
+            for (int j = -halfHeight; j < halfHeight; j++)
             {
                 if (Random.Range(0f, 1f) > 1 - clusterFrequency / 1000f)
                 {
@@ -51,16 +59,16 @@ public class ResourceController : MonoBehaviour
         }
     }
 
-    private void GenerateCluster(float xPos, float yPos, MonoBehaviour resourcePrefab)
+    private void GenerateCluster(float clusterPosX, float clusterPosY, MonoBehaviour resourcePrefab)
     {
-        int maxNumResources = Random.Range(1, clusterRichness * 30);
-        for (int treeNum = 0; treeNum < maxNumResources; treeNum++)
+        int clusterSize = Random.Range(1, clusterRichness * 30);
+        for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
         {
-            float distanceFromClusterCenterX = Random.Range(-treeNum, treeNum);
-            float distanceFromClusterCenterY = Random.Range(-treeNum, treeNum);
-            distanceFromClusterCenterX *= clusterSparseness / 100f;
-            distanceFromClusterCenterY *= clusterSparseness / 100f;
-            resources.Add(Instantiate(resourcePrefab, new Vector3(xPos + distanceFromClusterCenterX, yPos + distanceFromClusterCenterY, 0), Quaternion.identity));
+            float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 100f;
+            float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 100f;
+            float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
+            float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
+            resources.Add(Instantiate(resourcePrefab, new Vector3(resourcePosX, resourcePosY, 0), Quaternion.identity));
         }
     }
 }
