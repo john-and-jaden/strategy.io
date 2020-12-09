@@ -14,7 +14,7 @@ public class ResourceController : MonoBehaviour
         }
     }
     [Range(1, 10)]
-    [Tooltip("The maximum amount of resources per cluster from 0 to 10")]
+    [Tooltip("A multiplier for the maximum amount of resources per cluster from 0 to 10")]
     [SerializeField] private int clusterRichness = 5;
     public int ClusterFrequency
     {
@@ -38,18 +38,17 @@ public class ResourceController : MonoBehaviour
     [SerializeField] private int clusterSparseness = 5;
 
     // Private vars
-    private List<MonoBehaviour> resources = new List<MonoBehaviour>();
-
-    int halfWidth;
-    int halfHeight;
+    private List<Resource> resources = new List<Resource>();
+    float halfWidth;
+    float halfHeight;
     void Start()
     {
         halfWidth = GetComponent<GridController>().GetDimensions().x / 2;
         halfHeight = GetComponent<GridController>().GetDimensions().y / 2;
 
-        for (int i = -halfWidth; i < halfWidth; i++)
+        for (float i = -halfWidth + 0.5f; i < halfWidth + 0.5f; i++)
         {
-            for (int j = -halfHeight; j < halfHeight; j++)
+            for (float j = -halfHeight + 0.5f; j < halfHeight + 0.5f; j++)
             {
                 if (Random.Range(0f, 1f) > 1 - clusterFrequency / 1000f)
                 {
@@ -59,7 +58,7 @@ public class ResourceController : MonoBehaviour
         }
     }
 
-    private void GenerateCluster(float clusterPosX, float clusterPosY, MonoBehaviour resourcePrefab)
+    private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
         int clusterSize = Random.Range(1, clusterRichness * 30);
         for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
@@ -68,7 +67,7 @@ public class ResourceController : MonoBehaviour
             float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 100f;
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
-            resources.Add(Instantiate(resourcePrefab, new Vector3(resourcePosX, resourcePosY, 0), Quaternion.identity));
+            resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity));
         }
     }
 }

@@ -8,9 +8,4 @@ public class Resource : MonoBehaviour
     {
         transform.position = new Vector2(posX, posY);
     }
-
-    public Resource()
-    {
-        transform.position = new Vector2(0, 0);
-    }
 }
