@@ -4,31 +4,19 @@ using UnityEngine;
 
 public class ResourceController : MonoBehaviour
 {
-    // Public vars and serialized fields
+    // Public vars
     public Tree treePrefab;
+
+    // Serialized fields
     [Tooltip("A multiplier for the maximum amount of resources per cluster from 1 to 10")]
     [Range(1, 10)] [SerializeField] private int clusterRichness = 5;
     public int ClusterRichness { get { return clusterRichness; } }
-    public int ClusterFrequency
-    {
-        get
-        {
-            return clusterFrequency;
-        }
-    }
-    [Range(1, 10)]
     [Tooltip("The frequency of resource clusters on the map from 1 to 10")]
-    [SerializeField] private int clusterFrequency = 5;
-    public int ClusterSparseness
-    {
-        get
-        {
-            return clusterSparseness;
-        }
-    }
-    [Range(1, 10)]
+    [Range(1, 10)] [SerializeField] private int clusterFrequency = 5;
+    public int ClusterFrequency { get { return clusterFrequency; } }
     [Tooltip("The 'spread' of resources within a cluster from 1 to 10")]
-    [SerializeField] private int clusterSparseness = 5;
+    [Range(1, 10)] [SerializeField] private int clusterSparseness = 5;
+    public int ClusterSparseness { get { return clusterSparseness; } }
 
     // Private vars
     private List<Resource> resources = new List<Resource>();
