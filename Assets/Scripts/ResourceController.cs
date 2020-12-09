@@ -6,16 +6,9 @@ public class ResourceController : MonoBehaviour
 {
     // Public vars and serialized fields
     public Tree treePrefab;
-    public int ClusterRichness
-    {
-        get
-        {
-            return clusterRichness;
-        }
-    }
-    [Range(1, 10)]
     [Tooltip("A multiplier for the maximum amount of resources per cluster from 1 to 10")]
-    [SerializeField] private int clusterRichness = 5;
+    [Range(1, 10)] [SerializeField] private int clusterRichness = 5;
+    public int ClusterRichness { get { return clusterRichness; } }
     public int ClusterFrequency
     {
         get
