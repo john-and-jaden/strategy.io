@@ -202,7 +202,7 @@ MonoBehaviour:
     type: 3}
   clusterRichness: 10
   clusterFrequency: 10
-  clusterSparseness: 1
+  clusterSparseness: 10
 --- !u!114 &28465057
 MonoBehaviour:
   m_ObjectHideFlags: 0

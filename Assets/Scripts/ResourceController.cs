@@ -63,8 +63,8 @@ public class ResourceController : MonoBehaviour
         int clusterSize = Random.Range(1, clusterRichness * 30);
         for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
         {
-            float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 100f;
-            float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 100f;
+            float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
+            float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
             resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity));
