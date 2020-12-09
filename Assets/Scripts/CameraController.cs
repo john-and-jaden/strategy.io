@@ -6,28 +6,52 @@ public class CameraController : MonoBehaviour
 {
     public float minZoom = 5f;
     public float maxZoom = 15f;
-    public float scrollVelocityDampener = 0.8f;
+    [Tooltip("The scroll damp time in seconds")]
+    public float scrollDampTime = 0.5f;
+    public float scrollSensitivity = 1f;
+    public float scrollThreshold = 0.1f;
+
     private float scrollVelocity = 0f;
+    private float lastScrollVelocity = 0f;
+    private float scrollDampTimer;
+    private Vector2 lastMouseViewportPos = new Vector2(0.5f, 0.5f);
+    private Vector2 lastMouseWorldPos;
 
     void Update()
     {
-        // Keep a record of the mouse position before scrolling
-        Vector2 mouseViewportCoordinates = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        Vector2 mouseWorldCoodinates = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Scroll
-        scrollVelocity += -Input.mouseScrollDelta.y;
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollVelocity * Time.deltaTime, minZoom, maxZoom);
-
-        // Move camera towards mouse while scrolling
-        float cameraHeight = Camera.main.orthographicSize * 2;
+        // Calculate current camera dimensions
         Vector2 topRightWorldCoordinates = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
         Vector2 bottomLeftWorldCoordinates = Camera.main.ScreenToWorldPoint(Vector2.zero);
-        Vector2 cameraDimensionsWorld = topRightWorldCoordinates - bottomLeftWorldCoordinates;
-        transform.position = mouseWorldCoodinates - cameraDimensionsWorld * (mouseViewportCoordinates - Vector2.one * 0.5f);
-        transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+        Vector2 cameraWorldDimensions = topRightWorldCoordinates - bottomLeftWorldCoordinates;
 
-        // Dampen scrolling
-        scrollVelocity = Mathf.Lerp(scrollVelocity, 0, scrollVelocityDampener);
+        // Get mouse input
+        bool isScrolling = Mathf.Abs(Input.mouseScrollDelta.y) > scrollThreshold;
+        scrollVelocity += -Input.mouseScrollDelta.y * scrollSensitivity;
+
+        if (isScrolling)
+        {
+            // Update zoom momentum
+            lastScrollVelocity = scrollVelocity;
+            scrollDampTimer = 0;
+            
+            // Update mouse position
+            lastMouseViewportPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            lastMouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
+        else
+        {
+            // Update timer
+            scrollDampTimer += Time.deltaTime;
+
+            // Dampen scrolling
+            scrollVelocity = Mathf.Lerp(lastScrollVelocity, 0, scrollDampTimer / scrollDampTime);
+        }
+
+        // Zoom the camera
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollVelocity * Time.deltaTime, minZoom, maxZoom);
+
+        // Move camera towards target offset from mouse position
+        Vector2 scrollTarget = lastMouseWorldPos - cameraWorldDimensions * (lastMouseViewportPos - Vector2.one * 0.5f);
+        transform.position = new Vector3(scrollTarget.x, scrollTarget.y, -10);
     }
 }

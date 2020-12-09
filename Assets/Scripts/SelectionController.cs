@@ -98,12 +98,12 @@ public class SelectionController : MonoBehaviour
             }
 
             // Add hover targets to selection list
-            if (ContainsType<Unit>(hoverTargets))
+            if (ContainsType<Unit>(hoverTargets) || ContainsType<Unit>(selection))
             {
                 selection.AddRange(FilterType<Unit>(hoverTargets));
                 selection = selection.Distinct().ToList();
             }
-            else
+            else if (ContainsType<Building>(hoverTargets) && !ContainsType<Unit>(selection))
             {
                 selection.AddRange(FilterType<Building>(hoverTargets));
                 selection = selection.Distinct().ToList();
