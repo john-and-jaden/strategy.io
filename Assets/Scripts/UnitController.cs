@@ -50,7 +50,6 @@ public class UnitController : MonoBehaviour
                 if (selectionController.highlightedCluster != null)
                 {
                     unit.AssignedCluster = selectionController.highlightedCluster;
-                    Debug.Log(unit.AssignedCluster.Id);
                 }
             }
         }
