@@ -45,17 +45,12 @@ public class UnitController : MonoBehaviour
             // ADD moving out of way based on collision
             foreach (Unit unit in units)
             {
-                unit.SetMoveTarget(mousePos);
+                // Assign unit to the hovered cluster whether cluster is null or not
+                unit.AssignedCluster = selectionController.highlightedCluster;
                 unit.SetGatherRadiusSqr(gatherRadiusSqr);
-                // If hovering over a cluster, assign a unit to that cluster
-                if (selectionController.highlightedCluster != null)
+                if (unit.AssignedCluster == null)
                 {
-                    unit.AssignedCluster = selectionController.highlightedCluster;
-                }
-                // Else, unassign unit from cluster
-                else
-                {
-                    unit.AssignedCluster = null;
+                    unit.SetMoveTarget(mousePos);
                 }
             }
         }
