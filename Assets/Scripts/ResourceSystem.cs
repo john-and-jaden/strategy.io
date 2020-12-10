@@ -38,8 +38,8 @@ public class ResourceSystem : MonoBehaviour
     {
         resourcesParent = new GameObject("Resource Clusters").transform;
 
-        halfWidth = GetComponent<GridSystem>().GetDimensions().x / 2;
-        halfHeight = GetComponent<GridSystem>().GetDimensions().y / 2;
+        halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
+        halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
 
         for (float i = -halfWidth + 0.5f; i < halfWidth + 0.5f; i++)
         {

@@ -8,7 +8,7 @@ public class UnitSystem : MonoBehaviour
     // Approximation of the area of a Unit with radius 0.5
     private const float UNIT_AREA = 0.8f;
 
-    public float minGatherRadiusSqr = 0.25f;
+    [SerializeField] private float minGatherRadiusSqr = 0.25f;
 
     private List<Unit> units;
     private float gatherRadiusSqr;

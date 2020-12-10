@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class SelectionSystem : MonoBehaviour
 {
-    public SpriteRenderer boxSelectIndicatorPrefab;
-    public float selectDistance = 0.2f;
-    public int maxMouseHoverTargets = 8;
-    public LayerMask selectionMask;
+    [SerializeField] private SpriteRenderer boxSelectIndicatorPrefab;
+    [SerializeField] private float selectDistance = 0.2f;
+    [SerializeField] private int maxMouseHoverTargets = 8;
+    [SerializeField] private LayerMask selectionMask;
 
     private ContactFilter2D selectionFilter;
     private List<Selectable> selection;

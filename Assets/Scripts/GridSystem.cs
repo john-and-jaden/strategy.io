@@ -5,12 +5,12 @@ using UnityEngine.Tilemaps;
 
 public class GridSystem : MonoBehaviour
 {
-    public Tilemap tilemap;
-    public TileBase groundTile;
-    public TileBase borderTile;
-    public int width = 40;
-    public int height = 30;
-    public int borderSize = 4;
+    [SerializeField] private Tilemap tilemap;
+    [SerializeField] private TileBase groundTile;
+    [SerializeField] private TileBase borderTile;
+    [SerializeField] private int width = 40;
+    [SerializeField] private int height = 30;
+    [SerializeField] private int borderSize = 4;
 
     void Start()
     {
