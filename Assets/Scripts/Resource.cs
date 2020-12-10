@@ -2,4 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MonoBehaviour { }
+public class Resource : Selectable
+{
+    void Start()
+    {
+        SpawnIndicators();
+    }
+
+    void Update()
+    {
+        UpdateIndicators();
+    }
+}
