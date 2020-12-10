@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Resource : Selectable
 {
+    private int clusterId;
+    public int ClusterId
+    {
+        get { return clusterId; }
+        set { clusterId = value; }
+    }
     void Start()
     {
         SpawnIndicators();
