@@ -14,9 +14,9 @@ public class Resource : Selectable
 
     void Update()
     {
-        UpdateIndicators();
         if (hardness <= 0)
         {
+            SetHovered(false);
             cluster.resources.Remove(this);
             if (cluster.resources.Count == 0)
             {
@@ -25,5 +25,6 @@ public class Resource : Selectable
             }
             Object.Destroy(this.gameObject);
         }
+        UpdateIndicators();
     }
 }
