@@ -14,8 +14,8 @@ public abstract class Selectable : MonoBehaviour
 
     protected void SpawnIndicators()
     {
-        hoverIndicator = Instantiate(hoverIndicatorPrefab);
-        selectIndicator = Instantiate(selectIndicatorPrefab);
+        hoverIndicator = Instantiate(hoverIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
+        selectIndicator = Instantiate(selectIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
     }
