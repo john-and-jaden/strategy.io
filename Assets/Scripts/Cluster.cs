@@ -5,8 +5,8 @@ using UnityEngine;
 public class Cluster
 {
     public List<Resource> resources;
-    public int Size { get { return size; } }
     private int size;
+    public int Size { get { return size; } }
 
     public Cluster(int size)
     {
