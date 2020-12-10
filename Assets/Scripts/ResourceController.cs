@@ -46,6 +46,7 @@ public class ResourceController : MonoBehaviour
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
         int clusterSize = Random.Range(1, clusterRichness * 30);
+        Cluster cluster = new Cluster(clusterSize);
 
         string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
         Transform clusterParent = new GameObject(parentName).transform;
@@ -57,7 +58,7 @@ public class ResourceController : MonoBehaviour
             float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
-            resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent));
+            cluster.resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent));
         }
     }
 }
