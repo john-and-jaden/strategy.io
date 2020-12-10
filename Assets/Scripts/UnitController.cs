@@ -47,9 +47,15 @@ public class UnitController : MonoBehaviour
             {
                 unit.SetMoveTarget(mousePos);
                 unit.SetGatherRadiusSqr(gatherRadiusSqr);
+                // If hovering over a cluster, assign a unit to that cluster
                 if (selectionController.highlightedCluster != null)
                 {
                     unit.AssignedCluster = selectionController.highlightedCluster;
+                }
+                // Else, unassign unit from cluster
+                else
+                {
+                    unit.AssignedCluster = null;
                 }
             }
         }

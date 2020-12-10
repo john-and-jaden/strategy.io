@@ -12,6 +12,14 @@ public class Unit : Selectable
         get { return assignedCluster; }
         set { assignedCluster = value; }
     }
+    private Cluster previousFrameCluster;
+    // private Resource assignedResource;
+    // public Resource AssignedResource
+    // {
+    //     get { return assignedResource; }
+    //     set { assignedResource = value; }
+    // }
+    private Resource assignedResource;
 
     private Vector3 moveTarget;
     private float gatherRadiusSqr;
@@ -42,6 +50,9 @@ public class Unit : Selectable
                 isMoving = false;
             }
         }
+
+        // Gather resources in assigned cluster
+        GatherResources();
     }
 
     void FixedUpdate()
@@ -78,5 +89,25 @@ public class Unit : Selectable
     public void SetGatherRadiusSqr(float gatherRadiusSqr)
     {
         this.gatherRadiusSqr = gatherRadiusSqr;
+    }
+
+    private void GatherResources()
+    {
+        // Check whether the assigned cluster was changed (improves performance)
+        if (assignedCluster != null && previousFrameCluster != assignedCluster)
+        {
+            float minDistance = float.MaxValue;
+            foreach (Resource resource in assignedCluster.resources)
+            {
+                float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
+                if (minDistance > distanceToNode)
+                {
+                    minDistance = distanceToNode;
+                    assignedResource = resource;
+                }
+            }
+            SetMoveTarget(assignedResource.transform.position);
+        }
+        previousFrameCluster = assignedCluster;
     }
 }
