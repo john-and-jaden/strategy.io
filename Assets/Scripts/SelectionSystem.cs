@@ -3,12 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectionController : MonoBehaviour
+public class SelectionSystem : MonoBehaviour
 {
-    public SpriteRenderer boxSelectIndicatorPrefab;
-    public float selectDistance = 0.2f;
-    public int maxMouseHoverTargets = 8;
-    public LayerMask selectionMask;
+    [SerializeField] private SpriteRenderer boxSelectIndicatorPrefab;
+    [SerializeField] private float selectDistance = 0.2f;
+    [SerializeField] private int maxMouseHoverTargets = 8;
+    [SerializeField] private LayerMask selectionMask;
+
+    private Transform indicatorParent;
+    public Transform IndicatorParent { get { return indicatorParent; } }
 
     private ContactFilter2D selectionFilter;
     private List<Selectable> selection;
@@ -18,14 +21,15 @@ public class SelectionController : MonoBehaviour
     private Vector2 boxSelectStartPos;
     private bool isBoxSelectActive;
 
-    void Start()
+    void Awake()
     {
+        indicatorParent = new GameObject("Selection Indicators").transform;
         selectionFilter = new ContactFilter2D();
         selectionFilter.layerMask = selectionMask;
         selection = new List<Selectable>();
         hoverTargets = new List<Selectable>();
         overlapResults = new List<Collider2D>();
-        boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab);
+        boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab, indicatorParent);
         boxSelectIndicator.enabled = false;
     }
 
@@ -79,7 +83,7 @@ public class SelectionController : MonoBehaviour
             boxSelectIndicator.size = Vector2.zero;
             boxSelectStartPos = mousePos;
         }
-        
+
         // Select hovered objects on left-click released
         if (Input.GetButtonUp("Fire1"))
         {
@@ -124,17 +128,20 @@ public class SelectionController : MonoBehaviour
 
     private List<Selectable> FilterSelectables(List<Collider2D> colliders)
     {
-        return colliders.Where(c => {
+        return colliders.Where(c =>
+        {
             Selectable s;
             return c.TryGetComponent<Selectable>(out s);
-        }).Select(x => {
+        }).Select(x =>
+        {
             return x.GetComponent<Selectable>();
         }).ToList();
     }
 
     private bool ContainsType<T>(List<Selectable> selectables) where T : Selectable
     {
-        return selectables.Any(s => {
+        return selectables.Any(s =>
+        {
             T t;
             return s.TryGetComponent<T>(out t);
         });
@@ -142,10 +149,12 @@ public class SelectionController : MonoBehaviour
 
     private List<T> FilterType<T>(List<Selectable> selectables) where T : Selectable
     {
-        return selectables.Where(x => {
+        return selectables.Where(x =>
+        {
             T t;
             return x.TryGetComponent<T>(out t);
-        }).Select(x => {
+        }).Select(x =>
+        {
             return x.GetComponent<T>();
         }).ToList();
     }
@@ -156,7 +165,7 @@ public class SelectionController : MonoBehaviour
         float smallestDist = selectDistance * selectDistance + 1;
         for (int i = 0; i < selectables.Count; i++)
         {
-            Vector2 dir =  targetPos - (Vector2) selectables[i].transform.position;
+            Vector2 dir = targetPos - (Vector2)selectables[i].transform.position;
             float sqrDist = dir.sqrMagnitude;
             if (sqrDist < smallestDist)
             {

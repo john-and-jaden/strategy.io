@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Unit : Selectable
 {
-    public float moveSpeed = 1f;
-    public float softCollisionRadius = 0.5f;
+    [SerializeField] private float moveSpeed = 1f;
+    [SerializeField] private float softCollisionRadius = 0.5f;
 
     private Vector3 moveTarget;
     private float gatherRadiusSqr;

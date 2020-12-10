@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float minZoom = 5f;
-    public float maxZoom = 15f;
+    [SerializeField] private float minZoom = 5f;
+    
+    [SerializeField] private float maxZoom = 15f;
+
     [Tooltip("The scroll damp time in seconds")]
-    public float scrollDampTime = 0.5f;
-    public float scrollSensitivity = 1f;
-    public float scrollThreshold = 0.1f;
+    [SerializeField] private float scrollDampTime = 0.5f;
+
+    [SerializeField] private float scrollSensitivity = 1f;
+
+    [SerializeField] private float scrollThreshold = 0.1f;
 
     private float scrollVelocity = 0f;
     private float lastScrollVelocity = 0f;

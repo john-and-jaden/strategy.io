@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class Selectable : MonoBehaviour
 {
-    public SpriteRenderer hoverIndicatorPrefab;
-    public SpriteRenderer selectIndicatorPrefab;
+    [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
+    [SerializeField] private SpriteRenderer selectIndicatorPrefab;
 
     protected bool hovered;
     protected bool selected;
@@ -14,8 +14,8 @@ public abstract class Selectable : MonoBehaviour
 
     protected void SpawnIndicators()
     {
-        hoverIndicator = Instantiate(hoverIndicatorPrefab);
-        selectIndicator = Instantiate(selectIndicatorPrefab);
+        hoverIndicator = Instantiate(hoverIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
+        selectIndicator = Instantiate(selectIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
     }
