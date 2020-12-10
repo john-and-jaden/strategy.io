@@ -9,6 +9,7 @@ public class SelectionController : MonoBehaviour
     public float selectDistance = 0.2f;
     public int maxMouseHoverTargets = 8;
     public LayerMask selectionMask;
+    public Cluster highlightedCluster;
 
     private ContactFilter2D selectionFilter;
     private List<Selectable> selection;
@@ -39,6 +40,7 @@ public class SelectionController : MonoBehaviour
 
         // Calculate hover selection based on mouse position
         hoverTargets.Clear();
+        highlightedCluster = null;
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (isBoxSelectActive && mousePos != boxSelectStartPos)
         {
@@ -181,10 +183,10 @@ public class SelectionController : MonoBehaviour
 
     private void HighlightCluster(Resource resource)
     {
-        List<Resource> resourcesInCluster = GetComponent<ResourceController>().clusters[resource.ClusterId].resources;
-        for (int i = 0; i < resourcesInCluster.Count; i++)
+        highlightedCluster = GetComponent<ResourceController>().clusters[resource.ClusterId];
+        for (int i = 0; i < highlightedCluster.resources.Count; i++)
         {
-            hoverTargets.Add(resourcesInCluster[i]);
+            hoverTargets.Add(highlightedCluster.resources[i]);
         }
     }
 }

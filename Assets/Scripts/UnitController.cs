@@ -47,6 +47,11 @@ public class UnitController : MonoBehaviour
             {
                 unit.SetMoveTarget(mousePos);
                 unit.SetGatherRadiusSqr(gatherRadiusSqr);
+                if (selectionController.highlightedCluster != null)
+                {
+                    unit.AssignedCluster = selectionController.highlightedCluster;
+                    Debug.Log(unit.AssignedCluster.Id);
+                }
             }
         }
     }

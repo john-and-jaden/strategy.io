@@ -6,6 +6,12 @@ public class Unit : Selectable
 {
     public float moveSpeed = 1f;
     public float softCollisionRadius = 0.5f;
+    private Cluster assignedCluster;
+    public Cluster AssignedCluster
+    {
+        get { return assignedCluster; }
+        set { assignedCluster = value; }
+    }
 
     private Vector3 moveTarget;
     private float gatherRadiusSqr;
