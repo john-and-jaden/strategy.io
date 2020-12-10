@@ -183,7 +183,7 @@ public class SelectionController : MonoBehaviour
 
     private void HighlightCluster(Resource resource)
     {
-        highlightedCluster = GetComponent<ResourceController>().clusters[resource.ClusterId];
+        highlightedCluster = resource.cluster;
         for (int i = 0; i < highlightedCluster.resources.Count; i++)
         {
             hoverTargets.Add(highlightedCluster.resources[i]);

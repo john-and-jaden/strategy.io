@@ -26,6 +26,7 @@ public class Unit : Selectable
     private bool isMoving;
 
     private Collider2D[] softCollisionTargets;
+    private float resourceGatherRadius = 1f;
 
     void Start()
     {
@@ -93,21 +94,36 @@ public class Unit : Selectable
 
     private void GatherResources()
     {
-        // Check whether the assigned cluster was changed (improves performance)
-        if (assignedCluster != null && previousFrameCluster != assignedCluster)
+        if (assignedCluster != null && !assignedCluster.destroyed)
         {
-            float minDistance = float.MaxValue;
-            foreach (Resource resource in assignedCluster.resources)
+            // If assignedCluster was changed (improves performance) or resource is unassigned
+            // Then assign to closest resource in cluster
+            if (previousFrameCluster != assignedCluster || assignedResource == null)
             {
-                float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
-                if (minDistance > distanceToNode)
+                float minDistance = float.MaxValue;
+                foreach (Resource resource in assignedCluster.resources)
                 {
-                    minDistance = distanceToNode;
-                    assignedResource = resource;
+                    float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
+                    if (minDistance > distanceToNode)
+                    {
+                        minDistance = distanceToNode;
+                        assignedResource = resource;
+                    }
                 }
+                SetMoveTarget(assignedResource.transform.position);
             }
-            SetMoveTarget(assignedResource.transform.position);
+
+            // Mine resource if close enough
+            if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
+            {
+                assignedResource.hardness -= 1f;
+            }
         }
+        else
+        {
+            assignedCluster = null;
+        }
+
         previousFrameCluster = assignedCluster;
     }
 }

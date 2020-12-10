@@ -9,16 +9,13 @@ public class Cluster
     public int Size { get { return size; } }
     private int id;
     public int Id { get { return id; } }
+    public bool destroyed;
 
     public Cluster(int size, int id)
     {
         this.size = size;
         this.id = id;
         resources = new List<Resource>();
-    }
-
-    void Start()
-    {
-        
+        destroyed = false;
     }
 }

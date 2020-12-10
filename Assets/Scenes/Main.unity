@@ -201,7 +201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treePrefab: {fileID: 4848408111497684340, guid: b5e14c866a9d844c887ec36ab418f021,
     type: 3}
-  clusterRichness: 3
+  clusterRichness: 1
   clusterFrequency: 5
   clusterSparseness: 8
 --- !u!114 &28465057

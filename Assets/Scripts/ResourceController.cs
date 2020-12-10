@@ -62,7 +62,7 @@ public class ResourceController : MonoBehaviour
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
             Resource resource = Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent);
-            resource.ClusterId = clusterNum;
+            resource.cluster = cluster;
             cluster.resources.Add(resource);
         }
     }
