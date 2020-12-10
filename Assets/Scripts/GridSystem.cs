@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class GridController : MonoBehaviour
+public class GridSystem : MonoBehaviour
 {
     public Tilemap tilemap;
     public TileBase groundTile;

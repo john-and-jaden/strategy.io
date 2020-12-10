@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static SelectionSystem SelectionSystem { get { return selectionSystem; } }
     private static SelectionSystem selectionSystem;
-    public static UnitSystem UnitSystem { get { return unitSystem; } }
+    public static SelectionSystem SelectionSystem { get { return selectionSystem; } }
     private static UnitSystem unitSystem;
-    public static ResourceSystem ResourceSystem { get { return resourceSystem; } }
+    public static UnitSystem UnitSystem { get { return unitSystem; } }
+    private static GridSystem gridSystem;
+    public static GridSystem GridSystem { get { return gridSystem; } }
     private static ResourceSystem resourceSystem;
+    public static ResourceSystem ResourceSystem { get { return resourceSystem; } }
 
     private static GameManager instance;
 
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
 
         selectionSystem = GetComponent<SelectionSystem>();
         unitSystem = GetComponent<UnitSystem>();
+        gridSystem = GetComponent<GridSystem>();
         resourceSystem = GetComponent<ResourceSystem>();
     }
 }

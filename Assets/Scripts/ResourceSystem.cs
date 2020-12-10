@@ -8,15 +8,52 @@ public class ResourceSystem : MonoBehaviour
     [System.Serializable] public class WoodChangedEvent : UnityEvent<int> { }
     [System.Serializable] public class StoneChangedEvent : UnityEvent<int> { }
 
-    public int Wood { get { return wood; } }
+    [SerializeField] private Tree treePrefab;
+
+    [Tooltip("A multiplier for the maximum amount of resources per cluster from 1 to 10")]
+    [SerializeField] [Range(1, 10)] private int clusterRichness = 5;
+    public int ClusterRichness { get { return clusterRichness; } }
+
+    [Tooltip("The frequency of resource clusters on the map from 1 to 10")]
+    [SerializeField] [Range(1, 10)] private int clusterFrequency = 5;
+    public int ClusterFrequency { get { return clusterFrequency; } }
+
+    [Tooltip("The 'spread' of resources within a cluster from 1 to 10")]
+    [SerializeField] [Range(1, 10)] private int clusterSparseness = 5;
+    public int ClusterSparseness { get { return clusterSparseness; } }
+
     private int wood;
-    public int Stone { get { return stone; } }
+    public int Wood { get { return wood; } }
     private int stone;
+    public int Stone { get { return stone; } }
+
+    private List<Resource> resources = new List<Resource>();
+    private float halfWidth, halfHeight;
+    private Transform resourcesParent;
 
     private WoodChangedEvent onWoodChanged = new WoodChangedEvent();
     private StoneChangedEvent onStoneChanged = new StoneChangedEvent();
 
-    void Update() 
+    void Start()
+    {
+        resourcesParent = new GameObject("Resource Clusters").transform;
+
+        halfWidth = GetComponent<GridSystem>().GetDimensions().x / 2;
+        halfHeight = GetComponent<GridSystem>().GetDimensions().y / 2;
+
+        for (float i = -halfWidth + 0.5f; i < halfWidth + 0.5f; i++)
+        {
+            for (float j = -halfHeight + 0.5f; j < halfHeight + 0.5f; j++)
+            {
+                if (Random.Range(0f, 1f) > 1 - clusterFrequency / 1000f)
+                {
+                    GenerateCluster(i, j, treePrefab);
+                }
+            }
+        }
+    }
+
+    void Update()
     {
         // FOR TESTING
         if (Input.GetKeyDown(KeyCode.Q))
@@ -85,5 +122,23 @@ public class ResourceSystem : MonoBehaviour
     public void RemoveStoneChangedListener(UnityAction<int> listener)
     {
         onStoneChanged.RemoveListener(listener);
+    }
+
+    private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
+    {
+        int clusterSize = Random.Range(1, clusterRichness * 30);
+
+        string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
+        Transform clusterParent = new GameObject(parentName).transform;
+        clusterParent.parent = resourcesParent;
+
+        for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
+        {
+            float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
+            float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
+            float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
+            float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
+            resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent));
+        }
     }
 }
