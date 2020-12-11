@@ -11,12 +11,6 @@ public class Unit : Selectable
         set { assignedCluster = value; }
     }
     private Cluster previousFrameCluster;
-    // private Resource assignedResource;
-    // public Resource AssignedResource
-    // {
-    //     get { return assignedResource; }
-    //     set { assignedResource = value; }
-    // }
     private Resource assignedResource;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float softCollisionRadius = 0.5f;
