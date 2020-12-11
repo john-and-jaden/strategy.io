@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Unit : Selectable
 {
-    public float moveSpeed = 1f;
-    public float softCollisionRadius = 0.5f;
     private Cluster assignedCluster;
     public Cluster AssignedCluster
     {
@@ -20,6 +18,8 @@ public class Unit : Selectable
     //     set { assignedResource = value; }
     // }
     private Resource assignedResource;
+    [SerializeField] private float moveSpeed = 1f;
+    [SerializeField] private float softCollisionRadius = 0.5f;
 
     private Vector3 moveTarget;
     private float gatherRadiusSqr;

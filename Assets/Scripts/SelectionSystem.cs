@@ -3,12 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectionController : MonoBehaviour
+public class SelectionSystem : MonoBehaviour
 {
-    public SpriteRenderer boxSelectIndicatorPrefab;
-    public float selectDistance = 0.2f;
-    public int maxMouseHoverTargets = 8;
-    public LayerMask selectionMask;
+    [SerializeField] private SpriteRenderer boxSelectIndicatorPrefab;
+    [SerializeField] private float selectDistance = 0.2f;
+    [SerializeField] private int maxMouseHoverTargets = 8;
+    [SerializeField] private LayerMask selectionMask;
+
+    private Transform indicatorParent;
+    public Transform IndicatorParent { get { return indicatorParent; } }
     public Cluster highlightedCluster;
 
     private ContactFilter2D selectionFilter;
@@ -19,14 +22,15 @@ public class SelectionController : MonoBehaviour
     private Vector2 boxSelectStartPos;
     private bool isBoxSelectActive;
 
-    void Start()
+    void Awake()
     {
+        indicatorParent = new GameObject("Selection Indicators").transform;
         selectionFilter = new ContactFilter2D();
         selectionFilter.layerMask = selectionMask;
         selection = new List<Selectable>();
         hoverTargets = new List<Selectable>();
         overlapResults = new List<Collider2D>();
-        boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab);
+        boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab, indicatorParent);
         boxSelectIndicator.enabled = false;
     }
 
