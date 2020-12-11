@@ -48,7 +48,7 @@ public class ResourceController : MonoBehaviour
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab, int clusterNum)
     {
         int clusterSize = Random.Range(1, clusterRichness * 30);
-        Cluster cluster = new Cluster(clusterSize, clusterNum);
+        Cluster cluster = new Cluster(clusterSize);
         clusters.Add(cluster);
 
         string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
