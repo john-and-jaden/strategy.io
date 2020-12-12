@@ -128,7 +128,6 @@ public class ResourceSystem : MonoBehaviour
         // Initialize cluster object
         int clusterSize = Random.Range(1, clusterRichness * 30);
         Cluster cluster = new Cluster(clusterSize);
-        // clusters.Add(cluster);
 
         // Add cluster parent transforms for better scene organization
         string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
