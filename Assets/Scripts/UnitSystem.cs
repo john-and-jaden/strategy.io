@@ -41,9 +41,9 @@ public class UnitSystem : MonoBehaviour
             // Set units destination
             foreach (Unit unit in units)
             {   
-                if (GameManager.SelectionSystem.highlightedCluster != null)
+                if (GameManager.SelectionSystem.HighlightedCluster != null)
                 {
-                    unit.AssignCluster(GameManager.SelectionSystem.highlightedCluster);
+                    unit.AssignCluster(GameManager.SelectionSystem.HighlightedCluster);
                 }
                 else
                 {

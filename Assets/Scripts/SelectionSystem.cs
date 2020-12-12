@@ -12,7 +12,8 @@ public class SelectionSystem : MonoBehaviour
 
     private Transform indicatorParent;
     public Transform IndicatorParent { get { return indicatorParent; } }
-    public Cluster highlightedCluster;
+    private Cluster highlightedCluster;
+    public Cluster HighlightedCluster { get { return highlightedCluster; } }
 
     private ContactFilter2D selectionFilter;
     private List<Selectable> selection;
