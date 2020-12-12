@@ -89,6 +89,26 @@ public class Unit : Selectable
         this.gatherRadiusSqr = gatherRadiusSqr;
     }
 
+    private void GatherResources()
+    {
+        // Mine resource if close enough
+        if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
+        {
+            assignedResource.TakeDamage(1);
+        }
+    }
+
+    public void AssignCluster(Cluster cluster)
+    {
+        assignedCluster = cluster;
+        AssignResource();
+    }
+
+    public void UnassignCluster()
+    {
+        assignedCluster = null;
+        assignedResource = null;
+    }
     private void AssignResource()
     {
         float minDistance = float.MaxValue;
@@ -111,25 +131,5 @@ public class Unit : Selectable
         {
             AssignResource();
         }
-    }
-
-    private void GatherResources()
-    {
-        // Mine resource if close enough
-        if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
-        {
-            assignedResource.TakeDamage(1);
-        }
-    }
-
-    public void AssignCluster(Cluster cluster)
-    {
-        assignedCluster = cluster;
-        AssignResource();
-    }
-    public void UnassignCluster()
-    {
-        assignedCluster = null;
-        assignedResource = null;
     }
 }
