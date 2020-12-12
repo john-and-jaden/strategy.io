@@ -91,8 +91,6 @@ public class Unit : Selectable
 
     private void AssignResource()
     {
-        // If assignedCluster was changed (improves performance) or resource is unassigned
-        // Then assign to closest resource in cluster
         float minDistance = float.MaxValue;
         foreach (Resource resource in assignedCluster.resources)
         {
