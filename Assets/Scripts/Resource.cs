@@ -5,9 +5,15 @@ using UnityEngine.Events;
 
 public class Resource : Selectable
 {
-    public Cluster cluster;
-    public float health;
     [System.Serializable] public class ResourceDiedEvent : UnityEvent { }
+    [SerializeField] private Cluster cluster;
+    public Cluster Cluster
+    {
+        get { return cluster; }
+        set { cluster = value; }
+    }
+
+    private float health;
     private ResourceDiedEvent onResourceDied = new ResourceDiedEvent();
     void Start()
     {
@@ -29,11 +35,16 @@ public class Resource : Selectable
         health -= damageAmount;
         if (health <= 0)
         {
-            SetHovered(false);
-            UpdateIndicators();
-            cluster.resources.Remove(this);
-            Object.Destroy(this.gameObject);
-            onResourceDied.Invoke();
+            Die();
         }
+    }
+
+    public void Die()
+    {
+        SetHovered(false);
+        UpdateIndicators();
+        cluster.resources.Remove(this);
+        Object.Destroy(this.gameObject);
+        onResourceDied.Invoke();
     }
 }
