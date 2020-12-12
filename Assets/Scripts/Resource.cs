@@ -27,7 +27,7 @@ public class Resource : Selectable
         UpdateIndicators();
     }
 
-    public void AddResourceDiedListened(UnityAction listener)
+    public void AddResourceDiedListener(UnityAction listener)
     {
         onResourceDied.AddListener(listener);
     }

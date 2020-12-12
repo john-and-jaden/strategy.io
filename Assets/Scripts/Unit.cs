@@ -107,7 +107,7 @@ public class Unit : Selectable
                 assignedResource = resource;
             }
         }
-        assignedResource.AddResourceDiedListened(HandleResourceDeath);
+        assignedResource.AddResourceDiedListener(HandleResourceDeath);
         SetMoveTarget(assignedResource.transform.position);
     }
 
