@@ -144,7 +144,7 @@ public class ResourceSystem : MonoBehaviour
             Resource resource = Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent);
             resource.GetComponent<SpriteRenderer>().sortingOrder = resourceNum;
             resource.Cluster = cluster;
-            cluster.resources.Add(resource);
+            cluster.Resources.Add(resource);
         }
     }
 }

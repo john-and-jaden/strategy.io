@@ -98,7 +98,7 @@ public class Unit : Selectable
     private void AssignResource()
     {
         float minDistance = float.MaxValue;
-        foreach (Resource resource in assignedCluster.resources)
+        foreach (Resource resource in assignedCluster.Resources)
         {
             float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
             if (minDistance > distanceToNode)
@@ -122,7 +122,7 @@ public class Unit : Selectable
 
     private void HandleResourceDeath()
     {
-        if (assignedCluster != null && assignedCluster.resources.Count > 0)
+        if (assignedCluster != null && assignedCluster.Resources.Count > 0)
         {
             AssignResource();
         }

@@ -188,9 +188,9 @@ public class SelectionSystem : MonoBehaviour
     private void HighlightCluster(Resource resource)
     {
         highlightedCluster = resource.Cluster;
-        for (int i = 0; i < highlightedCluster.resources.Count; i++)
+        for (int i = 0; i < highlightedCluster.Resources.Count; i++)
         {
-            hoverTargets.Add(highlightedCluster.resources[i]);
+            hoverTargets.Add(highlightedCluster.Resources[i]);
         }
     }
 }

@@ -43,7 +43,7 @@ public class Resource : Selectable
     {
         SetHovered(false);
         UpdateIndicators();
-        cluster.resources.Remove(this);
+        cluster.Resources.Remove(this);
         Object.Destroy(this.gameObject);
         onResourceDied.Invoke();
     }
