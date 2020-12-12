@@ -15,7 +15,7 @@ public class Resource : Selectable
 
     private float health;
     private ResourceDiedEvent onResourceDied = new ResourceDiedEvent();
-    
+
     void Start()
     {
         health = 60;
@@ -26,6 +26,7 @@ public class Resource : Selectable
     {
         UpdateIndicators();
     }
+
     public void AddResourceDiedListened(UnityAction listener)
     {
         onResourceDied.AddListener(listener);
