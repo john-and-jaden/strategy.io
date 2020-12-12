@@ -4,23 +4,17 @@ using UnityEngine;
 
 public class Unit : Selectable
 {
-    private Cluster assignedCluster;
-    public Cluster AssignedCluster
-    {
-        get { return assignedCluster; }
-        set { assignedCluster = value; }
-    }
-    private Cluster previousFrameCluster;
-    private Resource assignedResource;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float softCollisionRadius = 0.5f;
+    [SerializeField] private float miningEfficiency = 1f;
+    [SerializeField] private float resourceGatherRadius = 2f;
 
     private Vector3 moveTarget;
     private float gatherRadiusSqr;
     private bool isMoving;
-
     private Collider2D[] softCollisionTargets;
-    private float resourceGatherRadius = 2f;
+    private Cluster assignedCluster;
+    private Resource assignedResource;
 
     void Start()
     {
@@ -89,15 +83,6 @@ public class Unit : Selectable
         this.gatherRadiusSqr = gatherRadiusSqr;
     }
 
-    private void GatherResources()
-    {
-        // Mine resource if close enough
-        if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
-        {
-            assignedResource.TakeDamage(1);
-        }
-    }
-
     public void AssignCluster(Cluster cluster)
     {
         assignedCluster = cluster;
@@ -109,6 +94,7 @@ public class Unit : Selectable
         assignedCluster = null;
         assignedResource = null;
     }
+
     private void AssignResource()
     {
         float minDistance = float.MaxValue;
@@ -123,6 +109,15 @@ public class Unit : Selectable
         }
         assignedResource.AddResourceDiedListened(HandleResourceDeath);
         SetMoveTarget(assignedResource.transform.position);
+    }
+
+    private void GatherResources()
+    {
+        // Mine resource if close enough
+        if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
+        {
+            assignedResource.TakeDamage(miningEfficiency);
+        }
     }
 
     private void HandleResourceDeath()
