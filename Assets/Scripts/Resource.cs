@@ -41,7 +41,7 @@ public class Resource : Selectable
         }
     }
 
-    public void Die()
+    private void Die()
     {
         SetHovered(false);
         UpdateIndicators();
