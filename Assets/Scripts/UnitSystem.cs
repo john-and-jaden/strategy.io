@@ -38,12 +38,11 @@ public class UnitSystem : MonoBehaviour
             // Get selected units
             units = GameManager.SelectionSystem.GetSelectionOfType<Unit>();
 
-            // Set unit destination
+            // Set units destination
             foreach (Unit unit in units)
             {   
                 if (GameManager.SelectionSystem.highlightedCluster != null)
                 {
-                    unit.SetGatherRadiusSqr(0f);
                     unit.AssignCluster(GameManager.SelectionSystem.highlightedCluster);
                 }
                 else
