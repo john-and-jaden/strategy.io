@@ -6,12 +6,12 @@ using UnityEngine.Events;
 public class Resource : Selectable
 {
     public Cluster cluster;
-    public float hardness;
+    public float health;
     [System.Serializable] public class ResourceDiedEvent : UnityEvent { }
     private ResourceDiedEvent onResourceDied = new ResourceDiedEvent();
     void Start()
     {
-        hardness = 60;
+        health = 60;
         SpawnIndicators();
     }
 
@@ -26,8 +26,8 @@ public class Resource : Selectable
 
     public void TakeDamage(float damageAmount)
     {
-        hardness -= damageAmount;
-        if (hardness <= 0)
+        health -= damageAmount;
+        if (health <= 0)
         {
             SetHovered(false);
             UpdateIndicators();
