@@ -47,7 +47,10 @@ public class Unit : Selectable
         }
 
         // Gather resources in assigned cluster
-        GatherResources();
+        if (assignedCluster != null)
+        {
+            GatherResources();
+        }
     }
 
     void FixedUpdate()
@@ -86,38 +89,49 @@ public class Unit : Selectable
         this.gatherRadiusSqr = gatherRadiusSqr;
     }
 
+    private void AssignResource()
+    {
+        // If assignedCluster was changed (improves performance) or resource is unassigned
+        // Then assign to closest resource in cluster
+        float minDistance = float.MaxValue;
+        foreach (Resource resource in assignedCluster.resources)
+        {
+            float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
+            if (minDistance > distanceToNode)
+            {
+                minDistance = distanceToNode;
+                assignedResource = resource;
+            }
+        }
+        assignedResource.AddResourceDiedListened(HandleResourceDeath);
+        SetMoveTarget(assignedResource.transform.position);
+    }
+
+    private void HandleResourceDeath()
+    {
+        if (assignedCluster != null)
+        {
+            AssignResource();
+        }
+    }
+
     private void GatherResources()
     {
-        if (assignedCluster != null && !assignedCluster.destroyed)
+        // Mine resource if close enough
+        if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
         {
-            // If assignedCluster was changed (improves performance) or resource is unassigned
-            // Then assign to closest resource in cluster
-            if (previousFrameCluster != assignedCluster || assignedResource == null)
-            {
-                float minDistance = float.MaxValue;
-                foreach (Resource resource in assignedCluster.resources)
-                {
-                    float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
-                    if (minDistance > distanceToNode)
-                    {
-                        minDistance = distanceToNode;
-                        assignedResource = resource;
-                    }
-                }
-                SetMoveTarget(assignedResource.transform.position);
-            }
-
-            // Mine resource if close enough
-            if (assignedResource != null && Vector3.Distance(assignedResource.transform.position, transform.position) < resourceGatherRadius)
-            {
-                assignedResource.hardness -= 1f;
-            }
+            assignedResource.TakeDamage(1);
         }
-        else
-        {
-            assignedCluster = null;
-        }
+    }
 
-        previousFrameCluster = assignedCluster;
+    public void AssignCluster(Cluster cluster)
+    {
+        assignedCluster = cluster;
+        AssignResource();
+    }
+    public void UnassignCluster()
+    {
+        assignedCluster = null;
+        assignedResource = null;
     }
 }
