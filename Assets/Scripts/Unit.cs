@@ -128,7 +128,7 @@ public class Unit : Selectable
         }
         else
         {
-            assignedCluster = null;
+            UnassignCluster();
         }
     }
 }
