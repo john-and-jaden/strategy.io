@@ -27,7 +27,6 @@ public class ResourceSystem : MonoBehaviour
     private int stone;
     public int Stone { get { return stone; } }
 
-    private List<Cluster> clusters = new List<Cluster>();
     private float halfWidth, halfHeight;
     private Transform resourcesParent;
 
@@ -126,14 +125,17 @@ public class ResourceSystem : MonoBehaviour
 
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
+        // Initialize cluster object
         int clusterSize = Random.Range(1, clusterRichness * 30);
         Cluster cluster = new Cluster(clusterSize);
-        clusters.Add(cluster);
+        // clusters.Add(cluster);
 
+        // Add cluster parent transforms for better scene organization
         string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
         Transform clusterParent = new GameObject(parentName).transform;
         clusterParent.parent = resourcesParent;
 
+        // Spawn resources and fill cluster
         for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
         {
             float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;

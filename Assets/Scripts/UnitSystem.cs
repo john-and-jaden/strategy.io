@@ -38,14 +38,18 @@ public class UnitSystem : MonoBehaviour
             // Get selected units
             units = GameManager.SelectionSystem.GetSelectionOfType<Unit>();
 
-            // ADD moving out of way based on collision
+            // Set unit destination
             foreach (Unit unit in units)
             {
-                // Assign unit to the hovered cluster whether cluster is null or not
-                unit.AssignedCluster = GameManager.SelectionSystem.highlightedCluster;
                 unit.SetGatherRadiusSqr(gatherRadiusSqr);
-                if (unit.AssignedCluster == null)
+                
+                if (GameManager.SelectionSystem.highlightedCluster != null)
                 {
+                    unit.AssignCluster(GameManager.SelectionSystem.highlightedCluster);
+                }
+                else
+                {
+                    unit.UnassignCluster();
                     unit.SetMoveTarget(mousePos);
                 }
             }
