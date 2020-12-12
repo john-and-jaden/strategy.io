@@ -15,6 +15,7 @@ public class Resource : Selectable
 
     private float health;
     private ResourceDiedEvent onResourceDied = new ResourceDiedEvent();
+    
     void Start()
     {
         health = 60;
