@@ -40,16 +40,16 @@ public class UnitSystem : MonoBehaviour
 
             // Set unit destination
             foreach (Unit unit in units)
-            {
-                unit.SetGatherRadiusSqr(gatherRadiusSqr);
-                
+            {   
                 if (GameManager.SelectionSystem.highlightedCluster != null)
                 {
+                    unit.SetGatherRadiusSqr(0f);
                     unit.AssignCluster(GameManager.SelectionSystem.highlightedCluster);
                 }
                 else
                 {
                     unit.UnassignCluster();
+                    unit.SetGatherRadiusSqr(gatherRadiusSqr);
                     unit.SetMoveTarget(mousePos);
                 }
             }

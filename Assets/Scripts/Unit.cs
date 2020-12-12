@@ -20,7 +20,7 @@ public class Unit : Selectable
     private bool isMoving;
 
     private Collider2D[] softCollisionTargets;
-    private float resourceGatherRadius = 1f;
+    private float resourceGatherRadius = 2f;
 
     void Start()
     {
@@ -40,7 +40,7 @@ public class Unit : Selectable
         {
             transform.position = Vector2.MoveTowards(transform.position, moveTarget, moveSpeed * Time.deltaTime);
             float dist = Vector3.SqrMagnitude(transform.position - moveTarget);
-            if (dist < gatherRadiusSqr)
+            if (dist < gatherRadiusSqr && assignedCluster == null)
             {
                 isMoving = false;
             }
@@ -127,9 +127,13 @@ public class Unit : Selectable
 
     private void HandleResourceDeath()
     {
-        if (assignedCluster != null)
+        if (assignedCluster != null && assignedCluster.resources.Count > 0)
         {
             AssignResource();
+        }
+        else
+        {
+            assignedCluster = null;
         }
     }
 }

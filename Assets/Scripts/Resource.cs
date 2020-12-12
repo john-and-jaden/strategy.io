@@ -24,15 +24,15 @@ public class Resource : Selectable
         onResourceDied.AddListener(listener);
     }
 
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         hardness -= damageAmount;
         if (hardness <= 0)
         {
             SetHovered(false);
             UpdateIndicators();
-            Object.Destroy(this.gameObject);
             cluster.resources.Remove(this);
+            Object.Destroy(this.gameObject);
             onResourceDied.Invoke();
         }
     }
