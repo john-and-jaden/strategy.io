@@ -8,10 +8,12 @@ public class UnitSystem : MonoBehaviour
     // Approximation of the area of a Unit with radius 0.5
     private const float UNIT_AREA = 0.8f;
 
-    [SerializeField] private float minGatherRadiusSqr = 0.25f;
+    [SerializeField] private float minGroupRadiusSqr = 0.25f;
+
+    private float groupRadiusSqr;
+    public float GroupRadiusSqr { get { return groupRadiusSqr; } }
 
     private List<Unit> units;
-    private float gatherRadiusSqr;
 
     void Awake()
     {
@@ -21,14 +23,8 @@ public class UnitSystem : MonoBehaviour
     void Update()
     {
         // Update gather radius squared based on number of gathered units
-        int numGathered = units.Where(unit => !unit.IsMoving()).Count();
-        gatherRadiusSqr = CalculateGatherRadiusSqr(numGathered);
-
-        // Update unit movement
-        foreach (Unit unit in units)
-        {
-            unit.SetGatherRadiusSqr(gatherRadiusSqr);
-        }
+        int numGathered = units.Where(unit => unit.State == UnitState.IDLE).Count();
+        groupRadiusSqr = CalculateGroupRadiusSqr(numGathered);
 
         // If the user right clicks, move the selected units
         if (Input.GetButtonDown("Fire2"))
@@ -40,24 +36,22 @@ public class UnitSystem : MonoBehaviour
 
             // Set units destination
             foreach (Unit unit in units)
-            {   
+            {
                 if (GameManager.SelectionSystem.HighlightedCluster != null)
                 {
-                    unit.AssignCluster(GameManager.SelectionSystem.HighlightedCluster);
+                    unit.Gather(GameManager.SelectionSystem.HighlightedCluster);
                 }
                 else
                 {
-                    unit.UnassignCluster();
-                    unit.SetGatherRadiusSqr(gatherRadiusSqr);
-                    unit.SetMoveTarget(mousePos);
+                    unit.Relocate(mousePos);
                 }
             }
         }
     }
 
-    private float CalculateGatherRadiusSqr(int numGathered)
+    private float CalculateGroupRadiusSqr(int numGathered)
     {
         float gatheredArea = numGathered * UNIT_AREA;
-        return Mathf.Max(minGatherRadiusSqr, gatheredArea / Mathf.PI);
+        return Mathf.Max(minGroupRadiusSqr, gatheredArea / Mathf.PI);
     }
 }

@@ -26,6 +26,12 @@ public abstract class Selectable : MonoBehaviour
         selectIndicator.enabled = selected;
     }
 
+    protected void DestroyIndicators()
+    {
+        Destroy(hoverIndicator.gameObject);
+        Destroy(selectIndicator.gameObject);
+    }
+
     public void SetHovered(bool hovered)
     {
         this.hovered = hovered;

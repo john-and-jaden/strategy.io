@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Resource : Selectable
 {
-    [System.Serializable] public class ResourceDiedEvent : UnityEvent { }
+    [System.Serializable] public class ResourceDestroyedEvent : UnityEvent { }
     [SerializeField] private Cluster cluster;
     public Cluster Cluster
     {
@@ -13,12 +13,13 @@ public class Resource : Selectable
         set { cluster = value; }
     }
 
-    private float health;
-    private ResourceDiedEvent onResourceDied = new ResourceDiedEvent();
+    [SerializeField] private float durability = 10;
+    public float Durability { get { return durability; } }
+
+    private ResourceDestroyedEvent onDestroyed = new ResourceDestroyedEvent();
 
     void Start()
     {
-        health = 60;
         SpawnIndicators();
     }
 
@@ -27,26 +28,30 @@ public class Resource : Selectable
         UpdateIndicators();
     }
 
-    public void AddResourceDiedListener(UnityAction listener)
+    public void AddDestroyedListener(UnityAction listener)
     {
-        onResourceDied.AddListener(listener);
+        onDestroyed.AddListener(listener);
     }
 
-    public void TakeDamage(float damageAmount)
+    public void RemoveDestroyedListener(UnityAction listener)
     {
-        health -= damageAmount;
-        if (health <= 0)
+        onDestroyed.RemoveListener(listener);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        durability -= damage;
+        if (durability <= 0)
         {
-            Die();
+            DestroySelf();
         }
     }
 
-    private void Die()
+    private void DestroySelf()
     {
-        SetHovered(false);
-        UpdateIndicators();
+        DestroyIndicators();
         cluster.Resources.Remove(this);
-        Object.Destroy(this.gameObject);
-        onResourceDied.Invoke();
+        onDestroyed.Invoke();
+        Destroy(gameObject);
     }
 }

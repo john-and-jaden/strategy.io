@@ -139,3 +139,5 @@ MonoBehaviour:
     type: 3}
   moveSpeed: 10
   softCollisionRadius: 0.6
+  gatherRate: 5
+  maxGatherDist: 1.1
