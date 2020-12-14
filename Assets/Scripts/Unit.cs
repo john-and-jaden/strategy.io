@@ -23,14 +23,16 @@ public class Unit : Selectable
     private Cluster assignedCluster;
     private Resource assignedResource;
 
-    void Start()
+    new void Start()
     {
-        SpawnIndicators();
+        base.Start();
         targetPos = transform.position;
     }
 
-    void Update()
+    new void Update()
     {
+        base.Update();
+
         // Update indicators
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;

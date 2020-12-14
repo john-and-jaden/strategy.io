@@ -18,16 +18,6 @@ public class Resource : Selectable
 
     private ResourceDestroyedEvent onDestroyed = new ResourceDestroyedEvent();
 
-    void Start()
-    {
-        SpawnIndicators();
-    }
-
-    void Update()
-    {
-        UpdateIndicators();
-    }
-
     public void AddDestroyedListener(UnityAction listener)
     {
         onDestroyed.AddListener(listener);
