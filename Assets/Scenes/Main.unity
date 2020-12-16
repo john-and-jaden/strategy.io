@@ -793,12 +793,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minZoom: 5
   maxZoom: 40
-  scrollDampTime: 0.1
-  scrollSensitivity: 0.5
-  scrollThreshold: 0.1
-  edgeCamMoveThreshold: 0.05
-  cameraMoveSpeed: 0.5
+  scrollDampTime: 0.00000005
+  edgeMoveDampTime: 0.3
+  scrollSensitivity: 1
+  edgeCamMoveThreshold: 0.01
+  maxCameraMoveSpeed: 0.5
   invertScrolling: 1
+  edgeMoveAcceleration: 0.01
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

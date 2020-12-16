@@ -9,18 +9,17 @@ public class CameraController : MonoBehaviour
 
     [Tooltip("The scroll damp time in seconds")]
     [SerializeField] private float scrollDampTime = 0.5f;
-
+    [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
-    [SerializeField] private float scrollThreshold = 0.1f;
     [SerializeField] private float edgeCamMoveThreshold = 0.1f;
-    [SerializeField] private float cameraMoveSpeed = 0.1f;
+    [SerializeField] private float maxCameraMoveSpeed = 0.1f;
     [SerializeField] private bool invertScrolling = true;
+    [SerializeField] private float edgeMoveAcceleration = 0.1f;
 
-    private float scrollVelocity = 0f;
-    private float lastScrollVelocity = 0f;
-    private float scrollDampTimer;
-    private Vector2 lastMouseViewportPos = new Vector2(0.5f, 0.5f);
-    private Vector2 lastMouseWorldPos;
+    Dampable edgeMoveXDampable;
+    Dampable edgeMoveYDampable;
+    Dampable scrollMoveDampable;
+
     private float halfWidth;
     private float halfHeight;
 
@@ -28,34 +27,22 @@ public class CameraController : MonoBehaviour
     {
         halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
         halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
+
+        edgeMoveXDampable = new Dampable(edgeMoveDampTime);
+        edgeMoveYDampable = new Dampable(edgeMoveDampTime);
+        scrollMoveDampable = new Dampable(scrollDampTime);
     }
 
     void Update()
     {
         // Get mouse input and update scrollVelocity
-        bool isScrolling = Input.GetAxis("Mouse ScrollWheel") != 0;
-        scrollVelocity += Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
-
-        if (isScrolling)
-        {
-            // Update zoom momentum
-            lastScrollVelocity = scrollVelocity;
-            scrollDampTimer = 0;
-        }
-        else
-        {
-            // Update timer
-            scrollDampTimer += Time.deltaTime;
-
-            // Dampen scrolling
-            scrollVelocity = Mathf.Lerp(lastScrollVelocity, 0, scrollDampTimer / scrollDampTime);
-        }
+        scrollMoveDampable.UpdateAndDampen(Input.GetAxis("Mouse ScrollWheel"), scrollMoveDampable.currentVelocity + Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1));
 
         // Zoom and move camera according to zoom
-        Zoom(scrollVelocity);
+        Zoom(scrollMoveDampable.currentVelocity);
 
         // Move camera using keyboard
-        transform.position = new Vector3(transform.position.x + Input.GetAxis("Horizontal") * cameraMoveSpeed, transform.position.y + Input.GetAxis("Vertical") * cameraMoveSpeed, transform.position.z);
+        AddToCurrentCameraPosition(Input.GetAxis("Horizontal") * maxCameraMoveSpeed, Input.GetAxis("Vertical") * maxCameraMoveSpeed);
 
         // Move camera using mouse if near screen edge
         MoveCameraUsingMouse();
@@ -78,7 +65,7 @@ public class CameraController : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float changeRatio = heightDelta / cameraHeight;
             Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
-            transform.position = new Vector3(transform.position.x + cameraDelta.x, transform.position.y + cameraDelta.y, transform.position.z);
+            AddToCurrentCameraPosition(cameraDelta.x, cameraDelta.y);
         }
 
         // Zoom camera
@@ -88,8 +75,17 @@ public class CameraController : MonoBehaviour
     private void MoveCameraUsingMouse()
     {
         Vector2 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        float xFactor = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
-        float yFactor = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
-        transform.position = new Vector3(transform.position.x + xFactor * cameraMoveSpeed, transform.position.y + yFactor * cameraMoveSpeed, transform.position.z);
+        int xFactor = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
+        int yFactor = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
+
+        edgeMoveXDampable.UpdateAndDampen(xFactor, Mathf.Clamp(edgeMoveXDampable.currentVelocity + edgeMoveAcceleration * xFactor, -maxCameraMoveSpeed, maxCameraMoveSpeed));
+        edgeMoveYDampable.UpdateAndDampen(yFactor, Mathf.Clamp(edgeMoveYDampable.currentVelocity + edgeMoveAcceleration * yFactor, -maxCameraMoveSpeed, maxCameraMoveSpeed));
+
+        AddToCurrentCameraPosition(edgeMoveXDampable.currentVelocity, edgeMoveYDampable.currentVelocity);
+    }
+
+    private void AddToCurrentCameraPosition(float xAddition, float yAddition)
+    {
+        transform.position = new Vector3(transform.position.x + xAddition, transform.position.y + yAddition, transform.position.z);
     }
 }
