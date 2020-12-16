@@ -5,42 +5,41 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private float minZoom = 5f;
-    
     [SerializeField] private float maxZoom = 15f;
 
     [Tooltip("The scroll damp time in seconds")]
     [SerializeField] private float scrollDampTime = 0.5f;
 
-    [SerializeField] private float scrollSensitivity = 1f;
-
+    [SerializeField] private float scrollSensitivity = 0.1f;
     [SerializeField] private float scrollThreshold = 0.1f;
+    [SerializeField] private float cameraMoveSpeed = 0.1f;
+    [SerializeField] private bool invertScrolling = true;
 
     private float scrollVelocity = 0f;
     private float lastScrollVelocity = 0f;
     private float scrollDampTimer;
     private Vector2 lastMouseViewportPos = new Vector2(0.5f, 0.5f);
     private Vector2 lastMouseWorldPos;
+    private float halfWidth;
+    private float halfHeight;
+
+    void Start()
+    {
+        halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
+        halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
+    }
 
     void Update()
     {
-        // Calculate current camera dimensions
-        Vector2 topRightWorldCoordinates = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
-        Vector2 bottomLeftWorldCoordinates = Camera.main.ScreenToWorldPoint(Vector2.zero);
-        Vector2 cameraWorldDimensions = topRightWorldCoordinates - bottomLeftWorldCoordinates;
-
-        // Get mouse input
-        bool isScrolling = Mathf.Abs(Input.mouseScrollDelta.y) > scrollThreshold;
-        scrollVelocity += -Input.mouseScrollDelta.y * scrollSensitivity;
+        // Get mouse input and update scrollVelocity
+        bool isScrolling = Input.GetAxis("Mouse ScrollWheel") != 0;
+        scrollVelocity += Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
 
         if (isScrolling)
         {
             // Update zoom momentum
             lastScrollVelocity = scrollVelocity;
             scrollDampTimer = 0;
-            
-            // Update mouse position
-            lastMouseViewportPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-            lastMouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
         else
         {
@@ -51,11 +50,36 @@ public class CameraController : MonoBehaviour
             scrollVelocity = Mathf.Lerp(lastScrollVelocity, 0, scrollDampTimer / scrollDampTime);
         }
 
-        // Zoom the camera
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + scrollVelocity * Time.deltaTime, minZoom, maxZoom);
+        // Zoom and move camera according to zoom
+        Zoom(scrollVelocity);
 
-        // Move camera towards target offset from mouse position
-        Vector2 scrollTarget = lastMouseWorldPos - cameraWorldDimensions * (lastMouseViewportPos - Vector2.one * 0.5f);
-        transform.position = new Vector3(scrollTarget.x, scrollTarget.y, -10);
+        // Move camera using keyboard
+        transform.position = new Vector3(transform.position.x + Input.GetAxis("Horizontal") * cameraMoveSpeed, transform.position.y + Input.GetAxis("Vertical") * cameraMoveSpeed, transform.position.z);
+
+        // Clamp camera position
+        float clampedX = Mathf.Clamp(transform.position.x, -halfWidth, halfWidth);
+        float clampedY = Mathf.Clamp(transform.position.y, -halfHeight, halfHeight);
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+    }
+
+    private void Zoom(float heightDelta)
+    {
+        // Get camera size and perform input clamping
+        float cameraHeight = Camera.main.orthographicSize;
+        float goalCameraHeight = cameraHeight + heightDelta;
+        float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, maxZoom);
+        heightDelta = clampedGoalCameraHeight - cameraHeight;
+
+        // If zooming in, move camera according to desired zoom amount and mouse position
+        if (heightDelta < 0)
+        {
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            float changeRatio = heightDelta / cameraHeight;
+            Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
+            transform.position = new Vector3(transform.position.x + cameraDelta.x, transform.position.y + cameraDelta.y, transform.position.z);
+        }
+
+        // Zoom camera
+        Camera.main.orthographicSize = Mathf.Clamp(cameraHeight + heightDelta, minZoom, maxZoom);
     }
 }
