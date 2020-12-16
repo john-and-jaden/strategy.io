@@ -792,9 +792,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minZoom: 5
+<<<<<<< HEAD
   maxZoom: 40
   scrollDampTime: 0.1
   scrollSensitivity: 0.5
+=======
+  maxZoom: 35
+  scrollDampTime: 0.3
+  scrollSensitivity: 4
+>>>>>>> 3a15931390809f0af044b8702a64b1e584425335
   scrollThreshold: 0.1
   cameraMoveSpeed: 0.5
   invertScrolling: 1
