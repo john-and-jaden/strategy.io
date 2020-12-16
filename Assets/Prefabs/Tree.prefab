@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4848408111497684342}
   - component: {fileID: 4848408111497684337}
+  - component: {fileID: -500430512623701868}
   - component: {fileID: 4848408111497684340}
   m_Layer: 0
   m_Name: Tree
@@ -82,6 +83,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &-500430512623701868
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4848408111497684336}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!114 &4848408111497684340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,3 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf1aad5943cd4cfaa87242d4d7ec8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverIndicatorPrefab: {fileID: 8694489509828249487, guid: d2890a4cec30af3449391b0d55f96207,
+    type: 3}
+  selectIndicatorPrefab: {fileID: 1919610854626468484, guid: 7998739ef2cef4242bac97161b1fce17,
+    type: 3}
+  durability: 10
