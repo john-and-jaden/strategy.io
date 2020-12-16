@@ -796,6 +796,7 @@ MonoBehaviour:
   scrollDampTime: 0.1
   scrollSensitivity: 0.5
   scrollThreshold: 0.1
+  edgeCamMoveThreshold: 0.05
   cameraMoveSpeed: 0.5
   invertScrolling: 1
 --- !u!20 &519420031

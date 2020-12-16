@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] private float scrollSensitivity = 0.1f;
     [SerializeField] private float scrollThreshold = 0.1f;
+    [SerializeField] private float edgeCamMoveThreshold = 0.1f;
     [SerializeField] private float cameraMoveSpeed = 0.1f;
     [SerializeField] private bool invertScrolling = true;
 
@@ -56,15 +57,16 @@ public class CameraController : MonoBehaviour
         // Move camera using keyboard
         transform.position = new Vector3(transform.position.x + Input.GetAxis("Horizontal") * cameraMoveSpeed, transform.position.y + Input.GetAxis("Vertical") * cameraMoveSpeed, transform.position.z);
 
+        // Move camera using mouse if near screen edge
+        MoveCameraUsingMouse();
+
         // Clamp camera position
-        float clampedX = Mathf.Clamp(transform.position.x, -halfWidth, halfWidth);
-        float clampedY = Mathf.Clamp(transform.position.y, -halfHeight, halfHeight);
-        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -halfWidth, halfWidth), Mathf.Clamp(transform.position.y, -halfHeight, halfHeight), transform.position.z);
     }
 
     private void Zoom(float heightDelta)
     {
-        // Get camera size and perform input clamping
+        // Clamp input
         float cameraHeight = Camera.main.orthographicSize;
         float goalCameraHeight = cameraHeight + heightDelta;
         float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, maxZoom);
@@ -80,6 +82,14 @@ public class CameraController : MonoBehaviour
         }
 
         // Zoom camera
-        Camera.main.orthographicSize = Mathf.Clamp(cameraHeight + heightDelta, minZoom, maxZoom);
+        Camera.main.orthographicSize += heightDelta;
+    }
+
+    private void MoveCameraUsingMouse()
+    {
+        Vector2 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        float xFactor = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
+        float yFactor = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
+        transform.position = new Vector3(transform.position.x + xFactor * cameraMoveSpeed, transform.position.y + yFactor * cameraMoveSpeed, transform.position.z);
     }
 }
