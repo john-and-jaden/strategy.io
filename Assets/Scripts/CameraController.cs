@@ -6,8 +6,6 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private float minZoom = 5f;
     [SerializeField] private float maxZoom = 15f;
-
-    [Tooltip("The scroll damp time in seconds")]
     [SerializeField] private float scrollDampTime = 0.5f;
     [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
