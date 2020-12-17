@@ -27,7 +27,6 @@ public class ResourceSystem : MonoBehaviour
     private int stone;
     public int Stone { get { return stone; } }
 
-    private List<Resource> resources = new List<Resource>();
     private float halfWidth, halfHeight;
     private Transform resourcesParent;
 
@@ -126,19 +125,26 @@ public class ResourceSystem : MonoBehaviour
 
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
+        // Initialize cluster object
         int clusterSize = Random.Range(1, clusterRichness * 30);
+        Cluster cluster = new Cluster(clusterSize);
 
+        // Add cluster parent transforms for better scene organization
         string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
         Transform clusterParent = new GameObject(parentName).transform;
         clusterParent.parent = resourcesParent;
 
+        // Spawn resources and fill cluster
         for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
         {
             float distanceFromClusterCenterX = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
-            resources.Add(Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent));
+            Resource resource = Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent);
+            resource.GetComponent<SpriteRenderer>().sortingOrder = resourceNum;
+            resource.Cluster = cluster;
+            cluster.Resources.Add(resource);
         }
     }
 }

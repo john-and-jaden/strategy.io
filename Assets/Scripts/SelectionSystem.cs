@@ -12,6 +12,8 @@ public class SelectionSystem : MonoBehaviour
 
     private Transform indicatorParent;
     public Transform IndicatorParent { get { return indicatorParent; } }
+    private Cluster highlightedCluster;
+    public Cluster HighlightedCluster { get { return highlightedCluster; } }
 
     private ContactFilter2D selectionFilter;
     private List<Selectable> selection;
@@ -43,6 +45,7 @@ public class SelectionSystem : MonoBehaviour
 
         // Calculate hover selection based on mouse position
         hoverTargets.Clear();
+        highlightedCluster = null;
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (isBoxSelectActive && mousePos != boxSelectStartPos)
         {
@@ -64,7 +67,14 @@ public class SelectionSystem : MonoBehaviour
             Selectable nearest = GetNearestSelectable(FilterSelectables(overlapResults), mousePos);
             if (nearest)
             {
-                hoverTargets.Add(nearest);
+                if (nearest.GetType().IsSubclassOf(typeof(Resource)))
+                {
+                    HighlightCluster((Resource)nearest);
+                }
+                else
+                {
+                    hoverTargets.Add(nearest);
+                }
             }
         }
 
@@ -174,5 +184,14 @@ public class SelectionSystem : MonoBehaviour
             }
         }
         return nearestIdx >= 0 ? selectables[nearestIdx] : null;
+    }
+
+    private void HighlightCluster(Resource resource)
+    {
+        highlightedCluster = resource.Cluster;
+        for (int i = 0; i < highlightedCluster.Resources.Count; i++)
+        {
+            hoverTargets.Add(highlightedCluster.Resources[i]);
+        }
     }
 }
