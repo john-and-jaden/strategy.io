@@ -4,17 +4,17 @@ public class Dampable
 {
     public float currentVelocity;
     float lastVelocity;
-    float time;
+    float dampTime;
     float timer;
 
     public Dampable(float time)
     {
-        this.time = time;
+        this.dampTime = time;
     }
 
-    public void UpdateAndDampen(float conditional, float currentVelocity)
+    public void UpdateAndDampen(float movingConditional, float currentVelocity)
     {
-        if (conditional != 0)
+        if (movingConditional != 0)
         {
             // Update momentum
             this.currentVelocity = currentVelocity;
@@ -27,7 +27,7 @@ public class Dampable
             timer += Time.deltaTime;
 
             // Dampen 
-            this.currentVelocity = Mathf.Lerp(lastVelocity, 0, timer / time);
+            this.currentVelocity = Mathf.Lerp(lastVelocity, 0, timer / dampTime);
         }
     }
 }
