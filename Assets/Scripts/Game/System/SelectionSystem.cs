@@ -133,40 +133,30 @@ public class SelectionSystem : MonoBehaviour
 
     public List<T> GetSelectionOfType<T>() where T : Selectable
     {
-        return selection.Select(s => s.GetComponent<T>()).ToList();
+        return selection
+            .Where(s => s.TryGetComponent<T>(out T t))
+            .Select(s => s.GetComponent<T>()).ToList();
     }
 
     private List<Selectable> FilterSelectables(List<Collider2D> colliders)
     {
-        return colliders.Where(c =>
-        {
-            Selectable s;
-            return c.TryGetComponent<Selectable>(out s);
-        }).Select(x =>
-        {
-            return x.GetComponent<Selectable>();
-        }).ToList();
+        return colliders
+            .Where(c => c.TryGetComponent<Selectable>(out Selectable s))
+            .Select(s => s.GetComponent<Selectable>())
+            .ToList();
     }
 
     private bool ContainsType<T>(List<Selectable> selectables) where T : Selectable
     {
-        return selectables.Any(s =>
-        {
-            T t;
-            return s.TryGetComponent<T>(out t);
-        });
+        return selectables.Any(s => s.TryGetComponent<T>(out T t));
     }
 
     private List<T> FilterType<T>(List<Selectable> selectables) where T : Selectable
     {
-        return selectables.Where(x =>
-        {
-            T t;
-            return x.TryGetComponent<T>(out t);
-        }).Select(x =>
-        {
-            return x.GetComponent<T>();
-        }).ToList();
+        return selectables
+            .Where(x => x.TryGetComponent<T>(out T t))
+            .Select(x => x.GetComponent<T>())
+            .ToList();
     }
 
     private Selectable GetNearestSelectable(List<Selectable> selectables, Vector2 targetPos)

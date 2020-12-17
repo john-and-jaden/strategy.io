@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2460767be76444e4f8ad4d2229ac48d5, type: 3}
+  m_Name: Building
+  m_EditorClassIdentifier: 
+  buildingPrefab: {fileID: 2699085035380939592, guid: 2deee38895e2ee04db9f5c1e1f899a11,
+    type: 3}
+  placementIndicatorSprite: {fileID: 21300000, guid: 6fffd95378b142842b25a859ce53c677,
+    type: 3}
+  displayName: Temp Building
