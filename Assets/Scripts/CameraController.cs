@@ -13,8 +13,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float scrollSensitivity = 0.1f;
     [SerializeField] private float edgeCamMoveThreshold = 0.1f;
     [SerializeField] private float maxCameraMoveSpeed = 0.1f;
-    [SerializeField] private bool invertScrolling = true;
     [SerializeField] private float edgeMoveAcceleration = 0.1f;
+    [SerializeField] private bool invertScrolling = true;
 
     Dampable edgeMoveXDampable;
     Dampable edgeMoveYDampable;
@@ -36,7 +36,8 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         // Get mouse input and update scrollVelocity
-        scrollMoveDampable.UpdateAndDampen(Input.GetAxis("Mouse ScrollWheel"), scrollMoveDampable.currentVelocity + Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1));
+        float scrollVelocity = scrollMoveDampable.currentVelocity + Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
+        scrollMoveDampable.UpdateAndDampen(Input.GetAxis("Mouse ScrollWheel"), scrollVelocity);
 
         // Zoom and move camera according to zoom
         Zoom(scrollMoveDampable.currentVelocity);
@@ -78,8 +79,11 @@ public class CameraController : MonoBehaviour
         int xFactor = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
         int yFactor = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
 
-        edgeMoveXDampable.UpdateAndDampen(xFactor, Mathf.Clamp(edgeMoveXDampable.currentVelocity + edgeMoveAcceleration * xFactor, -maxCameraMoveSpeed, maxCameraMoveSpeed));
-        edgeMoveYDampable.UpdateAndDampen(yFactor, Mathf.Clamp(edgeMoveYDampable.currentVelocity + edgeMoveAcceleration * yFactor, -maxCameraMoveSpeed, maxCameraMoveSpeed));
+        float xVelocity = edgeMoveXDampable.currentVelocity + edgeMoveAcceleration * xFactor;
+        float yVelocity = edgeMoveYDampable.currentVelocity + edgeMoveAcceleration * yFactor;
+
+        edgeMoveXDampable.UpdateAndDampen(xFactor, Mathf.Clamp(xVelocity, -maxCameraMoveSpeed, maxCameraMoveSpeed));
+        edgeMoveYDampable.UpdateAndDampen(yFactor, Mathf.Clamp(yVelocity, -maxCameraMoveSpeed, maxCameraMoveSpeed));
 
         AddToCurrentCameraPosition(edgeMoveXDampable.currentVelocity, edgeMoveYDampable.currentVelocity);
     }
