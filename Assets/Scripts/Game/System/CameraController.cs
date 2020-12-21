@@ -14,9 +14,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float edgeMoveAcceleration = 0.1f;
     [SerializeField] private bool invertScrolling = true;
 
-    Dampable edgeMoveXDampable;
-    Dampable edgeMoveYDampable;
-    Dampable scrollMoveDampable;
+    Dampable xEdgeSpeedManager;
+    Dampable yEdgeSpeedManager;
+    Dampable scrollSpeedManager;
 
     private float halfWidth;
     private float halfHeight;
@@ -26,19 +26,24 @@ public class CameraController : MonoBehaviour
         halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
         halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
 
-        edgeMoveXDampable = new Dampable(edgeMoveDampTime);
-        edgeMoveYDampable = new Dampable(edgeMoveDampTime);
-        scrollMoveDampable = new Dampable(scrollDampTime);
+        xEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
+        yEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
+        scrollSpeedManager = new Dampable(scrollDampTime);
     }
 
     void Update()
     {
         // Get mouse input and update scrollVelocity
-        float scrollVelocity = scrollMoveDampable.currentVelocity + Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
-        scrollMoveDampable.UpdateAndDampen(Input.GetAxis("Mouse ScrollWheel"), scrollVelocity);
+        float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
+        scrollSpeedManager.UpdateSpeed(scrollAcceleration);
+
+
+        // float scrollVelocity = scrollMoveDampable.currentVelocity + Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
+        // scrollMoveDampable.UpdateAndDampen(Input.GetAxis("Mouse ScrollWheel"), scrollVelocity);
+
 
         // Zoom and move camera according to zoom
-        Zoom(scrollMoveDampable.currentVelocity);
+        Zoom(scrollSpeedManager.Speed);
 
         // Move camera using keyboard
         AddToCurrentCameraPosition(Input.GetAxis("Horizontal") * maxCameraMoveSpeed, Input.GetAxis("Vertical") * maxCameraMoveSpeed);
@@ -74,16 +79,13 @@ public class CameraController : MonoBehaviour
     private void MoveCameraUsingMouse()
     {
         Vector2 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        int xFactor = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
-        int yFactor = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
+        int xDir = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
+        int yDir = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
 
-        float xVelocity = edgeMoveXDampable.currentVelocity + edgeMoveAcceleration * xFactor;
-        float yVelocity = edgeMoveYDampable.currentVelocity + edgeMoveAcceleration * yFactor;
+        xEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * xDir);
+        yEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * yDir);
 
-        edgeMoveXDampable.UpdateAndDampen(xFactor, Mathf.Clamp(xVelocity, -maxCameraMoveSpeed, maxCameraMoveSpeed));
-        edgeMoveYDampable.UpdateAndDampen(yFactor, Mathf.Clamp(yVelocity, -maxCameraMoveSpeed, maxCameraMoveSpeed));
-
-        AddToCurrentCameraPosition(edgeMoveXDampable.currentVelocity, edgeMoveYDampable.currentVelocity);
+        AddToCurrentCameraPosition(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
     }
 
     private void AddToCurrentCameraPosition(float xAddition, float yAddition)

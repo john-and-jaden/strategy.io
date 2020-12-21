@@ -2,32 +2,34 @@ using UnityEngine;
 
 public class Dampable
 {
-    public float currentVelocity;
-    float lastVelocity;
-    float dampTime;
-    float timer;
-
-    public Dampable(float time)
+    private float speed;
+    private float minSpeed;
+    private float maxSpeed;
+    public float Speed { get { return speed; } }
+    private float lastSpeed;
+    private float dampTime;
+    private float timer;
+    public Dampable(float dampTime) : this(dampTime, float.MinValue, float.MaxValue) { }
+    public Dampable(float dampTime, float minSpeed, float maxSpeed)
     {
-        this.dampTime = time;
+        this.dampTime = dampTime;
+        this.minSpeed = minSpeed;
+        this.maxSpeed = maxSpeed;
     }
-
-    public void UpdateAndDampen(float movingConditional, float currentVelocity)
+    public void UpdateSpeed(float acceleration)
     {
-        if (movingConditional != 0)
+        bool isAccelerating = Mathf.Abs(acceleration) > Mathf.Epsilon;
+        if (isAccelerating)
         {
-            // Update momentum
-            this.currentVelocity = currentVelocity;
-            lastVelocity = currentVelocity;
+            // Update speed
+            lastSpeed = speed = Mathf.Clamp(speed + acceleration, minSpeed, maxSpeed);
             timer = 0;
         }
         else
         {
-            // Update timer
+            // Dampen speed
+            speed = Mathf.Lerp(lastSpeed, 0, timer / dampTime);
             timer += Time.deltaTime;
-
-            // Dampen 
-            this.currentVelocity = Mathf.Lerp(lastVelocity, 0, timer / dampTime);
         }
     }
 }
