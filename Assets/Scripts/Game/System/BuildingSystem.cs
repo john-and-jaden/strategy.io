@@ -4,32 +4,37 @@ using UnityEngine;
 
 public class BuildingSystem : MonoBehaviour
 {
-    public SpriteRenderer placementIndicatorPrefab;
+    public PlacementIndicator placementIndicatorPrefab;
 
     private Transform buildingParent;
     public Transform BuildingParent { get { return buildingParent; } }
 
     private BuildingType activeBuildingType;
-    private SpriteRenderer placementIndicator;
+    private PlacementIndicator placementIndicator;
 
     void Awake()
     {
         buildingParent = new GameObject("Buildings").transform;
+    }
+
+    void Start()
+    {
         placementIndicator = Instantiate(placementIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        placementIndicator.enabled = false;
     }
 
     void Update()
     {
         if (activeBuildingType == null) return;
+        
+        // Get mouse position
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Update placement indicator position
-        placementIndicator.transform.position = transform.position;
+        placementIndicator.transform.position = mousePos;
 
         // On left-click, spawn active building type
         if (Input.GetButtonDown("Fire1"))
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SpawnBuilding(activeBuildingType, mousePos);
             CancelSelection();
         }
@@ -44,8 +49,8 @@ public class BuildingSystem : MonoBehaviour
     public void SelectBuildingType(BuildingType buildingType)
     {
         activeBuildingType = buildingType;
-        placementIndicator.sprite = buildingType.PlacementIndicatorSprite;
-        placementIndicator.enabled = true;
+        placementIndicator.SetSprite(buildingType.PlacementIndicatorSprite);
+        placementIndicator.Show();
     }
 
     public void SpawnBuilding(BuildingType buildingType, Vector2 placementPos)
@@ -56,6 +61,6 @@ public class BuildingSystem : MonoBehaviour
     private void CancelSelection()
     {
         activeBuildingType = null;
-        placementIndicator.enabled = false;
+        placementIndicator.Hide();
     }
 }

@@ -11,6 +11,8 @@ public class BuildingType : ScriptableObject
     [SerializeField] private Sprite placementIndicatorSprite;
     public Sprite PlacementIndicatorSprite { get { return placementIndicatorSprite; } }
 
+    [SerializeField] private Vector2 sizeDimensions;
+
     [SerializeField] private string displayName;
     public string DisplayName { get { return displayName; } }
 }

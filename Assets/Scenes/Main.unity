@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b192a24370a832d478996eca952ca6f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placementIndicatorPrefab: {fileID: 481073987464597927, guid: 9e7e9afcd1b99384285882b583bd5761,
+  placementIndicatorPrefab: {fileID: -7529337934909906155, guid: 9e7e9afcd1b99384285882b583bd5761,
     type: 3}
 --- !u!1001 &216778801
 PrefabInstance:
