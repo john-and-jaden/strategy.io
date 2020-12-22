@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private float minZoom = 5f;
-    [SerializeField] private float maxZoom = 15f;
+    [SerializeField] private int extraSpace = 10;
     [SerializeField] private float scrollDampTime = 0.5f;
     [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
@@ -44,8 +44,7 @@ public class CameraController : MonoBehaviour
         // Move camera using mouse if near screen edge
         MoveCameraUsingMouse();
 
-        // Clamp camera position
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -halfWidth, halfWidth), Mathf.Clamp(transform.position.y, -halfHeight, halfHeight), transform.position.z);
+        ClampCameraPosition();
     }
 
     private void Zoom(float heightDelta)
@@ -53,7 +52,7 @@ public class CameraController : MonoBehaviour
         // Clamp input
         float cameraHeight = Camera.main.orthographicSize;
         float goalCameraHeight = cameraHeight + heightDelta;
-        float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, maxZoom);
+        float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, halfHeight + extraSpace + 10);
         heightDelta = clampedGoalCameraHeight - cameraHeight;
 
         // If zooming in, move camera according to desired zoom amount and mouse position
@@ -84,5 +83,28 @@ public class CameraController : MonoBehaviour
     private void MoveCamera(float xAddition, float yAddition)
     {
         transform.position = new Vector3(transform.position.x + xAddition, transform.position.y + yAddition, transform.position.z);
+    }
+
+    private void ClampCameraPosition()
+    {
+        float cameraHeight = Camera.main.orthographicSize * 2;
+        float cameraWidth = cameraHeight * Camera.main.aspect;
+
+        if (cameraWidth < 2 * halfWidth + 2 * extraSpace)
+        {
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -halfWidth + cameraWidth / 2 - extraSpace, halfWidth - cameraWidth / 2 + extraSpace), transform.position.y, transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(0, transform.position.y, transform.position.z);
+        }
+        if (cameraHeight < 2 * halfHeight + 2 * extraSpace)
+        {
+            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -halfHeight + cameraHeight / 2 - extraSpace, halfHeight - cameraHeight / 2 + extraSpace), transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        }
     }
 }
