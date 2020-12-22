@@ -33,11 +33,9 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        // Get mouse input and update scrollVelocity
+        // Zoom and move camera accordingly
         float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
         scrollSpeedManager.UpdateSpeed(scrollAcceleration);
-
-        // Zoom and move camera according to zoom
         Zoom(scrollSpeedManager.Speed);
 
         // Move camera using keyboard

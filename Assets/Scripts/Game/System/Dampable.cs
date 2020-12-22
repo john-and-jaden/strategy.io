@@ -19,9 +19,14 @@ public class Dampable
     public void UpdateSpeed(float acceleration)
     {
         bool isAccelerating = Mathf.Abs(acceleration) > Mathf.Epsilon;
+        bool directionHasChanged = Mathf.Sign(acceleration) != Mathf.Sign(speed);
         if (isAccelerating)
         {
-            // Update speed
+            // Update speed and reset timer
+            if (directionHasChanged)
+            {
+                speed = 0;
+            }
             lastSpeed = speed = Mathf.Clamp(speed + acceleration, minSpeed, maxSpeed);
             timer = 0;
         }
