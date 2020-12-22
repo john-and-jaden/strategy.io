@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
         Zoom(scrollSpeedManager.Speed);
 
         // Move camera using keyboard
-        AddToCurrentCameraPosition(Input.GetAxis("Horizontal") * maxCameraMoveSpeed, Input.GetAxis("Vertical") * maxCameraMoveSpeed);
+        MoveCamera(Input.GetAxis("Horizontal") * maxCameraMoveSpeed, Input.GetAxis("Vertical") * maxCameraMoveSpeed);
 
         // Move camera using mouse if near screen edge
         MoveCameraUsingMouse();
@@ -62,7 +62,7 @@ public class CameraController : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float changeRatio = heightDelta / cameraHeight;
             Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
-            AddToCurrentCameraPosition(cameraDelta.x, cameraDelta.y);
+            MoveCamera(cameraDelta.x, cameraDelta.y);
         }
 
         // Zoom camera
@@ -78,10 +78,10 @@ public class CameraController : MonoBehaviour
         xEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * xDir);
         yEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * yDir);
 
-        AddToCurrentCameraPosition(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
+        MoveCamera(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
     }
 
-    private void AddToCurrentCameraPosition(float xAddition, float yAddition)
+    private void MoveCamera(float xAddition, float yAddition)
     {
         transform.position = new Vector3(transform.position.x + xAddition, transform.position.y + yAddition, transform.position.z);
     }
