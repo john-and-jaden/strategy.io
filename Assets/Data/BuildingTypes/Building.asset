@@ -16,4 +16,5 @@ MonoBehaviour:
     type: 3}
   placementIndicatorSprite: {fileID: 21300000, guid: 6fffd95378b142842b25a859ce53c677,
     type: 3}
+  sizeDimensions: {x: 2, y: 2}
   displayName: Temp Building

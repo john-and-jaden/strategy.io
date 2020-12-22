@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class BuildingSystem : MonoBehaviour
 {
-    public PlacementIndicator placementIndicatorPrefab;
+    [SerializeField] private SpriteRenderer placementIndicatorPrefab;
+    [SerializeField] private Color validPlacementColor;
+    [SerializeField] private Color invalidPlacementColor;
 
     private Transform buildingParent;
     public Transform BuildingParent { get { return buildingParent; } }
 
     private BuildingType activeBuildingType;
-    private PlacementIndicator placementIndicator;
+    private SpriteRenderer placementIndicator;
+    private bool isPlacementValid;
 
     void Awake()
     {
@@ -20,6 +23,7 @@ public class BuildingSystem : MonoBehaviour
     void Start()
     {
         placementIndicator = Instantiate(placementIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
+        placementIndicator.enabled = false;
     }
 
     void Update()
@@ -30,10 +34,10 @@ public class BuildingSystem : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Update placement indicator position
-        placementIndicator.transform.position = mousePos;
+        CheckPlacement(mousePos);
 
         // On left-click, spawn active building type
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && isPlacementValid)
         {
             SpawnBuilding(activeBuildingType, mousePos);
             CancelSelection();
@@ -49,8 +53,8 @@ public class BuildingSystem : MonoBehaviour
     public void SelectBuildingType(BuildingType buildingType)
     {
         activeBuildingType = buildingType;
-        placementIndicator.SetSprite(buildingType.PlacementIndicatorSprite);
-        placementIndicator.Show();
+        placementIndicator.sprite = buildingType.PlacementIndicatorSprite;
+        placementIndicator.enabled = true;
     }
 
     public void SpawnBuilding(BuildingType buildingType, Vector2 placementPos)
@@ -58,9 +62,19 @@ public class BuildingSystem : MonoBehaviour
         Instantiate(buildingType.BuildingPrefab, placementPos, Quaternion.identity, buildingParent);
     }
 
+    private void CheckPlacement(Vector2 placementPos)
+    {
+        // Perform a physics check at the current location
+        isPlacementValid = Physics2D.OverlapBox(placementPos, activeBuildingType.SizeDimensions, 0) == null;
+
+        // Update the placement indicator
+        placementIndicator.transform.position = placementPos;
+        placementIndicator.color = isPlacementValid ? validPlacementColor : invalidPlacementColor;
+    }
+
     private void CancelSelection()
     {
         activeBuildingType = null;
-        placementIndicator.Hide();
+        placementIndicator.enabled = false;
     }
 }

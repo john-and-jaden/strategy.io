@@ -6,12 +6,26 @@ using TMPro;
 
 public class BuildingSelector : MonoBehaviour
 {
-    [SerializeField] private BuildingType buildingType;
     [SerializeField] private Image selectorIcon;
     [SerializeField] private TextMeshProUGUI selectorText;
 
-    void Start()
+    private BuildingType buildingType;
+
+    private Image buttonImage;
+
+    void Awake()
     {
+        buttonImage = GetComponent<Image>();
+    }
+
+    public void SetSelectorActive(bool active)
+    {
+        buttonImage.enabled = active;
+    }
+
+    public void SetBuildingType(BuildingType buildingType)
+    {
+        this.buildingType = buildingType;
         selectorIcon.sprite = buildingType.PlacementIndicatorSprite;
         selectorText.text = buildingType.DisplayName;
     }
