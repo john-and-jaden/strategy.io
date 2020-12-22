@@ -20,6 +20,7 @@ public class CameraController : MonoBehaviour
 
     private float halfWidth;
     private float halfHeight;
+    private float topUIHeight = 5;
 
     void Start()
     {
@@ -52,7 +53,7 @@ public class CameraController : MonoBehaviour
         // Clamp input
         float cameraHeight = Camera.main.orthographicSize;
         float goalCameraHeight = cameraHeight + heightDelta;
-        float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, halfHeight + extraSpace + 10);
+        float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, halfHeight + extraSpace + topUIHeight);
         heightDelta = clampedGoalCameraHeight - cameraHeight;
 
         // If zooming in, move camera according to desired zoom amount and mouse position
@@ -100,11 +101,11 @@ public class CameraController : MonoBehaviour
         }
         if (cameraHeight < 2 * halfHeight + 2 * extraSpace)
         {
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -halfHeight + cameraHeight / 2 - extraSpace, halfHeight - cameraHeight / 2 + extraSpace), transform.position.z);
+            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -halfHeight + cameraHeight / 2 - extraSpace, halfHeight - cameraHeight / 2 + extraSpace + topUIHeight), transform.position.z);
         }
         else
         {
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+            transform.position = new Vector3(transform.position.x, topUIHeight, transform.position.z);
         }
     }
 }
