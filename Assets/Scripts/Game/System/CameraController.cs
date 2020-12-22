@@ -37,11 +37,6 @@ public class CameraController : MonoBehaviour
         float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
         scrollSpeedManager.UpdateSpeed(scrollAcceleration);
 
-
-        // float scrollVelocity = scrollMoveDampable.currentVelocity + Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
-        // scrollMoveDampable.UpdateAndDampen(Input.GetAxis("Mouse ScrollWheel"), scrollVelocity);
-
-
         // Zoom and move camera according to zoom
         Zoom(scrollSpeedManager.Speed);
 
