@@ -23,10 +23,7 @@ public class Dampable
         if (isAccelerating)
         {
             // Update speed and reset timer
-            if (directionHasChanged)
-            {
-                speed = 0;
-            }
+            if (directionHasChanged) speed = 0;
             lastSpeed = speed = Mathf.Clamp(speed + acceleration, minSpeed, maxSpeed);
             timer = 0;
         }
