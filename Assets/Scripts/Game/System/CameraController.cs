@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
     [SerializeField] private float edgeProportionOfScreen = 0.1f;
-    [SerializeField] private float maxCameraMoveSpeed = 0.1f;
+    [SerializeField] private float maxCameraMoveSpeed = 20f;
     [SerializeField] private float edgeMoveAcceleration = 0.1f;
     [SerializeField] private bool invertScrolling = true;
 
@@ -24,10 +24,11 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        // Set class fields
         worldHalfWidth = GameManager.GridSystem.GetDimensions().x / 2;
         worldHalfHeight = GameManager.GridSystem.GetDimensions().y / 2;
         maxCameraHalfHeight = worldHalfHeight + sideMargins;
-
+        maxCameraMoveSpeed = maxCameraMoveSpeed * Time.deltaTime;
         xEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
         yEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
         scrollSpeedManager = new Dampable(scrollDampTime);
