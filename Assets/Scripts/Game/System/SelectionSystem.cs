@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class SelectionSystem : MonoBehaviour
 
     private Transform indicatorParent;
     public Transform IndicatorParent { get { return indicatorParent; } }
+
+    // TODO: refactor this
     private Cluster highlightedCluster;
     public Cluster HighlightedCluster { get { return highlightedCluster; } }
 
@@ -22,6 +25,7 @@ public class SelectionSystem : MonoBehaviour
     private SpriteRenderer boxSelectIndicator;
     private Vector2 boxSelectStartPos;
     private bool isBoxSelectActive;
+    private Vector2 mousePos;
 
     void Awake()
     {
@@ -37,143 +41,145 @@ public class SelectionSystem : MonoBehaviour
 
     void Update()
     {
-        // Cancel hover on previous selection
-        for (int i = 0; i < hoverTargets.Count; i++)
-        {
-            hoverTargets[i].SetHovered(false);
-        }
+        // Update the mouse position
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Calculate hover selection based on mouse position
-        hoverTargets.Clear();
-        highlightedCluster = null;
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (isBoxSelectActive && mousePos != boxSelectStartPos)
-        {
-            // Get all objects within selection box
-            Vector2 boxCenter = (boxSelectStartPos + mousePos) / 2;
-            Vector2 boxDiff = mousePos - boxSelectStartPos;
-            Vector2 boxSize = new Vector2(Mathf.Abs(boxDiff.x), Mathf.Abs(boxDiff.y));
-            Physics2D.OverlapBox(boxCenter, boxSize, 0, selectionFilter, overlapResults);
-            hoverTargets = FilterSelectables(overlapResults);
-
-            // Update indicator box
-            boxSelectIndicator.transform.position = boxCenter;
-            boxSelectIndicator.size = boxSize;
-        }
-        else
-        {
-            // Get nearest object within range of cursor
-            Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
-            Selectable nearest = GetNearestSelectable(FilterSelectables(overlapResults), mousePos);
-            if (nearest)
-            {
-                if (nearest.GetType().IsSubclassOf(typeof(Resource)))
-                {
-                    HighlightCluster((Resource)nearest);
-                }
-                else
-                {
-                    hoverTargets.Add(nearest);
-                }
-            }
-        }
-
-        // Update hover state
-        for (int i = 0; i < hoverTargets.Count; i++)
-        {
-            hoverTargets[i].SetHovered(true);
-        }
+        // Update the current hover targets
+        UpdateHoverTargets();
 
         // Start selection box on left-click pressed
         if (Input.GetButtonDown("Fire1"))
         {
-            isBoxSelectActive = true;
-            boxSelectIndicator.enabled = true;
-            boxSelectIndicator.transform.position = mousePos;
-            boxSelectIndicator.size = Vector2.zero;
-            boxSelectStartPos = mousePos;
+            StartBoxSelect();
         }
 
         // Select hovered objects on left-click released
         if (Input.GetButtonUp("Fire1"))
         {
-            // Cancel the selection box
-            isBoxSelectActive = false;
-            boxSelectIndicator.enabled = false;
+            SelectHovered();
+        }
+    }
 
-            // Cancel previous selections if not holding shift
-            if (!Input.GetKey(KeyCode.LeftShift))
-            {
-                for (int i = 0; i < selection.Count; i++)
-                {
-                    selection[i].SetSelected(false);
-                }
-                selection.Clear();
-            }
+    private void UpdateHoverTargets()
+    {
+        // Cancel hover on previous targets
+        for (int i = 0; i < hoverTargets.Count; i++)
+        {
+            hoverTargets[i].SetHovered(false);
+        }
+        hoverTargets.Clear();
 
-            // Add hover targets to selection list
-            if (ContainsType<Unit>(hoverTargets) || ContainsType<Unit>(selection))
-            {
-                selection.AddRange(FilterType<Unit>(hoverTargets));
-                selection = selection.Distinct().ToList();
-            }
-            else if (ContainsType<Building>(hoverTargets) && !ContainsType<Unit>(selection))
-            {
-                selection.AddRange(FilterType<Building>(hoverTargets));
-                selection = selection.Distinct().ToList();
-            }
+        // TODO: refactor this
+        highlightedCluster = null;
 
-            // Update selection states
+        // Update hover targets based on selection type
+        if (isBoxSelectActive && mousePos != boxSelectStartPos)
+        {
+            UpdateBoxHover();
+        }
+        else
+        {
+            UpdateMouseHover();
+        }
+
+        // Update hover state for new targets
+        for (int i = 0; i < hoverTargets.Count; i++)
+        {
+            hoverTargets[i].SetHovered(true);
+        }
+    }
+
+    private void UpdateBoxHover()
+    {
+        // Get all objects within selection box
+        Vector2 boxCenter = (boxSelectStartPos + mousePos) / 2;
+        Vector2 boxDiff = mousePos - boxSelectStartPos;
+        Vector2 boxSize = new Vector2(Mathf.Abs(boxDiff.x), Mathf.Abs(boxDiff.y));
+        Physics2D.OverlapBox(boxCenter, boxSize, 0, selectionFilter, overlapResults);
+        hoverTargets = SelectionHelper.Convert<Collider2D, Selectable>(overlapResults);
+
+        // Update indicator box
+        boxSelectIndicator.transform.position = boxCenter;
+        boxSelectIndicator.size = boxSize;
+    }
+
+    private void UpdateMouseHover()
+    {
+        // Get nearest object within range of cursor
+        Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
+        List<Selectable> targetsInRange = SelectionHelper.Convert<Collider2D, Selectable>(overlapResults);
+        Selectable nearest = SelectionHelper.GetNearest(targetsInRange, mousePos, selectDistance);
+        if (nearest)
+        {
+            // TODO: refactor this
+            if (nearest.GetType().IsSubclassOf(typeof(Resource)))
+            {
+                HighlightCluster((Resource)nearest);
+            }
+            else
+            {
+                hoverTargets.Add(nearest);
+            }
+        }
+    }
+
+    private void StartBoxSelect()
+    {
+        isBoxSelectActive = true;
+        boxSelectIndicator.enabled = true;
+        boxSelectIndicator.transform.position = mousePos;
+        boxSelectIndicator.size = Vector2.zero;
+        boxSelectStartPos = mousePos;
+    }
+
+    private void SelectHovered()
+    {
+        // Cancel the selection box
+        isBoxSelectActive = false;
+        boxSelectIndicator.enabled = false;
+
+        // Cancel previous selections if not holding shift
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
             for (int i = 0; i < selection.Count; i++)
             {
-                selection[i].SetSelected(true);
+                selection[i].SetSelected(false);
             }
+            selection.Clear();
+        }
+
+        // Add hover targets to selection list by priority
+        SelectByPriority();
+
+        // Update selection states
+        for (int i = 0; i < selection.Count; i++)
+        {
+            selection[i].SetSelected(true);
+        }
+    }
+
+    private void SelectByPriority()
+    {
+        if (SelectionHelper.ContainsAny<Unit>(hoverTargets) || SelectionHelper.ContainsOnly<Unit>(selection))
+        {
+            selection.AddRange(SelectionHelper.Convert<Selectable, Unit>(hoverTargets));
+            selection = selection.Distinct().ToList();
+        }
+        else if (SelectionHelper.ContainsAny<Building>(hoverTargets) || SelectionHelper.ContainsOnly<Building>(selection))
+        {
+            selection.AddRange(SelectionHelper.Convert<Selectable, Building>(hoverTargets));
+            selection = selection.Distinct().ToList();
+        }
+        else if (SelectionHelper.ContainsAny<Resource>(hoverTargets) || SelectionHelper.ContainsOnly<Resource>(selection))
+        {
+            selection.AddRange(SelectionHelper.Convert<Selectable, Resource>(hoverTargets));
+            selection = selection.Distinct().ToList();
         }
     }
 
     public List<T> GetSelectionOfType<T>() where T : Selectable
     {
-        return selection
-            .Where(s => s.TryGetComponent<T>(out T t))
-            .Select(s => s.GetComponent<T>()).ToList();
-    }
-
-    private List<Selectable> FilterSelectables(List<Collider2D> colliders)
-    {
-        return colliders
-            .Where(c => c.TryGetComponent<Selectable>(out Selectable s))
-            .Select(s => s.GetComponent<Selectable>())
-            .ToList();
-    }
-
-    private bool ContainsType<T>(List<Selectable> selectables) where T : Selectable
-    {
-        return selectables.Any(s => s.TryGetComponent<T>(out T t));
-    }
-
-    private List<T> FilterType<T>(List<Selectable> selectables) where T : Selectable
-    {
-        return selectables
-            .Where(x => x.TryGetComponent<T>(out T t))
-            .Select(x => x.GetComponent<T>())
-            .ToList();
-    }
-
-    private Selectable GetNearestSelectable(List<Selectable> selectables, Vector2 targetPos)
-    {
-        int nearestIdx = -1;
-        float smallestDist = selectDistance * selectDistance + 1;
-        for (int i = 0; i < selectables.Count; i++)
-        {
-            Vector2 dir = targetPos - (Vector2)selectables[i].transform.position;
-            float sqrDist = dir.sqrMagnitude;
-            if (sqrDist < smallestDist)
-            {
-                nearestIdx = i;
-                smallestDist = sqrDist;
-            }
-        }
-        return nearestIdx >= 0 ? selectables[nearestIdx] : null;
+        return SelectionHelper.Convert<Selectable, T>(selection);
     }
 
     private void HighlightCluster(Resource resource)
@@ -182,6 +188,52 @@ public class SelectionSystem : MonoBehaviour
         for (int i = 0; i < highlightedCluster.Resources.Count; i++)
         {
             hoverTargets.Add(highlightedCluster.Resources[i]);
+        }
+    }
+
+    private static class SelectionHelper
+    {
+        /// <summary>Returns whether a list contains any selectables of type <c>S</c>.</summary>
+        public static bool ContainsAny<S>(List<Selectable> selectables) where S : Selectable
+        {
+            return selectables.Any(s => s.TryGetComponent<S>(out S t));
+        }
+
+        /// <summary>Returns whether a list contains any selectables of type <c>S</c>.</summary>
+        public static bool ContainsOnly<S>(List<Selectable> selectables) where S : Selectable
+        {
+            return selectables.Any(s => s.TryGetComponent<S>(out S t));
+        }
+
+        /// <summary>Gets all Selectable components of type <c>S</c> from <paramref name="components"/>.</summary>
+        /// <returns>List of selectables of type <c>S</c>.</returns>
+        public static List<S> Convert<C, S>(List<C> components)
+            where C : Component
+            where S : Selectable
+        {
+            return components
+                .Where(x => x.TryGetComponent<S>(out S s))
+                .Select(x => x.GetComponent<S>())
+                .ToList();
+        }
+
+        /// <summary>Returns the nearest Selectable from <paramref name="components"/> to the given 
+        /// <paramref name="targetPos"/> within a <paramref name="maxDistance"/>.</summary>
+        public static Selectable GetNearest(List<Selectable> components, Vector2 targetPos, float maxDistance)
+        {
+            int nearestIdx = -1;
+            float smallestDist = maxDistance * maxDistance + 1;
+            for (int i = 0; i < components.Count; i++)
+            {
+                Vector2 dir = targetPos - (Vector2)components[i].transform.position;
+                float sqrDist = dir.sqrMagnitude;
+                if (sqrDist < smallestDist)
+                {
+                    nearestIdx = i;
+                    smallestDist = sqrDist;
+                }
+            }
+            return nearestIdx >= 0 ? components[nearestIdx] : null;
         }
     }
 }
