@@ -92,8 +92,8 @@ public class CameraController : MonoBehaviour
         float cameraHalfHeight = Camera.main.orthographicSize;
         float minCameraHalfWidth = minCameraHalfHeight * Camera.main.aspect;
         float maxZoomLevel = maxCameraHalfHeight - minCameraHalfHeight;
-        float zoomLevel = -(Camera.main.orthographicSize - maxCameraHalfHeight);
-        float overallMaxDistFromCenterX = worldHalfWidth - minCameraHalfWidth / 2 + sideMargins / 2;
+        float zoomLevel = -(cameraHalfHeight - maxCameraHalfHeight);
+        float overallMaxDistFromCenterX = worldHalfWidth - minCameraHalfWidth + sideMargins;
         float currentMaxDistFromCenterX = (zoomLevel / maxZoomLevel) * overallMaxDistFromCenterX;
 
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldHalfHeight + cameraHalfHeight - sideMargins, worldHalfHeight - cameraHalfHeight + sideMargins), transform.position.z);
