@@ -794,8 +794,8 @@ MonoBehaviour:
   scrollDampTime: 0.1
   edgeMoveDampTime: 0.3
   scrollSensitivity: 0.05
-  edgeCamMoveThreshold: 0.01
-  maxCameraMoveSpeed: 0.5
+  edgeProportionOfScreen: 0.1
+  maxCameraMoveSpeed: 20
   edgeMoveAcceleration: 0.01
   invertScrolling: 1
 --- !u!20 &519420031
