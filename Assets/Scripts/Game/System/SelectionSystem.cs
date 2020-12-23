@@ -160,19 +160,23 @@ public class SelectionSystem : MonoBehaviour
 
     private void SelectByPriority()
     {
+        // We could make this generic using type reflection, however that would make the code substantially more confusing
         if (SelectionHelper.ContainsAny<Unit>(hoverTargets) || SelectionHelper.ContainsOnly<Unit>(selection))
         {
-            selection.AddRange(SelectionHelper.Convert<Selectable, Unit>(hoverTargets));
+            List<Unit> selectedUnits = SelectionHelper.Convert<Selectable, Unit>(hoverTargets);
+            selection.AddRange(selectedUnits);
             selection = selection.Distinct().ToList();
         }
         else if (SelectionHelper.ContainsAny<Building>(hoverTargets) || SelectionHelper.ContainsOnly<Building>(selection))
         {
-            selection.AddRange(SelectionHelper.Convert<Selectable, Building>(hoverTargets));
+            List<Building> selectedBuildings = SelectionHelper.Convert<Selectable, Building>(hoverTargets);
+            selection.AddRange(selectedBuildings);
             selection = selection.Distinct().ToList();
         }
         else if (SelectionHelper.ContainsAny<Resource>(hoverTargets) || SelectionHelper.ContainsOnly<Resource>(selection))
         {
-            selection.AddRange(SelectionHelper.Convert<Selectable, Resource>(hoverTargets));
+            List<Resource> selectedResources = SelectionHelper.Convert<Selectable, Resource>(hoverTargets);
+            selection.AddRange(selectedResources);
             selection = selection.Distinct().ToList();
         }
     }
