@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float scrollDampTime = 0.5f;
     [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
-    [SerializeField] private float edgeCamMoveThreshold = 0.1f;
+    [SerializeField] private float edgeProportionOfScreen = 0.1f;
     [SerializeField] private float maxCameraMoveSpeed = 0.1f;
     [SerializeField] private float edgeMoveAcceleration = 0.1f;
     [SerializeField] private bool invertScrolling = true;
@@ -72,8 +72,8 @@ public class CameraController : MonoBehaviour
     private void MoveCameraUsingMouse()
     {
         Vector2 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        int xDir = mousePos.x < edgeCamMoveThreshold ? -1 : (mousePos.x > 1 - edgeCamMoveThreshold ? 1 : 0);
-        int yDir = mousePos.y < edgeCamMoveThreshold ? -1 : (mousePos.y > 1 - edgeCamMoveThreshold ? 1 : 0);
+        int xDir = mousePos.x < edgeProportionOfScreen ? -1 : (mousePos.x > 1 - edgeProportionOfScreen ? 1 : 0);
+        int yDir = mousePos.y < edgeProportionOfScreen ? -1 : (mousePos.y > 1 - edgeProportionOfScreen ? 1 : 0);
 
         xEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * xDir);
         yEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * yDir);
