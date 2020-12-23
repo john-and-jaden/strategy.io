@@ -791,15 +791,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aab82ac44c34924d84a69735cd6cb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minZoom: 5
-  maxZoom: 40
   scrollDampTime: 0.1
   edgeMoveDampTime: 0.3
   scrollSensitivity: 0.05
   edgeCamMoveThreshold: 0.01
   maxCameraMoveSpeed: 0.5
-  invertScrolling: 1
   edgeMoveAcceleration: 0.01
+  invertScrolling: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -827,7 +825,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 35
+  orthographic size: 9.8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private float minZoom = 5f;
-    [SerializeField] private int extraSpace = 10;
     [SerializeField] private float scrollDampTime = 0.5f;
     [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
@@ -18,13 +16,17 @@ public class CameraController : MonoBehaviour
     Dampable yEdgeSpeedManager;
     Dampable scrollSpeedManager;
 
-    private float halfWidth;
-    private float halfHeight;
+    private float worldHalfWidth;
+    private float worldHalfHeight;
+    private float maxCameraHalfHeight;
+    private float minCameraHalfHeight = 5f;
+    private int sideMargins = 10;
 
     void Start()
     {
-        halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
-        halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
+        worldHalfWidth = GameManager.GridSystem.GetDimensions().x / 2;
+        worldHalfHeight = GameManager.GridSystem.GetDimensions().y / 2;
+        maxCameraHalfHeight = worldHalfHeight + sideMargins;
 
         xEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
         yEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
@@ -50,16 +52,15 @@ public class CameraController : MonoBehaviour
     private void Zoom(float heightDelta)
     {
         // Clamp input
-        float cameraHeight = Camera.main.orthographicSize;
-        float goalCameraHeight = cameraHeight + heightDelta;
-        float clampedGoalCameraHeight = Mathf.Clamp(goalCameraHeight, minZoom, halfHeight + extraSpace + 10);
-        heightDelta = clampedGoalCameraHeight - cameraHeight;
+        float goalCameraHalfHeight = Camera.main.orthographicSize + heightDelta;
+        float clampedGoalCameraHalfHeight = Mathf.Clamp(goalCameraHalfHeight, minCameraHalfHeight, maxCameraHalfHeight);
+        heightDelta = clampedGoalCameraHalfHeight - Camera.main.orthographicSize;
 
         // If zooming in, move camera according to desired zoom amount and mouse position
         if (heightDelta < 0)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float changeRatio = heightDelta / cameraHeight;
+            float changeRatio = heightDelta / Camera.main.orthographicSize;
             Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
             MoveCamera(cameraDelta.x, cameraDelta.y);
         }
@@ -87,24 +88,13 @@ public class CameraController : MonoBehaviour
 
     private void ClampCameraPosition()
     {
-        float cameraHeight = Camera.main.orthographicSize * 2;
-        float cameraWidth = cameraHeight * Camera.main.aspect;
+        float cameraHalfHeight = Camera.main.orthographicSize;
+        float minCameraHalfWidth = minCameraHalfHeight * Camera.main.aspect;
+        float maxZoomLevel = maxCameraHalfHeight - minCameraHalfHeight;
+        float zoomLevel = -(Camera.main.orthographicSize - maxCameraHalfHeight);
+        float overallMaxDistFromCenterX = worldHalfWidth - minCameraHalfWidth / 2 + sideMargins / 2;
+        float currentMaxDistFromCenterX = (zoomLevel / maxZoomLevel) * overallMaxDistFromCenterX;
 
-        if (cameraWidth < 2 * halfWidth + 2 * extraSpace)
-        {
-            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -halfWidth + cameraWidth / 2 - extraSpace, halfWidth - cameraWidth / 2 + extraSpace), transform.position.y, transform.position.z);
-        }
-        else
-        {
-            transform.position = new Vector3(0, transform.position.y, transform.position.z);
-        }
-        if (cameraHeight < 2 * halfHeight + 2 * extraSpace)
-        {
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -halfHeight + cameraHeight / 2 - extraSpace, halfHeight - cameraHeight / 2 + extraSpace), transform.position.z);
-        }
-        else
-        {
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-        }
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldHalfHeight + cameraHalfHeight - sideMargins, worldHalfHeight - cameraHalfHeight + sideMargins), transform.position.z);
     }
 }
