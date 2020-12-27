@@ -11,16 +11,6 @@ public class Resource : Damageable
         set { cluster = value; }
     }
 
-    // new public void TakeDamage(float damage)
-    // {
-    //     damaged = true;
-    //     durability -= damage;
-    //     if (durability <= 0)
-    //     {
-    //         DestroySelf();
-    //     }
-    // }
-
     override protected void DestroySelf()
     {
         DestroyIndicators();
