@@ -18,8 +18,6 @@ public abstract class Unit : Damageable
     }
 
     private Collider2D[] softCollisionTargets;
-    private Cluster assignedCluster;
-    private Resource assignedResource;
 
     new void Start()
     {
