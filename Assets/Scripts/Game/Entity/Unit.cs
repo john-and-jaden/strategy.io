@@ -5,8 +5,6 @@ using UnityEngine;
 public abstract class Unit : Damageable
 {
     [SerializeField] private float softCollisionRadius = 0.5f;
-    // [SerializeField] private float gatherRate = 1f;
-    // [SerializeField] private float maxGatherDist = 2f;
     [SerializeField] protected float moveSpeed = 1f;
 
     protected UnitState state;
