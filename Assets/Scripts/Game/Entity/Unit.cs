@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Unit : Selectable
+public abstract class Unit : Damageable
 {
     [SerializeField] private float softCollisionRadius = 0.5f;
     [SerializeField] private float gatherRate = 1f;
@@ -33,6 +33,7 @@ public abstract class Unit : Selectable
     {
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
+        healthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z);
         base.Update();
     }
 

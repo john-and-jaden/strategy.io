@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Resource : Selectable
+public class Resource : Damageable
 {
     [System.Serializable] public class ResourceDestroyedEvent : UnityEvent { }
     [SerializeField] private Cluster cluster;

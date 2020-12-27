@@ -137,3 +137,5 @@ MonoBehaviour:
     type: 3}
   selectIndicatorPrefab: {fileID: 1919610854626468484, guid: 7998739ef2cef4242bac97161b1fce17,
     type: 3}
+  healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
+    type: 3}
