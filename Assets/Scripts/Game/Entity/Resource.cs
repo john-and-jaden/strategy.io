@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Resource : Damageable
 {
-    [System.Serializable] public class ResourceDestroyedEvent : UnityEvent { }
     [SerializeField] private Cluster cluster;
     public Cluster Cluster
     {
@@ -13,31 +11,17 @@ public class Resource : Damageable
         set { cluster = value; }
     }
 
-    [SerializeField] private float durability = 10;
-    public float Durability { get { return durability; } }
+    // new public void TakeDamage(float damage)
+    // {
+    //     damaged = true;
+    //     durability -= damage;
+    //     if (durability <= 0)
+    //     {
+    //         DestroySelf();
+    //     }
+    // }
 
-    private ResourceDestroyedEvent onDestroyed = new ResourceDestroyedEvent();
-
-    public void AddDestroyedListener(UnityAction listener)
-    {
-        onDestroyed.AddListener(listener);
-    }
-
-    public void RemoveDestroyedListener(UnityAction listener)
-    {
-        onDestroyed.RemoveListener(listener);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        durability -= damage;
-        if (durability <= 0)
-        {
-            DestroySelf();
-        }
-    }
-
-    private void DestroySelf()
+    override protected void DestroySelf()
     {
         DestroyIndicators();
         cluster.Resources.Remove(this);
