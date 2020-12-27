@@ -12,8 +12,8 @@ public abstract class Damageable : Selectable
     [SerializeField] protected float initialDurability = 10;
     private float durability;
     public float Durability { get { return durability; } }
-    [System.Serializable] public class ResourceDestroyedEvent : UnityEvent { }
-    protected ResourceDestroyedEvent onDestroyed = new ResourceDestroyedEvent();
+    [System.Serializable] public class DestroyedEvent : UnityEvent { }
+    protected DestroyedEvent onDestroyed = new DestroyedEvent();
     protected bool damaged;
 
     new protected void Start()
@@ -61,6 +61,7 @@ public abstract class Damageable : Selectable
         onDestroyed.Invoke();
         Destroy(gameObject);
     }
+
     public void AddDestroyedListener(UnityAction listener)
     {
         onDestroyed.AddListener(listener);
