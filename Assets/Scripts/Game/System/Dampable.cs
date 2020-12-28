@@ -3,12 +3,13 @@ using UnityEngine;
 public class Dampable
 {
     private float speed;
+    public float Speed { get { return speed; } }
     private float minSpeed;
     private float maxSpeed;
-    public float Speed { get { return speed; } }
     private float lastSpeed;
     private float dampTime;
     private float timer;
+
     public Dampable(float dampTime) : this(dampTime, float.MinValue, float.MaxValue) { }
     public Dampable(float dampTime, float minSpeed, float maxSpeed)
     {
@@ -16,6 +17,7 @@ public class Dampable
         this.minSpeed = minSpeed;
         this.maxSpeed = maxSpeed;
     }
+
     public void UpdateSpeed(float acceleration)
     {
         bool isAccelerating = Mathf.Abs(acceleration) > Mathf.Epsilon;
