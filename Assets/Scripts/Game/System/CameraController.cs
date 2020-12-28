@@ -4,45 +4,50 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    [Header("Scrolling Settings")]
     [SerializeField] private float scrollDampTime = 0.5f;
-    [SerializeField] private float edgeMoveDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
-    [SerializeField] private float edgeProportionOfScreen = 0.1f;
-    [SerializeField] private float maxCameraMoveSpeed = 20f;
-    [SerializeField] private float edgeMoveAcceleration = 0.1f;
+    [SerializeField] private float minCameraSize = 5f;
     [SerializeField] private bool invertScrolling = true;
+
+    [Header("Panning Settings")]
+    [SerializeField] private float panDampTime = 0.5f;
+    [SerializeField] private float maxCameraPanSpeed = 20f;
+    [SerializeField] private float panAcceleration = 0.1f;
+    [SerializeField] private int panSideMargins = 10;
+
+    [Tooltip("The proportion of the screen which detects mouse input to pan the camera")]
+    [SerializeField] private float panScreenEdgeProportion = 0.1f;
 
     Dampable xEdgeSpeedManager;
     Dampable yEdgeSpeedManager;
     Dampable scrollSpeedManager;
 
-    private float worldHalfWidth;
-    private float worldHalfHeight;
-    private float maxCameraHalfHeight;
-    private float minCameraHalfHeight = 5f;
-    private int sideMargins = 10;
+    private float worldSizeX;
+    private float worldSize;
+    private float maxCameraSize;
 
     void Start()
     {
         // Set class fields
-        worldHalfWidth = GameManager.GridSystem.GetDimensions().x / 2;
-        worldHalfHeight = GameManager.GridSystem.GetDimensions().y / 2;
-        maxCameraHalfHeight = worldHalfHeight + sideMargins;
-        maxCameraMoveSpeed = maxCameraMoveSpeed * Time.deltaTime;
-        xEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
-        yEdgeSpeedManager = new Dampable(edgeMoveDampTime, -maxCameraMoveSpeed, maxCameraMoveSpeed);
+        worldSizeX = GameManager.GridSystem.GetDimensions().x / 2;
+        worldSize = GameManager.GridSystem.GetDimensions().y / 2;
+        maxCameraSize = worldSize + panSideMargins;
+        maxCameraPanSpeed = maxCameraPanSpeed * Time.deltaTime;
+        xEdgeSpeedManager = new Dampable(panDampTime, -maxCameraPanSpeed, maxCameraPanSpeed);
+        yEdgeSpeedManager = new Dampable(panDampTime, -maxCameraPanSpeed, maxCameraPanSpeed);
         scrollSpeedManager = new Dampable(scrollDampTime);
     }
 
     void Update()
     {
         // Zoom and move camera accordingly
-        float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? -1 : 1);
+        float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? 1 : -1);
         scrollSpeedManager.UpdateSpeed(scrollAcceleration);
         Zoom(scrollSpeedManager.Speed);
 
         // Move camera using keyboard
-        MoveCamera(Input.GetAxis("Horizontal") * maxCameraMoveSpeed, Input.GetAxis("Vertical") * maxCameraMoveSpeed);
+        MoveCamera(Input.GetAxis("Horizontal") * maxCameraPanSpeed, Input.GetAxis("Vertical") * maxCameraPanSpeed);
 
         // Move camera using mouse if near screen edge
         MoveCameraUsingMouse();
@@ -50,52 +55,52 @@ public class CameraController : MonoBehaviour
         ClampCameraPosition();
     }
 
-    private void Zoom(float heightDelta)
+    private void Zoom(float sizeDelta)
     {
         // Clamp input
-        float goalCameraHalfHeight = Camera.main.orthographicSize + heightDelta;
-        float clampedGoalCameraHalfHeight = Mathf.Clamp(goalCameraHalfHeight, minCameraHalfHeight, maxCameraHalfHeight);
-        heightDelta = clampedGoalCameraHalfHeight - Camera.main.orthographicSize;
+        float goalCameraSize = Camera.main.orthographicSize + sizeDelta;
+        float clampedGoalCameraSize = Mathf.Clamp(goalCameraSize, minCameraSize, maxCameraSize);
+        sizeDelta = clampedGoalCameraSize - Camera.main.orthographicSize;
 
         // If zooming in, move camera according to desired zoom amount and mouse position
-        if (heightDelta < 0)
+        if (sizeDelta < 0)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float changeRatio = heightDelta / Camera.main.orthographicSize;
+            float changeRatio = sizeDelta / Camera.main.orthographicSize;
             Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
             MoveCamera(cameraDelta.x, cameraDelta.y);
         }
 
         // Zoom camera
-        Camera.main.orthographicSize += heightDelta;
+        Camera.main.orthographicSize += sizeDelta;
     }
 
     private void MoveCameraUsingMouse()
     {
-        Vector2 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        int xDir = mousePos.x < edgeProportionOfScreen ? -1 : (mousePos.x > 1 - edgeProportionOfScreen ? 1 : 0);
-        int yDir = mousePos.y < edgeProportionOfScreen ? -1 : (mousePos.y > 1 - edgeProportionOfScreen ? 1 : 0);
+        Vector2 mousePosViewPort = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        int xDir = mousePosViewPort.x < panScreenEdgeProportion ? -1 : (mousePosViewPort.x > 1 - panScreenEdgeProportion ? 1 : 0);
+        int yDir = mousePosViewPort.y < panScreenEdgeProportion ? -1 : (mousePosViewPort.y > 1 - panScreenEdgeProportion ? 1 : 0);
 
-        xEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * xDir);
-        yEdgeSpeedManager.UpdateSpeed(edgeMoveAcceleration * yDir);
+        xEdgeSpeedManager.UpdateSpeed(panAcceleration * xDir);
+        yEdgeSpeedManager.UpdateSpeed(panAcceleration * yDir);
 
         MoveCamera(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
     }
 
     private void MoveCamera(float xAddition, float yAddition)
     {
-        transform.position = new Vector3(transform.position.x + xAddition, transform.position.y + yAddition, transform.position.z);
+        transform.position += new Vector3(xAddition, yAddition, 0);
     }
 
     private void ClampCameraPosition()
     {
-        float cameraHalfHeight = Camera.main.orthographicSize;
-        float minCameraHalfWidth = minCameraHalfHeight * Camera.main.aspect;
-        float maxZoomLevel = maxCameraHalfHeight - minCameraHalfHeight;
-        float zoomLevel = -(cameraHalfHeight - maxCameraHalfHeight);
-        float overallMaxDistFromCenterX = worldHalfWidth - minCameraHalfWidth + sideMargins;
+        float cameraSize = Camera.main.orthographicSize;
+        float minCameraSizeX = minCameraSize * Camera.main.aspect;
+        float maxZoomLevel = maxCameraSize - minCameraSize;
+        float zoomLevel = maxCameraSize - cameraSize;
+        float overallMaxDistFromCenterX = worldSizeX - minCameraSizeX + panSideMargins;
         float currentMaxDistFromCenterX = (zoomLevel / maxZoomLevel) * overallMaxDistFromCenterX;
 
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldHalfHeight + cameraHalfHeight - sideMargins, worldHalfHeight - cameraHalfHeight + sideMargins), transform.position.z);
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldSize + cameraSize - panSideMargins, worldSize - cameraSize + panSideMargins), transform.position.z);
     }
 }
