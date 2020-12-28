@@ -53,9 +53,10 @@ public class CameraController : MonoBehaviour
     private void Zoom(float heightDelta)
     {
         // Clamp input
-        float goalCameraHalfHeight = Camera.main.orthographicSize + heightDelta;
-        float clampedGoalCameraHalfHeight = Mathf.Clamp(goalCameraHalfHeight, minCameraHalfHeight, maxCameraHalfHeight);
-        heightDelta = clampedGoalCameraHalfHeight - Camera.main.orthographicSize;
+        float currentCameraSize = Camera.main.orthographicSize;
+        float targetCameraSize = currentCameraSize + sizeDelta;
+        float clampedTargetCameraSize = Mathf.Clamp(targetCameraSize, minCameraSize, maxCameraSize);
+        float clampedSizeDelta = clampedTargetCameraSize - currentCameraSize;
 
         // If zooming in, move camera according to desired zoom amount and mouse position
         if (heightDelta < 0)
