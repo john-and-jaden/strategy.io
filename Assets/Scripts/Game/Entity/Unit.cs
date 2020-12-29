@@ -29,14 +29,11 @@ public class Unit : Selectable
         targetPos = transform.position;
     }
 
-    new void Update()
+    void Update()
     {
-        base.Update();
-
         // Update indicators
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
-        UpdateIndicators();
 
         // Do action based on state
         switch (state)

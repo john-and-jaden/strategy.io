@@ -39,7 +39,6 @@ public class Resource : Selectable
 
     private void DestroySelf()
     {
-        DestroyIndicators();
         cluster.Resources.Remove(this);
         onDestroyed.Invoke();
         Destroy(gameObject);

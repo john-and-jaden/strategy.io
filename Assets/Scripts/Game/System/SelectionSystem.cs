@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -65,7 +64,7 @@ public class SelectionSystem : MonoBehaviour
         // Cancel hover on previous targets
         for (int i = 0; i < hoverTargets.Count; i++)
         {
-            hoverTargets[i].SetHovered(false);
+            hoverTargets[i].CancelHover();
         }
         hoverTargets.Clear();
 
@@ -85,7 +84,7 @@ public class SelectionSystem : MonoBehaviour
         // Update hover state for new targets
         for (int i = 0; i < hoverTargets.Count; i++)
         {
-            hoverTargets[i].SetHovered(true);
+            hoverTargets[i].Hover();
         }
     }
 
@@ -143,7 +142,7 @@ public class SelectionSystem : MonoBehaviour
         {
             for (int i = 0; i < selection.Count; i++)
             {
-                selection[i].SetSelected(false);
+                selection[i].CancelSelect();
             }
             selection.Clear();
         }
@@ -154,7 +153,7 @@ public class SelectionSystem : MonoBehaviour
         // Update selection states
         for (int i = 0; i < selection.Count; i++)
         {
-            selection[i].SetSelected(true);
+            selection[i].Select();
         }
     }
 
@@ -186,6 +185,7 @@ public class SelectionSystem : MonoBehaviour
         return SelectionHelper.Convert<Selectable, T>(selection);
     }
 
+    // TODO: refactor this
     private void HighlightCluster(Resource resource)
     {
         highlightedCluster = resource.Cluster;
@@ -203,7 +203,7 @@ public class SelectionSystem : MonoBehaviour
             return selectables.Any(s => s.TryGetComponent<S>(out S t));
         }
 
-        /// <summary>Returns whether a list contains any selectables of type <c>S</c>.</summary>
+        /// <summary>Returns whether a list contains only selectables of type <c>S</c>.</summary>
         public static bool ContainsOnly<S>(List<Selectable> selectables) where S : Selectable
         {
             return selectables.Any(s => s.TryGetComponent<S>(out S t));
