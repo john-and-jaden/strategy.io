@@ -4,33 +4,8 @@ using UnityEngine;
 
 public abstract class Selectable : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
-    [SerializeField] private SpriteRenderer selectIndicatorPrefab;
-
-    protected SpriteRenderer hoverIndicator;
-    protected SpriteRenderer selectIndicator;
-
-    protected void Start()
-    {
-        SpawnIndicators();
-    }
-
-    private void SpawnIndicators()
-    {
-        hoverIndicator = Instantiate(hoverIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        selectIndicator = Instantiate(selectIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        hoverIndicator.transform.position = transform.position;
-        selectIndicator.transform.position = transform.position;
-        hoverIndicator.enabled = false;
-        selectIndicator.enabled = false;
-    }
-
-    protected void OnDestroy()
-    {
-        if (hoverIndicator == null || selectIndicator == null) return;
-        Destroy(hoverIndicator.gameObject);
-        Destroy(selectIndicator.gameObject);
-    }
+    [SerializeField] private SpriteRenderer hoverIndicator;
+    [SerializeField] private SpriteRenderer selectIndicator;
 
     public void Hover()
     {
