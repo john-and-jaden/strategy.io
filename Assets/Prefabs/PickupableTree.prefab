@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4848408111497684342}
   - component: {fileID: 4848408111497684337}
-  - component: {fileID: -500430512623701868}
-  - component: {fileID: 4848408111497684340}
+  - component: {fileID: 3778971538573736532}
   m_Layer: 0
-  m_Name: Tree
+  m_Name: PickupableTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4848408111497684336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -20.49, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -73,7 +72,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
-  m_Color: {r: 0.096293606, g: 0.31132078, b: 0.04552332, a: 1}
+  m_Color: {r: 0.096293606, g: 0.31132078, b: 0.04552332, a: 0.627451}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,23 +82,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &-500430512623701868
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848408111497684336}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &4848408111497684340
+--- !u!114 &3778971538573736532
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,15 +91,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4848408111497684336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcf1aad5943cd4cfaa87242d4d7ec8f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9aeeee5f19a13409490b91732eaf368d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIndicatorPrefab: {fileID: 8694489509828249487, guid: d2890a4cec30af3449391b0d55f96207,
-    type: 3}
-  selectIndicatorPrefab: {fileID: 1919610854626468484, guid: 7998739ef2cef4242bac97161b1fce17,
-    type: 3}
-  healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
-    type: 3}
-  initialDurability: 10
-  piackableResourcePrefab: {fileID: 3778971538573736532, guid: f66cc822aea8349c6810ad227ff4f913,
-    type: 3}
