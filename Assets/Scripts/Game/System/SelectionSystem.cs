@@ -6,7 +6,6 @@ using UnityEngine;
 public class SelectionSystem : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer boxSelectIndicatorPrefab;
-    [SerializeField] private float selectDistance = 0.2f;
     [SerializeField] private int maxMouseHoverTargets = 8;
     [SerializeField] private LayerMask selectionMask;
 
@@ -105,10 +104,10 @@ public class SelectionSystem : MonoBehaviour
     private void UpdateMouseHover()
     {
         // Get nearest object within range of cursor
-        Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
+        Physics2D.OverlapPoint(mousePos, selectionFilter, overlapResults);
         List<Selectable> targetsInRange = SelectionHelper.Convert<Collider2D, Selectable>(overlapResults);
-        Selectable nearest = SelectionHelper.GetNearest(targetsInRange, mousePos, selectDistance);
-        if (nearest)
+        Selectable nearest = SelectionHelper.GetNearest(targetsInRange, mousePos);
+        if (nearest != null)
         {
             // TODO: refactor this
             if (nearest.GetType().IsSubclassOf(typeof(Resource)))
@@ -197,20 +196,20 @@ public class SelectionSystem : MonoBehaviour
 
     private static class SelectionHelper
     {
-        /// <summary>Returns whether a list contains any selectables of type <c>S</c>.</summary>
+        /// <summary>Returns whether a list contains any selectables of type S.</summary>
         public static bool ContainsAny<S>(List<Selectable> selectables) where S : Selectable
         {
             return selectables.Any(s => s.TryGetComponent<S>(out S t));
         }
 
-        /// <summary>Returns whether a list contains only selectables of type <c>S</c>.</summary>
+        /// <summary>Returns whether a list contains only selectables of type S.</summary>
         public static bool ContainsOnly<S>(List<Selectable> selectables) where S : Selectable
         {
             return selectables.Any(s => s.TryGetComponent<S>(out S t));
         }
 
-        /// <summary>Gets all Selectable components of type <c>S</c> from <paramref name="components"/>.</summary>
-        /// <returns>List of selectables of type <c>S</c>.</returns>
+        /// <summary>Gets all Selectable components of type S from <paramref name="components"/>.</summary>
+        /// <returns>List of selectables of type S.</returns>
         public static List<S> Convert<C, S>(List<C> components)
             where C : Component
             where S : Selectable
@@ -221,20 +220,20 @@ public class SelectionSystem : MonoBehaviour
                 .ToList();
         }
 
-        /// <summary>Returns the nearest Selectable from <paramref name="components"/> to the given 
-        /// <paramref name="targetPos"/> within a <paramref name="maxDistance"/>.</summary>
-        public static Selectable GetNearest(List<Selectable> components, Vector2 targetPos, float maxDistance)
+        /// <summary>Returns the nearest Selectable from <paramref name="components"/>
+        /// to the given <paramref name="targetPos"/>.</summary>
+        public static Selectable GetNearest(List<Selectable> components, Vector2 targetPos)
         {
             int nearestIdx = -1;
-            float smallestDist = maxDistance * maxDistance + 1;
+            float minDist = float.MaxValue;
             for (int i = 0; i < components.Count; i++)
             {
                 Vector2 dir = targetPos - (Vector2)components[i].transform.position;
                 float sqrDist = dir.sqrMagnitude;
-                if (sqrDist < smallestDist)
+                if (sqrDist < minDist)
                 {
                     nearestIdx = i;
-                    smallestDist = sqrDist;
+                    minDist = sqrDist;
                 }
             }
             return nearestIdx >= 0 ? components[nearestIdx] : null;
