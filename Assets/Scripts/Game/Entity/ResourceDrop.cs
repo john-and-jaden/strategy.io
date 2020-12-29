@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PickupableResource : MonoBehaviour
+public class ResourceDrop : MonoBehaviour
 {
-
+    
 }

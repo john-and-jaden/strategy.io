@@ -3,21 +3,21 @@ using UnityEngine;
 
 public class Resource : Selectable
 {
-    [SerializeField] private Cluster cluster;
+    private Cluster cluster;
     public Cluster Cluster
     {
         get { return cluster; }
         set { cluster = value; }
     }
 
-    [SerializeField] private PickupableResource piackableResourcePrefab;
+    [SerializeField] private ResourceDrop resourceDropPrefab;
 
     override protected void DestroySelf()
     {
         DestroyIndicators();
         cluster.Resources.Remove(this);
         onDestroyed.Invoke();
-        Instantiate(piackableResourcePrefab, transform.position, Quaternion.identity);
+        Instantiate(resourceDropPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }

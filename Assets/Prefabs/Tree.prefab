@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4848408111497684336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.49, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -118,5 +118,5 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
     type: 3}
   initialDurability: 10
-  piackableResourcePrefab: {fileID: 3778971538573736532, guid: f66cc822aea8349c6810ad227ff4f913,
+  resourceDropPrefab: {fileID: -926583536727632469, guid: f66cc822aea8349c6810ad227ff4f913,
     type: 3}
