@@ -44,6 +44,9 @@ TagManager:
   - name: Indicators
     uniqueID: 905583285
     locked: 0
+  - name: Resources
+    uniqueID: 1557844199
+    locked: 0
   - name: Drops
     uniqueID: 2377499569
     locked: 0

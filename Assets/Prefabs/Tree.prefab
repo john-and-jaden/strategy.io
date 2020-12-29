@@ -69,8 +69,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1557844199
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
   m_Color: {r: 0.096293606, g: 0.31132078, b: 0.04552332, a: 1}
@@ -120,3 +120,5 @@ MonoBehaviour:
   initialDurability: 10
   resourceDropPrefab: {fileID: -926583536727632469, guid: f66cc822aea8349c6810ad227ff4f913,
     type: 3}
+  resourceDropCount: 2
+  resourceDropMaxPopForce: 3
