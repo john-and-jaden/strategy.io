@@ -2,4 +2,4 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building : Damageable { }
+public class Building : Selectable { }

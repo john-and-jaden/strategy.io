@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : Damageable
+public class Resource : Selectable
 {
     [SerializeField] private Cluster cluster;
     public Cluster Cluster

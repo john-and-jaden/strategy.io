@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Unit : Damageable
+public abstract class Unit : Selectable
 {
     [SerializeField] private float softCollisionRadius = 0.5f;
     [SerializeField] protected float moveSpeed = 1f;
