@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2699085035380939591}
   - component: {fileID: 2699085035380939590}
   - component: {fileID: 2699085035380939588}
-  - component: {fileID: 2699085035380939593}
+  - component: {fileID: -4779763435735099725}
   - component: {fileID: 2699085035380939592}
   m_Layer: 0
   m_Name: Building
@@ -105,8 +105,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &2699085035380939593
-CircleCollider2D:
+--- !u!61 &-4779763435735099725
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -119,8 +119,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Size: {x: 2, y: 2}
+  m_EdgeRadius: 0
 --- !u!114 &2699085035380939592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3bf1d783e1a01a49aa00e4ba969c8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIndicatorPrefab: {fileID: 8694489509828249487, guid: d2890a4cec30af3449391b0d55f96207,
+  hoverIndicatorPrefab: {fileID: 1340347132115731272, guid: e38dc0bfd806c0d4b81890121f227ce9,
     type: 3}
-  selectIndicatorPrefab: {fileID: 1919610854626468484, guid: 7998739ef2cef4242bac97161b1fce17,
+  selectIndicatorPrefab: {fileID: 8029390076138316231, guid: ad3b913c718f68f4392254fd09677191,
     type: 3}
