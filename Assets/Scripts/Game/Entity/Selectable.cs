@@ -8,18 +8,19 @@ public abstract class Selectable : MonoBehaviour
     [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
     [SerializeField] private SpriteRenderer selectIndicatorPrefab;
     [SerializeField] private SpriteRenderer healthBarPrefab;
+    [SerializeField] private float healthBarFadeTime = 2f;
+    [SerializeField] private float initialDurability = 10;
 
     protected bool hovered;
     protected bool selected;
     private float durability;
     public float Durability { get { return durability; } }
-    [SerializeField] protected float initialDurability = 10;
     [System.Serializable] public class DestroyedEvent : UnityEvent { }
     protected DestroyedEvent onDestroyed = new DestroyedEvent();
-    protected bool damaged;
     protected SpriteRenderer hoverIndicator;
     protected SpriteRenderer selectIndicator;
     protected SpriteRenderer healthBar;
+    private float healthBarFadeTimer = 0f;
 
     protected void SpawnIndicators()
     {
@@ -35,7 +36,7 @@ public abstract class Selectable : MonoBehaviour
     {
         hoverIndicator.enabled = hovered;
         selectIndicator.enabled = selected;
-        healthBar.enabled = damaged;
+        healthBar.enabled = durability != initialDurability;
     }
 
     protected void DestroyIndicators()
@@ -54,6 +55,7 @@ public abstract class Selectable : MonoBehaviour
     protected void Update()
     {
         UpdateIndicators();
+        if ((healthBarFadeTimer += Time.deltaTime) >= healthBarFadeTime) durability = initialDurability;
     }
 
     public void SetHovered(bool hovered)
@@ -68,14 +70,12 @@ public abstract class Selectable : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        damaged = true;
         durability -= damage;
         Vector3 healthBarScale = healthBar.transform.localScale;
         healthBar.size = new Vector2(durability / initialDurability, healthBar.size.y);
-        if (durability <= 0)
-        {
-            DestroySelf();
-        }
+        healthBarFadeTimer = 0f;
+
+        if (durability <= 0) DestroySelf();
     }
 
     protected virtual void DestroySelf()
