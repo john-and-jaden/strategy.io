@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4848408111497684337}
   - component: {fileID: -500430512623701868}
   - component: {fileID: 4848408111497684340}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
     type: 3}
   initialDurability: 10
-  resourceDropPrefab: {fileID: -926583536727632469, guid: f66cc822aea8349c6810ad227ff4f913,
+  resourceDropPrefab: {fileID: 8065496059092633356, guid: f66cc822aea8349c6810ad227ff4f913,
     type: 3}
   resourceDropCount: 2
   resourceDropMaxPopForce: 3

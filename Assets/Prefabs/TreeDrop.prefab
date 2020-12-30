@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4848408111497684342}
   - component: {fileID: 4848408111497684337}
   - component: {fileID: -6563189969867783765}
-  - component: {fileID: -926583536727632469}
+  - component: {fileID: 8065496059092633356}
   m_Layer: 0
   m_Name: TreeDrop
   m_TagString: Untagged
@@ -70,10 +70,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1917467727
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
-  m_Color: {r: 0.096293606, g: 0.31132078, b: 0.04552332, a: 0.627451}
+  m_Color: {r: 0.09970412, g: 0.5188679, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -104,7 +104,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-926583536727632469
+--- !u!114 &8065496059092633356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,6 +113,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4848408111497684336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9aeeee5f19a13409490b91732eaf368d, type: 3}
+  m_Script: {fileID: 11500000, guid: 93b3fef14f8f33c40ba6f1c7081da187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourceAmount: 5
+  attractionRadius: 1.5
+  attractionForce: 1
+  attractionMask:
+    serializedVersion: 2
+    m_Bits: 256
