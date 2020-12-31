@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Panning Settings")]
     [SerializeField] private float panDampTime = 0.5f;
-    [SerializeField] private float maxPanSpeed = 20f;
+    [SerializeField] private float perSecondMaxPanSpeed = 20f;
     [SerializeField] private float panAcceleration = 0.1f;
     [SerializeField] private int panSideMargin = 10;
 
@@ -26,6 +26,7 @@ public class CameraController : MonoBehaviour
     private float worldWidth;
     private float worldHeight;
     private float maxCameraSize;
+    private float perFrameMaxPanSpeed;
 
     void Start()
     {
@@ -33,16 +34,19 @@ public class CameraController : MonoBehaviour
         worldWidth = GameManager.GridSystem.GetDimensions().x;
         worldHeight = GameManager.GridSystem.GetDimensions().y;
         maxCameraSize = worldHeight / 2 + panSideMargin;
-        xEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
-        yEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
+        xEdgeSpeedManager = new Dampable(panDampTime);
+        yEdgeSpeedManager = new Dampable(panDampTime);
         scrollSpeedManager = new Dampable(scrollDampTime);
     }
 
     void Update()
     {
-        maxPanSpeed = maxPanSpeed * Time.deltaTime;
+        // Update maxPanSpeed and related variables
+        perFrameMaxPanSpeed = perSecondMaxPanSpeed * Time.deltaTime;
+        xEdgeSpeedManager.MinSpeed = yEdgeSpeedManager.MinSpeed = -perFrameMaxPanSpeed;
+        xEdgeSpeedManager.MaxSpeed = yEdgeSpeedManager.MaxSpeed = perFrameMaxPanSpeed;
 
-        // Zoom and move camera accordingly
+        // Zoom and pan accordingly
         float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? 1 : -1);
         scrollSpeedManager.UpdateSpeed(scrollAcceleration);
         Zoom(scrollSpeedManager.Speed);
@@ -55,7 +59,7 @@ public class CameraController : MonoBehaviour
     private void PanUsingMouseAndKeyboard()
     {
         // Pass mouse and keyboard pan inputs to pan method
-        Vector2 keyboardPanInput = new Vector2(Input.GetAxis("Horizontal") * maxPanSpeed, Input.GetAxis("Vertical") * maxPanSpeed);
+        Vector2 keyboardPanInput = new Vector2(Input.GetAxis("Horizontal") * perFrameMaxPanSpeed, Input.GetAxis("Vertical") * perFrameMaxPanSpeed);
         Vector2 sumMouseAndKeyboardInputs = GetMousePanInput() + keyboardPanInput;
         Pan(sumMouseAndKeyboardInputs.x, sumMouseAndKeyboardInputs.y);
     }
@@ -80,7 +84,7 @@ public class CameraController : MonoBehaviour
         float clampedTargetCameraSize = Mathf.Clamp(targetCameraSize, minCameraSize, maxCameraSize);
         float clampedSizeDelta = clampedTargetCameraSize - currentCameraSize;
 
-        // If zooming in, move camera according to desired zoom amount and mouse position
+        // If zooming in, pan according to desired zoom amount and mouse position
         if (clampedSizeDelta < 0)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -95,7 +99,7 @@ public class CameraController : MonoBehaviour
 
     private void Pan(float xDelta, float yDelta)
     {
-        transform.position += new Vector3(Mathf.Clamp(xDelta, -maxPanSpeed, maxPanSpeed), Mathf.Clamp(yDelta, -maxPanSpeed, maxPanSpeed), 0);
+        transform.position += new Vector3(Mathf.Clamp(xDelta, -perFrameMaxPanSpeed, perFrameMaxPanSpeed), Mathf.Clamp(yDelta, -perFrameMaxPanSpeed, perFrameMaxPanSpeed), 0);
     }
 
     private void ClampCameraPosition()
