@@ -8,13 +8,13 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float scrollDampTime = 0.5f;
     [SerializeField] private float scrollSensitivity = 0.1f;
     [SerializeField] private float minCameraSize = 5f;
-    [SerializeField] private bool invertScrolling = true;
+    [SerializeField] private bool invertScrolling = false;
 
     [Header("Panning Settings")]
     [SerializeField] private float panDampTime = 0.5f;
-    [SerializeField] private float maxCameraPanSpeed = 20f;
+    [SerializeField] private float maxPanSpeed = 20f;
     [SerializeField] private float panAcceleration = 0.1f;
-    [SerializeField] private int panSideMargins = 10;
+    [SerializeField] private int panSideMargin = 10;
 
     [Tooltip("The proportion of the screen which detects mouse input to pan the camera")]
     [SerializeField] private float panScreenEdgeProportion = 0.1f;
@@ -23,31 +23,31 @@ public class CameraController : MonoBehaviour
     Dampable yEdgeSpeedManager;
     Dampable scrollSpeedManager;
 
-    private float worldSizeX;
-    private float worldSize;
+    private float worldWidth;
+    private float worldHeight;
     private float maxCameraSize;
 
     void Start()
     {
         // Set class fields
-        worldSizeX = GameManager.GridSystem.GetDimensions().x / 2;
-        worldSize = GameManager.GridSystem.GetDimensions().y / 2;
-        maxCameraSize = worldSize + panSideMargins;
-        maxCameraPanSpeed = maxCameraPanSpeed * Time.deltaTime;
-        xEdgeSpeedManager = new Dampable(panDampTime, -maxCameraPanSpeed, maxCameraPanSpeed);
-        yEdgeSpeedManager = new Dampable(panDampTime, -maxCameraPanSpeed, maxCameraPanSpeed);
+        worldWidth = GameManager.GridSystem.GetDimensions().x;
+        worldHeight = GameManager.GridSystem.GetDimensions().y;
+        maxCameraSize = worldHeight / 2 + panSideMargin;
+        xEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
+        yEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
         scrollSpeedManager = new Dampable(scrollDampTime);
     }
 
     void Update()
     {
-        // Zoom and move camera accordingly
+        // Update speed variable, zoom and move camera accordingly
+        maxPanSpeed = maxPanSpeed * Time.deltaTime;
         float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? 1 : -1);
         scrollSpeedManager.UpdateSpeed(scrollAcceleration);
         Zoom(scrollSpeedManager.Speed);
 
         // Move camera using keyboard
-        MoveCamera(Input.GetAxis("Horizontal") * maxCameraPanSpeed, Input.GetAxis("Vertical") * maxCameraPanSpeed);
+        MoveCamera(Input.GetAxis("Horizontal") * maxPanSpeed, Input.GetAxis("Vertical") * maxPanSpeed);
 
         // Move camera using mouse if near screen edge
         MoveCameraUsingMouse();
@@ -88,9 +88,9 @@ public class CameraController : MonoBehaviour
         MoveCamera(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
     }
 
-    private void MoveCamera(float xAddition, float yAddition)
+    private void MoveCamera(float xDelta, float yDelta)
     {
-        transform.position += new Vector3(xAddition, yAddition, 0);
+        transform.position += new Vector3(xDelta, yDelta, 0);
     }
 
     private void ClampCameraPosition()
@@ -99,9 +99,9 @@ public class CameraController : MonoBehaviour
         float minCameraSizeX = minCameraSize * Camera.main.aspect;
         float maxZoomLevel = maxCameraSize - minCameraSize;
         float zoomLevel = maxCameraSize - cameraSize;
-        float overallMaxDistFromCenterX = worldSizeX - minCameraSizeX + panSideMargins;
+        float overallMaxDistFromCenterX = worldWidth / 2 - minCameraSizeX + panSideMargin;
         float currentMaxDistFromCenterX = (zoomLevel / maxZoomLevel) * overallMaxDistFromCenterX;
 
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldSize + cameraSize - panSideMargins, worldSize - cameraSize + panSideMargins), transform.position.z);
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldHeight / 2 + cameraSize - panSideMargin, worldHeight / 2 - cameraSize + panSideMargin), transform.position.z);
     }
 }
