@@ -110,6 +110,7 @@ public class CameraController : MonoBehaviour
         float clampedX = Mathf.Clamp(transform.position.x, -boundX, boundX);
         float clampedY = Mathf.Clamp(transform.position.y, -boundY, boundY);
 
+        // Clamp the camera position
         transform.position = new Vector3(clampedX, clampedY, transform.position.z);
     }
 }
