@@ -31,19 +31,6 @@ public class Worker : Unit
         }
     }
 
-    new public void Relocate(Vector3 targetPos)
-    {
-        StopGathering();
-        base.Relocate(targetPos);
-    }
-
-    public void Gather(Cluster cluster)
-    {
-        assignedCluster = cluster;
-        AssignResource();
-        state = UnitState.GATHERING;
-    }
-
     public override void Interact(Vector3 targetPos)
     {
         if (GameManager.SelectionSystem.HighlightedCluster != null)
@@ -52,8 +39,25 @@ public class Worker : Unit
         }
         else
         {
+            StopGathering();
             base.Interact(targetPos);
         }
+    }
+
+    private void Gather(Cluster cluster)
+    {
+        assignedCluster = cluster;
+        AssignResource();
+        state = UnitState.GATHERING;
+    }
+
+    private void StopGathering()
+    {
+        assignedCluster = null;
+
+        if (assignedResource == null) return;
+        assignedResource.RemoveDestroyedListener(HandleResourceDestruction);
+        assignedResource = null;
     }
 
     private void UpdateGather()
@@ -70,15 +74,6 @@ public class Worker : Unit
         {
             transform.position = Vector2.MoveTowards(transform.position, resourcePos, moveSpeed * Time.deltaTime);
         }
-    }
-
-    private void StopGathering()
-    {
-        if (assignedCluster == null) return;
-
-        assignedResource.RemoveDestroyedListener(HandleResourceDestruction);
-        assignedResource = null;
-        assignedCluster = null;
     }
 
     private void AssignResource()

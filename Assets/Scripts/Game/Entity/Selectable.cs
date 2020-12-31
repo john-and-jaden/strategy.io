@@ -5,21 +5,24 @@ using UnityEngine.Events;
 
 public abstract class Selectable : MonoBehaviour
 {
+    [System.Serializable] public class DestroyedEvent : UnityEvent { }
+
     [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
     [SerializeField] private SpriteRenderer selectIndicatorPrefab;
     [SerializeField] private SpriteRenderer healthBarPrefab;
     [SerializeField] private float healthBarFadeTime = 2f;
     [SerializeField] private float initialDurability = 10;
 
-    protected bool hovered;
-    protected bool selected;
     private float durability;
     public float Durability { get { return durability; } }
-    [System.Serializable] public class DestroyedEvent : UnityEvent { }
+
+    protected bool hovered;
+    protected bool selected;
     protected DestroyedEvent onDestroyed = new DestroyedEvent();
     protected SpriteRenderer hoverIndicator;
     protected SpriteRenderer selectIndicator;
     protected SpriteRenderer healthBar;
+
     private float healthBarFadeTimer = 0f;
 
     protected void SpawnIndicators()
@@ -71,7 +74,6 @@ public abstract class Selectable : MonoBehaviour
     public void TakeDamage(float damage)
     {
         durability -= damage;
-        Vector3 healthBarScale = healthBar.transform.localScale;
         healthBar.size = new Vector2(durability / initialDurability, healthBar.size.y);
         healthBarFadeTimer = 0f;
 
