@@ -95,13 +95,21 @@ public class CameraController : MonoBehaviour
 
     private void ClampCameraPosition()
     {
+        // Calculate y bounds
         float cameraSize = Camera.main.orthographicSize;
-        float minCameraSizeX = minCameraSize * Camera.main.aspect;
+        float boundY = worldHeight / 2 - cameraSize + panSideMargin;
+        // Calculate zoom level
         float maxZoomLevel = maxCameraSize - minCameraSize;
         float zoomLevel = maxCameraSize - cameraSize;
-        float overallMaxDistFromCenterX = worldWidth / 2 - minCameraSizeX + panSideMargin;
-        float currentMaxDistFromCenterX = (zoomLevel / maxZoomLevel) * overallMaxDistFromCenterX;
+        // Calculate x bounds based on zoom level
+        float minCameraSizeX = minCameraSize * Camera.main.aspect;
+        float maxBoundX = worldWidth / 2 - minCameraSizeX + panSideMargin;
+        float boundX = (zoomLevel / maxZoomLevel) * maxBoundX;
 
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -currentMaxDistFromCenterX, currentMaxDistFromCenterX), Mathf.Clamp(transform.position.y, -worldHeight / 2 + cameraSize - panSideMargin, worldHeight / 2 - cameraSize + panSideMargin), transform.position.z);
+        // Calculate clamped position values
+        float clampedX = Mathf.Clamp(transform.position.x, -boundX, boundX);
+        float clampedY = Mathf.Clamp(transform.position.y, -boundY, boundY);
+
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
     }
 }
