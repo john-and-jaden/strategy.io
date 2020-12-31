@@ -10,11 +10,6 @@ public class Worker : Unit
     private Cluster assignedCluster;
     private Resource assignedResource;
 
-    new void Start()
-    {
-        base.Start();
-    }
-
     new protected void Update()
     {
         base.Update();
