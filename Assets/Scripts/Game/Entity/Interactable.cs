@@ -36,6 +36,7 @@ public abstract class Interactable : MonoBehaviour
 
         Vector2 healthBarPos = transform.position + Vector3.up * healthBarOffset;
         healthBar = Instantiate(healthBarPrefab, healthBarPos, Quaternion.identity, GameManager.SelectionSystem.IndicatorParent);
+        healthBar.enabled = false;
     }
 
     protected void UpdateIndicators()
