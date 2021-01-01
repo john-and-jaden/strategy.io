@@ -30,6 +30,9 @@ public abstract class Unit : Interactable
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
         healthBar.transform.position = transform.position + Vector3.up * healthBarOffset;
+
+        if (state == UnitState.RELOCATING) UpdateRelocate();
+
         base.Update();
     }
 

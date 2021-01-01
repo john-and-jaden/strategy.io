@@ -12,18 +12,9 @@ public class Worker : Unit
 
     new protected void Update()
     {
+        if (state == UnitState.GATHERING) UpdateGather();
+        
         base.Update();
-
-        // Do action based on state
-        switch (state)
-        {
-            case UnitState.RELOCATING:
-                UpdateRelocate();
-                break;
-            case UnitState.GATHERING:
-                UpdateGather();
-                break;
-        }
     }
 
     public override void Interact(Vector3 targetPos)
