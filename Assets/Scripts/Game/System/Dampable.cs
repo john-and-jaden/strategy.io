@@ -5,9 +5,7 @@ public class Dampable
     private float speed;
     public float Speed { get { return speed; } }
     private float minSpeed;
-    public float MinSpeed { set { minSpeed = value; } }
     private float maxSpeed;
-    public float MaxSpeed { set { maxSpeed = value; } }
     private float lastSpeed;
     private float dampTime;
     private float timer;
