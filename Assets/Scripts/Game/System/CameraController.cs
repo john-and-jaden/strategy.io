@@ -14,9 +14,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float panDampTime = 0.5f;
     [SerializeField] private float maxPanSpeed = 20f;
     [SerializeField] private float panAcceleration = 0.1f;
+
+    [Tooltip("The amount of space in world units beyond the map extents that the camera can view.")]
     [SerializeField] private int panSideMargin = 10;
 
-    [Tooltip("The proportion of the screen which detects mouse input to pan the camera")]
+    [Tooltip("The proportion of the screen which detects mouse input to pan the camera.")]
     [SerializeField] private float panScreenEdgeProportion = 0.1f;
 
     Dampable xEdgeSpeedManager;

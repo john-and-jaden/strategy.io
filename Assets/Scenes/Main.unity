@@ -791,15 +791,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aab82ac44c34924d84a69735cd6cb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollDampTime: 0.1
-  scrollSensitivity: 0.05
+  scrollDampTime: 0.3
+  scrollSensitivity: 1
   minCameraSize: 5
   invertScrolling: 0
-  panDampTime: 0.5
-  maxCameraPanSpeed: 20
+  panDampTime: 0.2
+  maxPanSpeed: 20
   panAcceleration: 0.1
-  panSideMargins: 10
-  panScreenEdgeProportion: 0.1
+  panSideMargin: 10
+  panScreenEdgeProportion: 0.05
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
