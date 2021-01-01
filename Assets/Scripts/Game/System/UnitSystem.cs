@@ -36,14 +36,7 @@ public class UnitSystem : MonoBehaviour
             // Set units destination
             foreach (Unit unit in units)
             {
-                if (GameManager.SelectionSystem.HighlightedCluster != null)
-                {
-                    unit.Gather(GameManager.SelectionSystem.HighlightedCluster);
-                }
-                else
-                {
-                    unit.Relocate(mousePos);
-                }
+                unit.Interact(mousePos);
             }
         }
     }

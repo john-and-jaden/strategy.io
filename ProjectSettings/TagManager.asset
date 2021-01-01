@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Unit
+  - Resource
+  - Building
   - 
   - 
   - 
@@ -38,11 +38,23 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 2823871979
+    locked: 0
+  - name: Indicators
+    uniqueID: 905583285
+    locked: 0
+  - name: Resources
+    uniqueID: 1557844199
+    locked: 0
+  - name: Drops
+    uniqueID: 2377499569
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Main
-    uniqueID: 2823871979
+  - name: Effects
+    uniqueID: 2857155197
     locked: 0
   - name: UI
     uniqueID: 2632675893

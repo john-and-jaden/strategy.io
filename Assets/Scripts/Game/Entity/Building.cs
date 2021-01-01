@@ -1,1 +1,1 @@
-﻿public class Building : Selectable { }
+public class Building : Interactable { }
