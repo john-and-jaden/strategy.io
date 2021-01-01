@@ -40,36 +40,19 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        // Update speed variable, zoom and move camera accordingly
         maxPanSpeed = maxPanSpeed * Time.deltaTime;
-
-        // Zoom and move camera accordingly
         float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? 1 : -1);
         scrollSpeedManager.UpdateSpeed(scrollAcceleration);
         Zoom(scrollSpeedManager.Speed);
 
-        PanUsingMouseAndKeyboard();
+        // Move camera using keyboard
+        MoveCamera(Input.GetAxis("Horizontal") * maxPanSpeed, Input.GetAxis("Vertical") * maxPanSpeed);
+
+        // Move camera using mouse if near screen edge
+        MoveCameraUsingMouse();
 
         ClampCameraPosition();
-    }
-
-    private void PanUsingMouseAndKeyboard()
-    {
-        // Pass mouse and keyboard pan inputs to pan method
-        Vector2 keyboardPanInput = new Vector2(Input.GetAxis("Horizontal") * maxPanSpeed, Input.GetAxis("Vertical") * maxPanSpeed);
-        Vector2 sumMouseAndKeyboardInputs = GetMousePanInput() + keyboardPanInput;
-        Pan(sumMouseAndKeyboardInputs.x, sumMouseAndKeyboardInputs.y);
-    }
-
-    private Vector2 GetMousePanInput()
-    {
-        Vector2 mousePosViewPort = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        int xDir = mousePosViewPort.x < panScreenEdgeProportion ? -1 : (mousePosViewPort.x > 1 - panScreenEdgeProportion ? 1 : 0);
-        int yDir = mousePosViewPort.y < panScreenEdgeProportion ? -1 : (mousePosViewPort.y > 1 - panScreenEdgeProportion ? 1 : 0);
-
-        xEdgeSpeedManager.UpdateSpeed(panAcceleration * xDir);
-        yEdgeSpeedManager.UpdateSpeed(panAcceleration * yDir);
-
-        return new Vector2(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
     }
 
     private void Zoom(float sizeDelta)
@@ -86,16 +69,28 @@ public class CameraController : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float changeRatio = clampedSizeDelta / Camera.main.orthographicSize;
             Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
-            Pan(cameraDelta.x, cameraDelta.y);
+            MoveCamera(cameraDelta.x, cameraDelta.y);
         }
 
         // Zoom camera
         Camera.main.orthographicSize += clampedSizeDelta;
     }
 
-    private void Pan(float xDelta, float yDelta)
+    private void MoveCameraUsingMouse()
     {
-        transform.position += new Vector3(Mathf.Clamp(xDelta, -maxPanSpeed, maxPanSpeed), Mathf.Clamp(yDelta, -maxPanSpeed, maxPanSpeed), 0);
+        Vector2 mousePosViewPort = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        int xDir = mousePosViewPort.x < panScreenEdgeProportion ? -1 : (mousePosViewPort.x > 1 - panScreenEdgeProportion ? 1 : 0);
+        int yDir = mousePosViewPort.y < panScreenEdgeProportion ? -1 : (mousePosViewPort.y > 1 - panScreenEdgeProportion ? 1 : 0);
+
+        xEdgeSpeedManager.UpdateSpeed(panAcceleration * xDir);
+        yEdgeSpeedManager.UpdateSpeed(panAcceleration * yDir);
+
+        MoveCamera(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
+    }
+
+    private void MoveCamera(float xDelta, float yDelta)
+    {
+        transform.position += new Vector3(xDelta, yDelta, 0);
     }
 
     private void ClampCameraPosition()
