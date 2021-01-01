@@ -90,7 +90,7 @@ public class CameraController : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float changeRatio = clampedSizeDelta / Camera.main.orthographicSize;
             Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
-            Pan(cameraDelta.x, cameraDelta.y);
+            UnclampedPan(cameraDelta.x, cameraDelta.y);
         }
 
         // Zoom camera
@@ -100,6 +100,11 @@ public class CameraController : MonoBehaviour
     private void Pan(float xDelta, float yDelta)
     {
         transform.position += new Vector3(Mathf.Clamp(xDelta, -perFrameMaxPanSpeed, perFrameMaxPanSpeed), Mathf.Clamp(yDelta, -perFrameMaxPanSpeed, perFrameMaxPanSpeed), 0);
+    }
+
+    private void UnclampedPan(float xDelta, float yDelta)
+    {
+        transform.position += new Vector3(xDelta, yDelta, 0);
     }
 
     private void ClampCameraPosition()
