@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : Selectable
+public class Resource : Interactable
 {
     [SerializeField] private ResourceDrop resourceDropPrefab;
     [SerializeField] private int resourceDropCount = 2;
