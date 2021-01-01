@@ -10,7 +10,7 @@ public abstract class Interactable : MonoBehaviour
     [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
     [SerializeField] private SpriteRenderer selectIndicatorPrefab;
     [SerializeField] private SpriteRenderer healthBarPrefab;
-    [SerializeField] private float healthBarOffset = 0.7f;
+    [SerializeField] protected float healthBarOffset = 0.7f;
     [SerializeField] private float healthBarFadeDelay = 2f;
     [SerializeField] private float maxHealth = 10;
 

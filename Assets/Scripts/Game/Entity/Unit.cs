@@ -29,7 +29,7 @@ public abstract class Unit : Interactable
     {
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
-        healthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z);
+        healthBar.transform.position = transform.position + Vector3.up * healthBarOffset;
         base.Update();
     }
 
@@ -70,10 +70,8 @@ public abstract class Unit : Interactable
         if (targetDistSqr < GameManager.UnitSystem.GroupRadiusSqr)
         {
             state = UnitState.IDLE;
+            return;
         }
-        else
-        {
-            transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-        }
+        transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
     }
 }
