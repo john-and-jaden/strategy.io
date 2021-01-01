@@ -10,20 +10,22 @@ public abstract class Interactable : MonoBehaviour
     [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
     [SerializeField] private SpriteRenderer selectIndicatorPrefab;
     [SerializeField] private SpriteRenderer healthBarPrefab;
-    [SerializeField] private float healthBarFadeTime = 2f;
-    [SerializeField] private float initialDurability = 10;
+    [SerializeField] private float healthBarOffset = 0.7f;
+    [SerializeField] private float healthBarFadeDelay = 2f;
+    [SerializeField] private float maxHealth = 10;
 
-    private float durability;
-    public float Durability { get { return durability; } }
+    private float health;
+    public float Health { get { return health; } }
 
     protected bool hovered;
     protected bool selected;
-    protected DestroyedEvent onDestroyed = new DestroyedEvent();
     protected SpriteRenderer hoverIndicator;
     protected SpriteRenderer selectIndicator;
     protected SpriteRenderer healthBar;
 
     private float healthBarFadeTimer = 0f;
+    
+    protected DestroyedEvent onDestroyed = new DestroyedEvent();
 
     protected void SpawnIndicators()
     {
@@ -31,15 +33,15 @@ public abstract class Interactable : MonoBehaviour
         selectIndicator = Instantiate(selectIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
         hoverIndicator.transform.position = transform.position;
         selectIndicator.transform.position = transform.position;
-        healthBar = Instantiate(healthBarPrefab, GameManager.SelectionSystem.IndicatorParent);
-        healthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z);
+
+        Vector2 healthBarPos = transform.position + Vector3.up * healthBarOffset;
+        healthBar = Instantiate(healthBarPrefab, healthBarPos, Quaternion.identity, GameManager.SelectionSystem.IndicatorParent);
     }
 
     protected void UpdateIndicators()
     {
         hoverIndicator.enabled = hovered;
         selectIndicator.enabled = selected;
-        healthBar.enabled = durability != initialDurability;
     }
 
     protected void DestroyIndicators()
@@ -51,14 +53,19 @@ public abstract class Interactable : MonoBehaviour
 
     protected void Start()
     {
-        durability = initialDurability;
+        health = maxHealth;
         SpawnIndicators();
     }
 
     protected void Update()
     {
         UpdateIndicators();
-        if ((healthBarFadeTimer += Time.deltaTime) >= healthBarFadeTime) durability = initialDurability;
+
+        healthBarFadeTimer += Time.deltaTime;
+        if (healthBarFadeTimer >= healthBarFadeDelay)
+        {
+            healthBar.enabled = false;
+        }
     }
 
     public void SetHovered(bool hovered)
@@ -73,11 +80,12 @@ public abstract class Interactable : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        durability -= damage;
-        healthBar.size = new Vector2(durability / initialDurability, healthBar.size.y);
-        healthBarFadeTimer = 0f;
+        health -= damage;
+        if (health <= 0) DestroySelf();
 
-        if (durability <= 0) DestroySelf();
+        healthBarFadeTimer = 0f;
+        healthBar.size = new Vector2(health / maxHealth, healthBar.size.y);
+        healthBar.enabled = true;
     }
 
     protected virtual void DestroySelf()

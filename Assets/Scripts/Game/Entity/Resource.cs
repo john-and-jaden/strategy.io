@@ -16,11 +16,9 @@ public class Resource : Interactable
 
     override protected void DestroySelf()
     {
-        DestroyIndicators();
         cluster.Resources.Remove(this);
-        onDestroyed.Invoke();
         SpawnResourceDrops();
-        Destroy(gameObject);
+        base.DestroySelf();
     }
 
     private void SpawnResourceDrops()
