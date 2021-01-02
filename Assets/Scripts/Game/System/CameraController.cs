@@ -14,10 +14,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float panDampTime = 0.5f;
     [SerializeField] private float maxPanSpeed = 20f;
     [SerializeField] private float panAcceleration = 0.1f;
-
     [Tooltip("The amount of space in world units beyond the map extents that the camera can view.")]
-    [SerializeField] private int panSideMargin = 10;
-
+    [SerializeField] private int worldPanMargin = 10;
     [Tooltip("The proportion of the screen which detects mouse input to pan the camera.")]
     [SerializeField] private float panScreenEdgeProportion = 0.1f;
 
@@ -34,7 +32,7 @@ public class CameraController : MonoBehaviour
         // Set class fields
         worldWidth = GameManager.GridSystem.GetDimensions().x;
         worldHeight = GameManager.GridSystem.GetDimensions().y;
-        maxCameraSize = worldHeight / 2 + panSideMargin;
+        maxCameraSize = worldHeight / 2 + worldPanMargin;
         xEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
         yEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
         scrollSpeedManager = new Dampable(scrollDampTime);
@@ -42,70 +40,84 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        // Update speed variable, zoom and move camera accordingly
-        maxPanSpeed = maxPanSpeed * Time.deltaTime;
-        float scrollAcceleration = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity * (invertScrolling ? 1 : -1);
-        scrollSpeedManager.UpdateSpeed(scrollAcceleration);
-        Zoom(scrollSpeedManager.Speed);
+        // Get scroll input and zoom the camera
+        float scrollInput = GetScrollInput();
+        Zoom(scrollInput);
 
-        // Move camera using keyboard
-        MoveCamera(Input.GetAxis("Horizontal") * maxPanSpeed, Input.GetAxis("Vertical") * maxPanSpeed);
+        // Get movement inputs and pan the camera
+        Vector2 keyboardPanInput = GetKeyboardPanInput();
+        Vector2 mousePanInput = GetMousePanInput();
+        Pan(keyboardPanInput + mousePanInput);
 
-        // Move camera using mouse if near screen edge
-        MoveCameraUsingMouse();
-
+        // Clamp camera position to world bounds
         ClampCameraPosition();
+    }
+
+    private float GetScrollInput()
+    {
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+        scrollSpeedManager.UpdateSpeed(scrollInput * scrollSensitivity * (invertScrolling ? 1 : -1));
+        return scrollSpeedManager.Speed;
     }
 
     private void Zoom(float sizeDelta)
     {
-        // Clamp input
+        // Clamp size delta
         float currentCameraSize = Camera.main.orthographicSize;
-        float targetCameraSize = currentCameraSize + sizeDelta;
-        float clampedTargetCameraSize = Mathf.Clamp(targetCameraSize, minCameraSize, maxCameraSize);
-        float clampedSizeDelta = clampedTargetCameraSize - currentCameraSize;
+        float targetCameraSize = Mathf.Clamp(currentCameraSize + sizeDelta, minCameraSize, maxCameraSize);
+        float clampedSizeDelta = targetCameraSize - currentCameraSize;
 
         // If zooming in, move camera according to desired zoom amount and mouse position
         if (clampedSizeDelta < 0)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float changeRatio = clampedSizeDelta / Camera.main.orthographicSize;
-            Vector2 cameraDelta = changeRatio * (mousePosition - transform.position) * -1;
-            MoveCamera(cameraDelta.x, cameraDelta.y);
+            float changeRatio = clampedSizeDelta / currentCameraSize;
+            Vector3 cameraDelta = (mousePosition - transform.position) * changeRatio * -1;
+            transform.position += cameraDelta;
         }
 
         // Zoom camera
         Camera.main.orthographicSize += clampedSizeDelta;
     }
 
-    private void MoveCameraUsingMouse()
+    private Vector2 GetKeyboardPanInput()
     {
-        Vector2 mousePosViewPort = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        int xDir = mousePosViewPort.x < panScreenEdgeProportion ? -1 : (mousePosViewPort.x > 1 - panScreenEdgeProportion ? 1 : 0);
-        int yDir = mousePosViewPort.y < panScreenEdgeProportion ? -1 : (mousePosViewPort.y > 1 - panScreenEdgeProportion ? 1 : 0);
-
-        xEdgeSpeedManager.UpdateSpeed(panAcceleration * xDir);
-        yEdgeSpeedManager.UpdateSpeed(panAcceleration * yDir);
-
-        MoveCamera(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
+        Vector2 keyboardPanInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        return keyboardPanInput * maxPanSpeed;
     }
 
-    private void MoveCamera(float xDelta, float yDelta)
+    private Vector2 GetMousePanInput()
     {
-        transform.position += new Vector3(xDelta, yDelta, 0);
+        Vector2 mouseViewportPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        int xDir = mouseViewportPos.x < panScreenEdgeProportion ? -1 : (mouseViewportPos.x > 1 - panScreenEdgeProportion ? 1 : 0);
+        int yDir = mouseViewportPos.y < panScreenEdgeProportion ? -1 : (mouseViewportPos.y > 1 - panScreenEdgeProportion ? 1 : 0);
+
+        xEdgeSpeedManager.UpdateSpeed(panAcceleration * xDir * Time.deltaTime);
+        yEdgeSpeedManager.UpdateSpeed(panAcceleration * yDir * Time.deltaTime);
+
+        return new Vector2(xEdgeSpeedManager.Speed, yEdgeSpeedManager.Speed);
+    }
+
+    private void Pan(Vector2 panDelta)
+    {
+        float clampedX = Mathf.Clamp(panDelta.x, -maxPanSpeed, maxPanSpeed);
+        float clampedY = Mathf.Clamp(panDelta.y, -maxPanSpeed, maxPanSpeed);
+        transform.position += new Vector3(clampedX, clampedY) * Time.deltaTime;
     }
 
     private void ClampCameraPosition()
     {
         // Calculate y bounds
         float cameraSize = Camera.main.orthographicSize;
-        float boundY = worldHeight / 2 - cameraSize + panSideMargin;
+        float boundY = worldHeight / 2 - cameraSize + worldPanMargin;
+
         // Calculate zoom level
         float maxZoomLevel = maxCameraSize - minCameraSize;
         float zoomLevel = maxCameraSize - cameraSize;
+
         // Calculate x bounds based on zoom level
         float minCameraSizeX = minCameraSize * Camera.main.aspect;
-        float maxBoundX = worldWidth / 2 - minCameraSizeX + panSideMargin;
+        float maxBoundX = worldWidth / 2 - minCameraSizeX + worldPanMargin;
         float boundX = (zoomLevel / maxZoomLevel) * maxBoundX;
 
         // Calculate clamped position values

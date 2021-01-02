@@ -797,8 +797,8 @@ MonoBehaviour:
   invertScrolling: 0
   panDampTime: 0.2
   maxPanSpeed: 20
-  panAcceleration: 0.1
-  panSideMargin: 10
+  panAcceleration: 50
+  worldPanMargin: 10
   panScreenEdgeProportion: 0.05
 --- !u!20 &519420031
 Camera:
