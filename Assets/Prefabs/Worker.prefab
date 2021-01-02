@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 376293138153766181}
   - component: {fileID: 376293138153766169}
   - component: {fileID: 376293138153766183}
-  - component: {fileID: 376293138153766168}
-  m_Layer: 0
-  m_Name: Unit
+  - component: {fileID: 181007309694338732}
+  m_Layer: 8
+  m_Name: Worker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1471095317
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -121,7 +121,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
---- !u!114 &376293138153766168
+--- !u!114 &181007309694338732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,14 +130,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 376293138153766180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5188b8c9517ba674d8b245837e6c7fda, type: 3}
+  m_Script: {fileID: 11500000, guid: 5618a45d7e3884754b572ff70b142c2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hoverIndicatorPrefab: {fileID: 8694489509828249487, guid: d2890a4cec30af3449391b0d55f96207,
     type: 3}
   selectIndicatorPrefab: {fileID: 1919610854626468484, guid: 7998739ef2cef4242bac97161b1fce17,
     type: 3}
-  moveSpeed: 10
-  softCollisionRadius: 0.6
-  gatherRate: 5
-  maxGatherDist: 1.1
+  healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
+    type: 3}
+  initialDurability: 10
+  softCollisionRadius: 0.5
+  moveSpeed: 4
+  gatherRate: 1
+  maxGatherDist: 1.2

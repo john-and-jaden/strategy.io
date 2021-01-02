@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,8 +15,8 @@ public class SelectionSystem : MonoBehaviour
     public Cluster HighlightedCluster { get { return highlightedCluster; } }
 
     private ContactFilter2D selectionFilter;
-    private List<Selectable> selection;
-    private List<Selectable> hoverTargets;
+    private List<Interactable> selection;
+    private List<Interactable> hoverTargets;
     private List<Collider2D> overlapResults;
     private SpriteRenderer boxSelectIndicator;
     private Vector2 boxSelectStartPos;
@@ -28,8 +27,8 @@ public class SelectionSystem : MonoBehaviour
         indicatorParent = new GameObject("Selection Indicators").transform;
         selectionFilter = new ContactFilter2D();
         selectionFilter.layerMask = selectionMask;
-        selection = new List<Selectable>();
-        hoverTargets = new List<Selectable>();
+        selection = new List<Interactable>();
+        hoverTargets = new List<Interactable>();
         overlapResults = new List<Collider2D>();
         boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab, indicatorParent);
         boxSelectIndicator.enabled = false;
@@ -54,7 +53,7 @@ public class SelectionSystem : MonoBehaviour
             Vector2 boxDiff = mousePos - boxSelectStartPos;
             Vector2 boxSize = new Vector2(Mathf.Abs(boxDiff.x), Mathf.Abs(boxDiff.y));
             Physics2D.OverlapBox(boxCenter, boxSize, 0, selectionFilter, overlapResults);
-            hoverTargets = FilterSelectables(overlapResults);
+            hoverTargets = FilterInteractables(overlapResults);
 
             // Update indicator box
             boxSelectIndicator.transform.position = boxCenter;
@@ -64,7 +63,7 @@ public class SelectionSystem : MonoBehaviour
         {
             // Get nearest object within range of cursor
             Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
-            Selectable nearest = GetNearestSelectable(FilterSelectables(overlapResults), mousePos);
+            Interactable nearest = GetNearestInteractable(FilterInteractables(overlapResults), mousePos);
             if (nearest)
             {
                 if (nearest.GetType().IsSubclassOf(typeof(Resource)))
@@ -131,35 +130,35 @@ public class SelectionSystem : MonoBehaviour
         }
     }
 
-    public List<T> GetSelectionOfType<T>() where T : Selectable
+    public List<T> GetSelectionOfType<T>() where T : Interactable
     {
         return selection.Select(s => s.GetComponent<T>()).ToList();
     }
 
-    private List<Selectable> FilterSelectables(List<Collider2D> colliders)
+    private List<Interactable> FilterInteractables(List<Collider2D> colliders)
     {
         return colliders.Where(c =>
         {
-            Selectable s;
-            return c.TryGetComponent<Selectable>(out s);
+            Interactable s;
+            return c.TryGetComponent<Interactable>(out s);
         }).Select(x =>
         {
-            return x.GetComponent<Selectable>();
+            return x.GetComponent<Interactable>();
         }).ToList();
     }
 
-    private bool ContainsType<T>(List<Selectable> selectables) where T : Selectable
+    private bool ContainsType<T>(List<Interactable> interactables) where T : Interactable
     {
-        return selectables.Any(s =>
+        return interactables.Any(s =>
         {
             T t;
             return s.TryGetComponent<T>(out t);
         });
     }
 
-    private List<T> FilterType<T>(List<Selectable> selectables) where T : Selectable
+    private List<T> FilterType<T>(List<Interactable> interactables) where T : Interactable
     {
-        return selectables.Where(x =>
+        return interactables.Where(x =>
         {
             T t;
             return x.TryGetComponent<T>(out t);
@@ -169,13 +168,13 @@ public class SelectionSystem : MonoBehaviour
         }).ToList();
     }
 
-    private Selectable GetNearestSelectable(List<Selectable> selectables, Vector2 targetPos)
+    private Interactable GetNearestInteractable(List<Interactable> interactables, Vector2 targetPos)
     {
         int nearestIdx = -1;
         float smallestDist = selectDistance * selectDistance + 1;
-        for (int i = 0; i < selectables.Count; i++)
+        for (int i = 0; i < interactables.Count; i++)
         {
-            Vector2 dir = targetPos - (Vector2)selectables[i].transform.position;
+            Vector2 dir = targetPos - (Vector2)interactables[i].transform.position;
             float sqrDist = dir.sqrMagnitude;
             if (sqrDist < smallestDist)
             {
@@ -183,7 +182,7 @@ public class SelectionSystem : MonoBehaviour
                 smallestDist = sqrDist;
             }
         }
-        return nearestIdx >= 0 ? selectables[nearestIdx] : null;
+        return nearestIdx >= 0 ? interactables[nearestIdx] : null;
     }
 
     private void HighlightCluster(Resource resource)

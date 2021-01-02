@@ -1,47 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class Resource : Selectable
+public class Resource : Interactable
 {
-    [System.Serializable] public class ResourceDestroyedEvent : UnityEvent { }
-    [SerializeField] private Cluster cluster;
+    [SerializeField] private ResourceDrop resourceDropPrefab;
+    [SerializeField] private int resourceDropCount = 2;
+    [SerializeField] private float resourceDropMaxPopForce = 5f;
+
+    private Cluster cluster;
     public Cluster Cluster
     {
         get { return cluster; }
         set { cluster = value; }
     }
 
-    [SerializeField] private float durability = 10;
-    public float Durability { get { return durability; } }
-
-    private ResourceDestroyedEvent onDestroyed = new ResourceDestroyedEvent();
-
-    public void AddDestroyedListener(UnityAction listener)
+    override protected void DestroySelf()
     {
-        onDestroyed.AddListener(listener);
-    }
-
-    public void RemoveDestroyedListener(UnityAction listener)
-    {
-        onDestroyed.RemoveListener(listener);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        durability -= damage;
-        if (durability <= 0)
-        {
-            DestroySelf();
-        }
-    }
-
-    private void DestroySelf()
-    {
-        DestroyIndicators();
         cluster.Resources.Remove(this);
-        onDestroyed.Invoke();
-        Destroy(gameObject);
+        SpawnResourceDrops();
+        base.DestroySelf();
+    }
+
+    private void SpawnResourceDrops()
+    {
+        for (int i = 0; i < resourceDropCount; i++)
+        {
+            ResourceDrop drop = Instantiate(resourceDropPrefab, transform.position, Quaternion.identity);
+            Vector2 forceDir = Random.insideUnitCircle.normalized;
+            float forceScale = Random.Range(0, 1f);
+            Vector2 popForce = forceDir * forceScale * resourceDropMaxPopForce;
+            drop.GetComponent<Rigidbody2D>().AddForce(popForce, ForceMode2D.Impulse);
+        }
     }
 }
