@@ -220,8 +220,8 @@ MonoBehaviour:
   tilemap: {fileID: 345502806}
   groundTile: {fileID: 11400000, guid: 0d58421a54bb2fe4bb82e1a12db809b8, type: 2}
   borderTile: {fileID: 11400000, guid: 6f0270913afe62141bcb98dba76a7d9d, type: 2}
-  width: 70
-  height: 50
+  width: 120
+  height: 120
   borderSize: 6
 --- !u!114 &28465058
 MonoBehaviour:
@@ -584,11 +584,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aab82ac44c34924d84a69735cd6cb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minZoom: 5
-  maxZoom: 35
-  scrollDampTime: 0.3
-  scrollSensitivity: 4
-  scrollThreshold: 0.1
+  zoomDampTime: 0.3
+  zoomSensitivity: 1
+  minCameraSize: 5
+  invertScrolling: 0
+  panDampTime: 0.2
+  maxPanSpeed: 20
+  panAcceleration: 50
+  worldPanMargin: 10
+  panScreenEdgeProportion: 0.05
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -616,7 +620,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 35
+  orthographic size: 9.8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
