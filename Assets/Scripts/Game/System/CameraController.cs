@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [Header("Scrolling Settings")]
-    [SerializeField] private float scrollDampTime = 0.5f;
-    [SerializeField] private float scrollSensitivity = 0.1f;
+    [SerializeField] private float zoomDampTime = 0.5f;
+    [SerializeField] private float zoomSensitivity = 1f;
     [SerializeField] private float minCameraSize = 5f;
     [SerializeField] private bool invertScrolling = false;
 
@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
 
     Dampable xEdgeSpeedManager;
     Dampable yEdgeSpeedManager;
-    Dampable scrollSpeedManager;
+    Dampable zoomSpeedManager;
 
     private float worldWidth;
     private float worldHeight;
@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
         maxCameraSize = worldHeight / 2 + worldPanMargin;
         xEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
         yEdgeSpeedManager = new Dampable(panDampTime, -maxPanSpeed, maxPanSpeed);
-        scrollSpeedManager = new Dampable(scrollDampTime);
+        zoomSpeedManager = new Dampable(zoomDampTime);
     }
 
     void Update()
@@ -55,9 +55,9 @@ public class CameraController : MonoBehaviour
 
     private float GetScrollInput()
     {
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        scrollSpeedManager.UpdateSpeed(scrollInput * scrollSensitivity * (invertScrolling ? 1 : -1));
-        return scrollSpeedManager.Speed;
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel") * (invertScrolling ? 1 : -1);
+        zoomSpeedManager.UpdateSpeed(scrollInput * zoomSensitivity);
+        return zoomSpeedManager.Speed;
     }
 
     private void Zoom(float sizeDelta)
