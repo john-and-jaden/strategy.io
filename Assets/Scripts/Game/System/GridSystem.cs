@@ -19,6 +19,11 @@ public class GridSystem : MonoBehaviour
             Debug.LogWarning("Grid dimensions will behave unexpectedly with non-even values!");
         }
 
+        // Update tilemap bounds
+        tilemap.origin = new Vector3Int(-width / 2 - borderSize, -height / 2 - borderSize, 0);
+        tilemap.size = new Vector3Int(width + borderSize * 2, height + borderSize * 2, 0);
+
+        // Apply tiles
         tilemap.BoxFill(
             Vector3Int.zero,
             borderTile,
