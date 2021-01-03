@@ -1,4 +1,4 @@
 ﻿public enum UnitState
 {
-    IDLE, RELOCATING, GATHERING
+    IDLE, RELOCATING, GATHERING, ATTACKING
 }

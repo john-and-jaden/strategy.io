@@ -20,6 +20,12 @@ public class Resource : Interactable
         base.DestroySelf();
     }
 
+    new protected void Start()
+    {
+        playerId = -1;
+        base.Start();
+    }
+
     private void SpawnResourceDrops()
     {
         for (int i = 0; i < resourceDropCount; i++)
