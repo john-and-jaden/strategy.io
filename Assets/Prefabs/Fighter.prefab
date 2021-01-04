@@ -147,4 +147,4 @@ MonoBehaviour:
   moveSpeed: 5
   attackRate: 1
   damageAmount: 1
-  maxAttackDist: 1.2
+  maxAttackDist: 1
