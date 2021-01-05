@@ -1,19 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Fighter : Unit
 {
-    [SerializeField] private float attackRate = 1f;
     [SerializeField] private float damageAmount = 1f;
     [SerializeField] private float maxAttackDist = 2f;
+    [SerializeField] private float autoAttackRadius = 10f;
+    [SerializeField] private float attackCooldown = 1f;
 
     private Interactable assignedEnemy;
+    private bool canAttack = true;
+    private WaitForSeconds cooldownWaitForSeconds;
+
+    new protected void Start()
+    {
+        cooldownWaitForSeconds = new WaitForSeconds(attackCooldown);
+
+        base.Start();
+    }
 
     new protected void Update()
     {
         if (state == UnitState.ATTACKING) UpdateAttack();
+        else if (state == UnitState.IDLE) SeekNearbyEnemies();
+        Debug.Log(state);
         base.Update();
+    }
+
+    public override void Interact(Vector3 targetPos)
+    {
+        List<Interactable> hoveredInteractables = GameManager.SelectionSystem.HoverTargets;
+        if (hoveredInteractables.Count > 0 && hoveredInteractables[0].playerId != playerId && hoveredInteractables[0].playerId != -1)
+        {
+            Attack(hoveredInteractables[0]);
+        }
+        else
+        {
+            StopAttacking();
+            base.Interact(targetPos);
+        }
+    }
+
+    private void Attack(Interactable enemy)
+    {
+        assignedEnemy = enemy;
+        assignedEnemy.AddDestroyedListener(HandleEnemyDestruction);
+        state = UnitState.ATTACKING;
+    }
+
+    private void StopAttacking()
+    {
+        if (assignedEnemy == null) return;
+        assignedEnemy.RemoveDestroyedListener(HandleEnemyDestruction);
+        assignedEnemy = null;
+        state = UnitState.IDLE;
     }
 
     private void UpdateAttack()
@@ -24,7 +66,11 @@ public class Fighter : Unit
         float enemyDistSqr = Vector3.SqrMagnitude(transform.position - enemyPos);
         if (enemyDistSqr < maxAttackDist * maxAttackDist)
         {
-            assignedEnemy.TakeDamage(attackRate * damageAmount * Time.deltaTime);
+            if (canAttack)
+            {
+                StartCoroutine(AttackCooldown());
+                assignedEnemy.TakeDamage(damageAmount * Time.deltaTime);
+            }
         }
         else
         {
@@ -32,25 +78,25 @@ public class Fighter : Unit
         }
     }
 
-    public override void Interact(Vector3 targetPos)
+    private IEnumerator AttackCooldown()
     {
-        List<Interactable> hoveredInteractables = GameManager.SelectionSystem.HoverTargets;
-        if (hoveredInteractables.Count > 0 && hoveredInteractables[0].playerId != playerId && hoveredInteractables[0].playerId != -1)
+        canAttack = false;
+        yield return cooldownWaitForSeconds;
+        canAttack = true;
+    }
+
+    private void SeekNearbyEnemies()
+    {
+        List<Interactable> interactablesInAutoAttackRadius = Physics2D.OverlapCircleAll(transform.position, autoAttackRadius).Select(collider => collider.gameObject.GetComponent<Interactable>()).Where(interactable => interactable.playerId != playerId && interactable.playerId != -1).ToList();
+        Interactable closestEnemy = FindClosestInteractableInList(interactablesInAutoAttackRadius);
+        if (closestEnemy != null)
         {
-            assignedEnemy = hoveredInteractables[0];
-            state = UnitState.ATTACKING;
-        }
-        else
-        {
-            StopAttacking();
-            base.Interact(targetPos);
+            Attack(closestEnemy);
         }
     }
 
-    private void StopAttacking()
+    private void HandleEnemyDestruction()
     {
-        if (assignedEnemy == null) return;
-        // assignedEnemy.RemoveDestroyedListener(HandleResourceDestruction);
-        assignedEnemy = null;
+        StopAttacking();
     }
 }

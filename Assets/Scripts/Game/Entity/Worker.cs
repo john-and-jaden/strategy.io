@@ -13,7 +13,7 @@ public class Worker : Unit
     new protected void Update()
     {
         if (state == UnitState.GATHERING) UpdateGather();
-        
+
         base.Update();
     }
 
@@ -44,6 +44,7 @@ public class Worker : Unit
         if (assignedResource == null) return;
         assignedResource.RemoveDestroyedListener(HandleResourceDestruction);
         assignedResource = null;
+        state = UnitState.IDLE;
     }
 
     private void UpdateGather()
@@ -64,18 +65,7 @@ public class Worker : Unit
 
     private void AssignResource()
     {
-        float minDistance = float.MaxValue;
-        Resource closestResource = null;
-        foreach (Resource resource in assignedCluster.Resources)
-        {
-            float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
-            if (minDistance > distanceToNode)
-            {
-                minDistance = distanceToNode;
-                closestResource = resource;
-            }
-        }
-        assignedResource = closestResource;
+        assignedResource = (Resource)FindClosestInteractableInList(assignedCluster.Resources.ConvertAll(resource => (Interactable)resource));
         assignedResource.AddDestroyedListener(HandleResourceDestruction);
     }
 

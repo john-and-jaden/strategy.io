@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class Unit : Interactable
 {
@@ -63,6 +64,22 @@ public abstract class Unit : Interactable
     public virtual void Interact(Vector3 targetPos)
     {
         Relocate(targetPos);
+    }
+
+    protected Interactable FindClosestInteractableInList(List<Interactable> interactables)
+    {
+        float minDistance = float.MaxValue;
+        Interactable closest = null;
+        foreach (Interactable interactable in interactables)
+        {
+            float distance = Vector3.Distance(transform.position, interactable.transform.position);
+            if (minDistance > distance)
+            {
+                minDistance = distance;
+                closest = interactable;
+            }
+        }
+        return closest;
     }
 
     protected void UpdateRelocate()

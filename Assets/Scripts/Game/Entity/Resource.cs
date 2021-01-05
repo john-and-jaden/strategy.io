@@ -23,6 +23,7 @@ public class Resource : Interactable
     new protected void Start()
     {
         playerId = -1;
+        
         base.Start();
     }
 
