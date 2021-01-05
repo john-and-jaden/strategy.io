@@ -62,7 +62,7 @@ public class SelectionSystem : MonoBehaviour
         // Cancel hover on previous targets
         for (int i = 0; i < hoverTargets.Count; i++)
         {
-            hoverTargets[i].CancelHover();
+            hoverTargets[i].Unhover();
         }
         hoverTargets.Clear();
 
@@ -140,7 +140,7 @@ public class SelectionSystem : MonoBehaviour
         {
             for (int i = 0; i < selection.Count; i++)
             {
-                selection[i].CancelSelect();
+                selection[i].Deselect();
             }
             selection.Clear();
         }

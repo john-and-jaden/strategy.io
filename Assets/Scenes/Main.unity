@@ -1050,7 +1050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomDampTime: 0.3
-  zoomSensitivity: 1
+  zoomSensitivity: 0.8
   minCameraSize: 5
   invertScrolling: 0
   panDampTime: 0.2

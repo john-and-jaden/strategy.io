@@ -11,6 +11,12 @@ public class BuildingType : ScriptableObject
     [SerializeField] private Sprite placementIndicatorSprite;
     public Sprite PlacementIndicatorSprite { get { return placementIndicatorSprite; } }
 
+    [SerializeField] private int woodCost;
+    public int WoodCost { get { return woodCost; } }
+
+    [SerializeField] private int stoneCost;
+    public int StoneCost { get { return stoneCost; } }
+
     [SerializeField] private Vector2 sizeDimensions;
     public Vector2 SizeDimensions { get { return sizeDimensions; } }
 

@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Worker : Unit
 {
+    [SerializeField] private BuildingType[] buildingTypes;
     [SerializeField] private float gatherRate = 1f;
     [SerializeField] private float maxGatherDist = 2f;
 
     private Cluster assignedCluster;
     private Resource assignedResource;
 
-    new protected void Update()
+    protected override void Start()
+    {
+        base.Start();
+    }
+
+    protected override void Update()
     {
         if (state == UnitState.GATHERING) UpdateGather();
         
@@ -42,7 +48,7 @@ public class Worker : Unit
         assignedCluster = null;
 
         if (assignedResource == null) return;
-        assignedResource.RemoveDestroyedListener(HandleResourceDestruction);
+        assignedResource.RemoveDeathListener(HandleResourceDestruction);
         assignedResource = null;
     }
 
@@ -76,7 +82,7 @@ public class Worker : Unit
             }
         }
         assignedResource = closestResource;
-        assignedResource.AddDestroyedListener(HandleResourceDestruction);
+        assignedResource.AddDeathListener(HandleResourceDestruction);
     }
 
     private void HandleResourceDestruction()

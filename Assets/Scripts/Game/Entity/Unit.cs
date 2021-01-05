@@ -17,13 +17,13 @@ public abstract class Unit : Interactable
 
     private Collider2D[] softCollisionTargets;
 
-    protected void Start()
+    protected virtual void Start()
     {
         targetPos = transform.position;
         state = UnitState.IDLE;
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (state == UnitState.RELOCATING) UpdateRelocate();
     }
