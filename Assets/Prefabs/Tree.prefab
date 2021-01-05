@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4848408111497684337}
   - component: {fileID: -500430512623701868}
   - component: {fileID: 4848408111497684340}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,11 +27,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4848408111497684336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.49, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 5212944366957777655}
-  - {fileID: 4964319501085181467}
+  m_Children: [{fileID: 5212944366957777655}, {fileID: 4964319501085181467}]
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -71,8 +69,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1471095317
-  m_SortingLayer: 1
+  m_SortingLayerID: 1557844199
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
   m_Color: {r: 0.096293606, g: 0.31132078, b: 0.04552332, a: 1}
@@ -85,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &-500430512623701868
+--- !u!58 &
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,7 +113,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIndicator: {fileID: 5212944366957777654}
   selectIndicator: {fileID: 4964319501085181466}
-  durability: 10
+  healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
+    type: 3}
+  initialDurability: 10
+  resourceDropPrefab: {fileID: 8065496059092633356, guid: f66cc822aea8349c6810ad227ff4f913,
+    type: 3}
+  resourceDropCount: 2
+  resourceDropMaxPopForce: 3
 --- !u!1 &4964319501085181465
 GameObject:
   m_ObjectHideFlags: 0

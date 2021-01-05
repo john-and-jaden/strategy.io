@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2699085035380939588}
   - component: {fileID: -4779763435735099725}
   - component: {fileID: 2699085035380939592}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Building
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,9 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.45, y: 2.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 8526973018468834604}
-  - {fileID: 5967094903975915519}
+  m_Children: [{fileID: 8526973018468834604}, {fileID: 5967094903975915519}]
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -72,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1471095317
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 6fffd95378b142842b25a859ce53c677, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -107,7 +105,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &-4779763435735099725
+--- !u!61 &
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,6 +145,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIndicator: {fileID: 8526973018468834605}
   selectIndicator: {fileID: 5967094903975915518}
+  healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
+    type: 3}
+  initialDurability: 10
 --- !u!1 &5967094903975915517
 GameObject:
   m_ObjectHideFlags: 0

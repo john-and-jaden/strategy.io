@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +16,8 @@ public class SelectionSystem : MonoBehaviour
     public Cluster HighlightedCluster { get { return highlightedCluster; } }
 
     private ContactFilter2D selectionFilter;
-    private List<Selectable> selection;
-    private List<Selectable> hoverTargets;
+    private List<Interactable> selection;
+    private List<Interactable> hoverTargets;
     private List<Collider2D> overlapResults;
     private SpriteRenderer boxSelectIndicator;
     private Vector2 boxSelectStartPos;
@@ -30,8 +29,8 @@ public class SelectionSystem : MonoBehaviour
         indicatorParent = new GameObject("Selection Indicators").transform;
         selectionFilter = new ContactFilter2D();
         selectionFilter.layerMask = selectionMask;
-        selection = new List<Selectable>();
-        hoverTargets = new List<Selectable>();
+        selection = new List<Interactable>();
+        hoverTargets = new List<Interactable>();
         overlapResults = new List<Collider2D>();
         boxSelectIndicator = Instantiate(boxSelectIndicatorPrefab, indicatorParent);
         boxSelectIndicator.enabled = false;

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -37,14 +36,7 @@ public class UnitSystem : MonoBehaviour
             // Set units destination
             foreach (Unit unit in units)
             {
-                if (GameManager.SelectionSystem.HighlightedCluster != null)
-                {
-                    unit.Gather(GameManager.SelectionSystem.HighlightedCluster);
-                }
-                else
-                {
-                    unit.Relocate(mousePos);
-                }
+                unit.Interact(mousePos);
             }
         }
     }

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1256b198a5d877f49940fcc02331e2ae
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - hoverIndicatorPrefab: {instanceID: 0}
+  - selectIndicatorPrefab: {instanceID: 0}
+  - healthBarPrefab: {fileID: 2510616426098045995, guid: 41e1ad66c3dc84ea083849099d5853fd,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
