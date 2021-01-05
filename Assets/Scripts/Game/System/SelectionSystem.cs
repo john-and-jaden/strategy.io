@@ -93,7 +93,7 @@ public class SelectionSystem : MonoBehaviour
         Vector2 boxDiff = mousePos - boxSelectStartPos;
         Vector2 boxSize = new Vector2(Mathf.Abs(boxDiff.x), Mathf.Abs(boxDiff.y));
         Physics2D.OverlapBox(boxCenter, boxSize, 0, selectionFilter, overlapResults);
-        hoverTargets = SelectionHelper.Convert<Collider2D, Selectable>(overlapResults);
+        hoverTargets = SelectionHelper.Convert<Collider2D, Interactable>(overlapResults);
 
         // Update indicator box
         boxSelectIndicator.transform.position = boxCenter;
@@ -104,8 +104,8 @@ public class SelectionSystem : MonoBehaviour
     {
         // Get nearest object within range of cursor
         Physics2D.OverlapPoint(mousePos, selectionFilter, overlapResults);
-        List<Selectable> targetsInRange = SelectionHelper.Convert<Collider2D, Selectable>(overlapResults);
-        Selectable nearest = SelectionHelper.GetNearest(targetsInRange, mousePos);
+        List<Interactable> targetsInRange = SelectionHelper.Convert<Collider2D, Interactable>(overlapResults);
+        Interactable nearest = SelectionHelper.GetNearest(targetsInRange, mousePos);
         if (nearest != null)
         {
             // TODO: refactor this
@@ -160,27 +160,27 @@ public class SelectionSystem : MonoBehaviour
         // We could make this generic using type reflection, however that would make the code substantially more confusing
         if (SelectionHelper.ContainsAny<Unit>(hoverTargets) || SelectionHelper.ContainsOnly<Unit>(selection))
         {
-            List<Unit> selectedUnits = SelectionHelper.Convert<Selectable, Unit>(hoverTargets);
+            List<Unit> selectedUnits = SelectionHelper.Convert<Interactable, Unit>(hoverTargets);
             selection.AddRange(selectedUnits);
             selection = selection.Distinct().ToList();
         }
         else if (SelectionHelper.ContainsAny<Building>(hoverTargets) || SelectionHelper.ContainsOnly<Building>(selection))
         {
-            List<Building> selectedBuildings = SelectionHelper.Convert<Selectable, Building>(hoverTargets);
+            List<Building> selectedBuildings = SelectionHelper.Convert<Interactable, Building>(hoverTargets);
             selection.AddRange(selectedBuildings);
             selection = selection.Distinct().ToList();
         }
         else if (SelectionHelper.ContainsAny<Resource>(hoverTargets) || SelectionHelper.ContainsOnly<Resource>(selection))
         {
-            List<Resource> selectedResources = SelectionHelper.Convert<Selectable, Resource>(hoverTargets);
+            List<Resource> selectedResources = SelectionHelper.Convert<Interactable, Resource>(hoverTargets);
             selection.AddRange(selectedResources);
             selection = selection.Distinct().ToList();
         }
     }
 
-    public List<T> GetSelectionOfType<T>() where T : Selectable
+    public List<T> GetSelectionOfType<T>() where T : Interactable
     {
-        return SelectionHelper.Convert<Selectable, T>(selection);
+        return SelectionHelper.Convert<Interactable, T>(selection);
     }
 
     // TODO: refactor this
@@ -195,33 +195,33 @@ public class SelectionSystem : MonoBehaviour
 
     private static class SelectionHelper
     {
-        /// <summary>Returns whether a list contains any selectables of type S.</summary>
-        public static bool ContainsAny<S>(List<Selectable> selectables) where S : Selectable
+        /// <summary>Returns whether a list contains any interactables of type T.</summary>
+        public static bool ContainsAny<T>(List<Interactable> selectables) where T : Interactable
         {
-            return selectables.Any(s => s.TryGetComponent<S>(out S t));
+            return selectables.Any(x => x.TryGetComponent<T>(out T t));
         }
 
-        /// <summary>Returns whether a list contains only selectables of type S.</summary>
-        public static bool ContainsOnly<S>(List<Selectable> selectables) where S : Selectable
+        /// <summary>Returns whether a list contains only interactables of type T.</summary>
+        public static bool ContainsOnly<T>(List<Interactable> selectables) where T : Interactable
         {
-            return selectables.Any(s => s.TryGetComponent<S>(out S t));
+            return selectables.Any(x => x.TryGetComponent<T>(out T t));
         }
 
-        /// <summary>Gets all Selectable components of type S from <paramref name="components"/>.</summary>
-        /// <returns>List of selectables of type S.</returns>
-        public static List<S> Convert<C, S>(List<C> components)
+        /// <summary>Gets all Interactable components of type T from <paramref name="components"/>.</summary>
+        /// <returns>List of interactables of type T.</returns>
+        public static List<T> Convert<C, T>(List<C> components)
             where C : Component
-            where S : Selectable
+            where T : Interactable
         {
             return components
-                .Where(x => x.TryGetComponent<S>(out S s))
-                .Select(x => x.GetComponent<S>())
+                .Where(x => x.TryGetComponent<T>(out T t))
+                .Select(x => x.GetComponent<T>())
                 .ToList();
         }
 
-        /// <summary>Returns the nearest Selectable from <paramref name="components"/>
+        /// <summary>Returns the nearest Interactable from <paramref name="components"/>
         /// to the given <paramref name="targetPos"/>.</summary>
-        public static Selectable GetNearest(List<Selectable> components, Vector2 targetPos)
+        public static Interactable GetNearest(List<Interactable> components, Vector2 targetPos)
         {
             int nearestIdx = -1;
             float minDist = float.MaxValue;

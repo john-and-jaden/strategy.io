@@ -5,104 +5,92 @@ using UnityEngine.Events;
 
 public abstract class Interactable : MonoBehaviour
 {
-    [System.Serializable] public class DestroyedEvent : UnityEvent { }
+    [System.Serializable] public class DeathEvent : UnityEvent { }
+    [System.Serializable] public class HealthChangedEvent : UnityEvent<float> { }
+    [System.Serializable] public class MaxHealthChangedEvent : UnityEvent<float> { }
 
-    [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
-    [SerializeField] private SpriteRenderer selectIndicatorPrefab;
-    [SerializeField] private SpriteRenderer healthBarPrefab;
-    [SerializeField] protected float healthBarOffset = 0.7f;
-    [SerializeField] private float healthBarFadeDelay = 2f;
+    [SerializeField] private SpriteRenderer hoverIndicator;
+    [SerializeField] private SpriteRenderer selectIndicator;
+
     [SerializeField] private float maxHealth = 10;
+    public float MaxHealth { get { return maxHealth; } }
 
     private float health;
     public float Health { get { return health; } }
 
-    protected bool hovered;
-    protected bool selected;
-    protected SpriteRenderer hoverIndicator;
-    protected SpriteRenderer selectIndicator;
-    protected SpriteRenderer healthBar;
+    private DeathEvent onDeath = new DeathEvent();
+    private HealthChangedEvent onHealthChanged = new HealthChangedEvent();
+    private MaxHealthChangedEvent onMaxHealthChanged = new MaxHealthChangedEvent();
 
-    private float healthBarFadeTimer = 0f;
-    
-    protected DestroyedEvent onDestroyed = new DestroyedEvent();
-
-    protected void SpawnIndicators()
-    {
-        hoverIndicator = Instantiate(hoverIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        selectIndicator = Instantiate(selectIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        hoverIndicator.transform.position = transform.position;
-        selectIndicator.transform.position = transform.position;
-
-        Vector2 healthBarPos = transform.position + Vector3.up * healthBarOffset;
-        healthBar = Instantiate(healthBarPrefab, healthBarPos, Quaternion.identity, GameManager.SelectionSystem.IndicatorParent);
-        healthBar.enabled = false;
-    }
-
-    protected void UpdateIndicators()
-    {
-        hoverIndicator.enabled = hovered;
-        selectIndicator.enabled = selected;
-    }
-
-    protected void DestroyIndicators()
-    {
-        Destroy(hoverIndicator.gameObject);
-        Destroy(selectIndicator.gameObject);
-        Destroy(healthBar.gameObject);
-    }
-
-    protected void Start()
+    protected virtual void Awake()
     {
         health = maxHealth;
-        SpawnIndicators();
     }
 
-    protected void Update()
+    public void Hover()
     {
-        UpdateIndicators();
-
-        healthBarFadeTimer += Time.deltaTime;
-        if (healthBarFadeTimer >= healthBarFadeDelay)
-        {
-            healthBar.enabled = false;
-        }
+        if (hoverIndicator == null) return;
+        hoverIndicator.enabled = true;
     }
 
-    public void SetHovered(bool hovered)
+    public void CancelHover()
     {
-        this.hovered = hovered;
+        if (hoverIndicator == null) return;
+        hoverIndicator.enabled = false;
     }
 
-    public void SetSelected(bool selected)
+    public void Select()
     {
-        this.selected = selected;
+        if (selectIndicator == null) return;
+        selectIndicator.enabled = true;
+    }
+
+    public void CancelSelect()
+    {
+        if (selectIndicator == null) return;
+        selectIndicator.enabled = false;
     }
 
     public void TakeDamage(float damage)
     {
         health -= damage;
-        if (health <= 0) DestroySelf();
-
-        healthBarFadeTimer = 0f;
-        healthBar.size = new Vector2(health / maxHealth, healthBar.size.y);
-        healthBar.enabled = true;
+        onHealthChanged.Invoke(health);
+        if (health <= 0) Die();
     }
 
-    protected virtual void DestroySelf()
+    protected virtual void Die()
     {
-        DestroyIndicators();
-        onDestroyed.Invoke();
+        onDeath.Invoke();
         Destroy(gameObject);
     }
 
     public void AddDestroyedListener(UnityAction listener)
     {
-        onDestroyed.AddListener(listener);
+        onDeath.AddListener(listener);
     }
 
     public void RemoveDestroyedListener(UnityAction listener)
     {
-        onDestroyed.RemoveListener(listener);
+        onDeath.RemoveListener(listener);
+    }
+
+    public void AddHealthChangedListener(UnityAction<float> listener)
+    {
+        onHealthChanged.AddListener(listener);
+    }
+
+    public void RemoveHealthChangedListener(UnityAction<float> listener)
+    {
+        onHealthChanged.RemoveListener(listener);
+    }
+
+    public void AddMaxHealthChangedListener(UnityAction<float> listener)
+    {
+        onMaxHealthChanged.AddListener(listener);
+    }
+
+    public void RemoveMaxHealthChangedListener(UnityAction<float> listener)
+    {
+        onMaxHealthChanged.RemoveListener(listener);
     }
 }

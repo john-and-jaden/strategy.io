@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2699085035380939591}
   - component: {fileID: 2699085035380939590}
   - component: {fileID: 2699085035380939588}
-  - component: {fileID: -4779763435735099725}
+  - component: {fileID: 4354998054650172990}
   - component: {fileID: 2699085035380939592}
   m_Layer: 10
   m_Name: Building
@@ -30,7 +30,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.45, y: 2.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: [{fileID: 8526973018468834604}, {fileID: 5967094903975915519}]
+  m_Children:
+  - {fileID: 8526973018468834604}
+  - {fileID: 5967094903975915519}
+  - {fileID: 3791355608971308396}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105,7 +108,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &
+--- !u!61 &4354998054650172990
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,9 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIndicator: {fileID: 8526973018468834605}
   selectIndicator: {fileID: 5967094903975915518}
-  healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
-    type: 3}
-  initialDurability: 10
+  maxHealth: 10
 --- !u!1 &5967094903975915517
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,7 +217,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1471095317
-  m_SortingLayer: 1
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 246cb8e32d3ab1d46a65fd318d579d39, type: 3}
   m_Color: {r: 0.16570044, g: 0, b: 1, a: 1}
@@ -297,7 +298,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1471095317
-  m_SortingLayer: 1
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 246cb8e32d3ab1d46a65fd318d579d39, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -310,3 +311,73 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &1186566274989284946
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2699085035380939591}
+    m_Modifications:
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755119092871808994, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: parent
+      value: 
+      objectReference: {fileID: 2699085035380939592}
+    - target: {fileID: 6575012774223341719, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: m_Name
+      value: HealthBar
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f6366fa182d994fdfb9a3eea1f65151a, type: 3}
+--- !u!4 &3791355608971308396 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2659971976081879870, guid: f6366fa182d994fdfb9a3eea1f65151a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1186566274989284946}
+  m_PrefabAsset: {fileID: 0}

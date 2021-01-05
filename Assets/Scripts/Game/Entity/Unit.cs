@@ -17,21 +17,15 @@ public abstract class Unit : Interactable
 
     private Collider2D[] softCollisionTargets;
 
-    new void Start()
+    protected void Start()
     {
-        base.Start();
         targetPos = transform.position;
+        state = UnitState.IDLE;
     }
 
-    new protected void Update()
+    protected void Update()
     {
-        hoverIndicator.transform.position = transform.position;
-        selectIndicator.transform.position = transform.position;
-        healthBar.transform.position = transform.position + Vector3.up * healthBarOffset;
-
         if (state == UnitState.RELOCATING) UpdateRelocate();
-
-        base.Update();
     }
 
     void FixedUpdate()
