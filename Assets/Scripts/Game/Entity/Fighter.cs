@@ -25,7 +25,6 @@ public class Fighter : Unit
     {
         if (state == UnitState.ATTACKING) UpdateAttack();
         else if (state == UnitState.IDLE) SeekNearbyEnemies();
-        Debug.Log(state);
         base.Update();
     }
 
