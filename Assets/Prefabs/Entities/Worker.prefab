@@ -141,6 +141,8 @@ MonoBehaviour:
   maxHealth: 10
   softCollisionRadius: 0.5
   moveSpeed: 4
+  buildingTypes:
+  - {fileID: 11400000, guid: 97e9c9604d44c9f4d863ee5af980e906, type: 2}
   gatherRate: 5
   maxGatherDist: 1.2
 --- !u!1 &3269816437915353696

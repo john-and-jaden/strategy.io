@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingMenu : MonoBehaviour
+public class BuildingMenu : HUDMenu
 {
     [SerializeField] private BuildingSelector[] selectors;
 
-    public void SetBuildingTypes(List<BuildingType> buildingTypes)
+    public void SetBuildingTypes(BuildingType[] buildingTypes)
     {
-        if (buildingTypes.Count > selectors.Length)
+        if (buildingTypes.Length > selectors.Length)
         {
             Debug.LogError($"Number of building types exceeded menu capacity of {selectors.Length} building selectors!");
             return;
@@ -17,14 +17,14 @@ public class BuildingMenu : MonoBehaviour
         // Hide all selectors
         for (int i = 0; i < selectors.Length; i++)
         {
-            selectors[i].SetSelectorActive(false);
+            selectors[i].Close();
         }
 
         // Show and update however many selectors we need
-        for (int i = 0; i < buildingTypes.Count; i++)
+        for (int i = 0; i < buildingTypes.Length; i++)
         {
             selectors[i].SetBuildingType(buildingTypes[i]);
-            selectors[i].SetSelectorActive(true);
+            selectors[i].Open();
         }
     }
 }

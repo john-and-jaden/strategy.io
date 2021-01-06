@@ -17,8 +17,9 @@ public abstract class Unit : Interactable
 
     private Collider2D[] softCollisionTargets;
 
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
         targetPos = transform.position;
         state = UnitState.IDLE;
     }

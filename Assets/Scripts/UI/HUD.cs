@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class HUD : MonoBehaviour
 {
-    private static HUD instance;
-    public static HUD Instance { get { return instance; } }
+    private static BuildingMenu buildingMenu;
+    public static BuildingMenu BuildingMenu { get { return buildingMenu; } }
 
-    [SerializeField] private CanvasGroup buildingMenu;
+    private static HUD instance;
 
     void Awake()
     {
@@ -17,17 +17,7 @@ public class HUD : MonoBehaviour
             return;
         }
         instance = this;
-    }
 
-    public void SetBuildingMenuActive(bool active)
-    {
-        SetMenuActive(buildingMenu, active);
-    }
-
-    private void SetMenuActive(CanvasGroup menu, bool active)
-    {
-        menu.alpha = active ? 1 : 0;
-        menu.blocksRaycasts = active;
-        menu.interactable = active;
+        buildingMenu = GetComponentInChildren<BuildingMenu>();
     }
 }

@@ -11,11 +11,6 @@ public class Worker : Unit
     private Cluster assignedCluster;
     private Resource assignedResource;
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     protected override void Update()
     {
         if (state == UnitState.GATHERING) UpdateGather();
@@ -25,15 +20,34 @@ public class Worker : Unit
 
     public override void Interact(Vector3 targetPos)
     {
-        if (GameManager.SelectionSystem.HighlightedCluster != null)
+        if (GameManager.SelectionSystem.HasHoverTargetOfType<Resource>())
         {
-            Gather(GameManager.SelectionSystem.HighlightedCluster);
+            Gather(GameManager.SelectionSystem.GetHoverTargetsOfType<Resource>()[0].Cluster);
         }
         else
         {
             StopGathering();
             base.Interact(targetPos);
         }
+    }
+
+    public override void Select()
+    {
+        if (!interactive) return;
+
+        HUD.BuildingMenu.SetBuildingTypes(buildingTypes);
+        HUD.BuildingMenu.Open();
+
+        base.Select();
+    }
+
+    public override void Deselect()
+    {
+        if (!interactive) return;
+        
+        HUD.BuildingMenu.Close();
+
+        base.Deselect();
     }
 
     private void Gather(Cluster cluster)

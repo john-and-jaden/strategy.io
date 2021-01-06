@@ -4,24 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class BuildingSelector : MonoBehaviour
+public class BuildingSelector : HUDMenu
 {
     [SerializeField] private Image selectorIcon;
     [SerializeField] private TextMeshProUGUI selectorText;
 
     private BuildingType buildingType;
-
-    private Image buttonImage;
-
-    void Awake()
-    {
-        buttonImage = GetComponent<Image>();
-    }
-
-    public void SetSelectorActive(bool active)
-    {
-        buttonImage.enabled = active;
-    }
 
     public void SetBuildingType(BuildingType buildingType)
     {
