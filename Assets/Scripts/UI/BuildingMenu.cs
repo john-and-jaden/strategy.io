@@ -6,6 +6,14 @@ public class BuildingMenu : HUDMenu
 {
     [SerializeField] private BuildingSelector[] selectors;
 
+    private int numActive;
+
+    protected void Start()
+    {
+        GameManager.ResourceSystem.AddWoodChangedListener(HandleResourceChanged);
+        GameManager.ResourceSystem.AddStoneChangedListener(HandleResourceChanged);
+    }
+
     public void SetBuildingTypes(BuildingType[] buildingTypes)
     {
         if (buildingTypes.Length > selectors.Length)
@@ -21,10 +29,19 @@ public class BuildingMenu : HUDMenu
         }
 
         // Show and update however many selectors we need
-        for (int i = 0; i < buildingTypes.Length; i++)
+        numActive = buildingTypes.Length;
+        for (int i = 0; i < numActive; i++)
         {
             selectors[i].SetBuildingType(buildingTypes[i]);
             selectors[i].Open();
+        }
+    }
+
+    private void HandleResourceChanged(int resource)
+    {
+        for (int i = 0; i < numActive; i++)
+        {
+            selectors[i].UpdateAvailability();
         }
     }
 }

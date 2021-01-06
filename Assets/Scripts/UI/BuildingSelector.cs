@@ -16,6 +16,14 @@ public class BuildingSelector : HUDMenu
         this.buildingType = buildingType;
         selectorIcon.sprite = buildingType.PlacementIndicatorSprite;
         selectorText.text = buildingType.DisplayName;
+        UpdateAvailability();
+    }
+
+    public void UpdateAvailability()
+    {
+        bool hasWood = GameManager.ResourceSystem.Wood >= buildingType.WoodCost;
+        bool hasStone = GameManager.ResourceSystem.Stone >= buildingType.StoneCost;
+        canvasGroup.interactable = hasWood && hasStone;
     }
 
     public void HandleSelect()

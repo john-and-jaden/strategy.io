@@ -59,6 +59,8 @@ public class BuildingSystem : MonoBehaviour
 
     public void SpawnBuilding(BuildingType buildingType, Vector2 placementPos)
     {
+        GameManager.ResourceSystem.SpendWood(buildingType.WoodCost);
+        GameManager.ResourceSystem.SpendStone(buildingType.StoneCost);
         Instantiate(buildingType.BuildingPrefab, placementPos, Quaternion.identity, buildingParent);
     }
 

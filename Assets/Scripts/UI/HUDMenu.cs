@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(CanvasGroup))]
 public abstract class HUDMenu : MonoBehaviour
 {
-    private CanvasGroup canvasGroup;
+    protected CanvasGroup canvasGroup;
 
     protected virtual void Awake()
     {
@@ -26,6 +26,5 @@ public abstract class HUDMenu : MonoBehaviour
     {
         canvasGroup.alpha = active ? 1 : 0;
         canvasGroup.blocksRaycasts = active;
-        canvasGroup.interactable = active;
     }
 }
