@@ -37,7 +37,7 @@ public class BuildingSystem : MonoBehaviour
         CheckPlacement(mousePos);
 
         // On left-click, spawn active building type
-        if (Input.GetButtonDown("Fire1") && isPlacementValid)
+        if (Input.GetButtonDown("Fire1") && isPlacementValid && !GameManager.SelectionSystem.IsOverUI)
         {
             SpawnBuilding(activeBuildingType, mousePos);
             CancelSelection();
@@ -59,9 +59,24 @@ public class BuildingSystem : MonoBehaviour
 
     public void SpawnBuilding(BuildingType buildingType, Vector2 placementPos)
     {
+        // Expend the resource costs
         GameManager.ResourceSystem.SpendWood(buildingType.WoodCost);
         GameManager.ResourceSystem.SpendStone(buildingType.StoneCost);
-        Instantiate(buildingType.BuildingPrefab, placementPos, Quaternion.identity, buildingParent);
+
+        // Spawn the building object
+        Building building = Instantiate(buildingType.BuildingPrefab, placementPos, Quaternion.identity, buildingParent);
+
+        // Assign the selected worker(s)
+        List<Worker> selectedWorkers = GameManager.SelectionSystem.GetSelectionOfType<Worker>();
+        foreach (Worker worker in selectedWorkers)
+        {
+            worker.Build(building);
+        }
+    }
+
+    public bool IsSelectionActive()
+    {
+        return activeBuildingType != null;
     }
 
     private void CheckPlacement(Vector2 placementPos)

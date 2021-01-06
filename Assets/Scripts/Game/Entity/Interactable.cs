@@ -14,10 +14,10 @@ public abstract class Interactable : MonoBehaviour
     [SerializeField] private SpriteRenderer hoverIndicator;
     [SerializeField] private SpriteRenderer selectIndicator;
 
-    [SerializeField] private float maxHealth = 10;
+    [SerializeField] protected float maxHealth = 10;
     public float MaxHealth { get { return maxHealth; } }
 
-    private float health;
+    protected float health;
     public float Health { get { return health; } }
 
     protected bool interactive = false;
@@ -25,11 +25,6 @@ public abstract class Interactable : MonoBehaviour
     private DeathEvent onDeath = new DeathEvent();
     private HealthChangedEvent onHealthChanged = new HealthChangedEvent();
     private MaxHealthChangedEvent onMaxHealthChanged = new MaxHealthChangedEvent();
-
-    protected virtual void Awake()
-    {
-        health = maxHealth;
-    }
 
     protected virtual void Start()
     {
@@ -60,11 +55,27 @@ public abstract class Interactable : MonoBehaviour
         if (selectIndicator != null) selectIndicator.enabled = false;
     }
 
-    public void TakeDamage(float damage)
+    ///<summary>Returns true if the interactable died.</summary>
+    public virtual bool TakeDamage(float damage)
     {
-        health -= damage;
-        onHealthChanged.Invoke(health);
-        if (health <= 0) Die();
+        UpdateHealth(-damage);
+        bool dead = health <= 0;
+        if (dead) Die();
+        return dead;
+    }
+
+    ///<summary>Returns true if the interactable reached max health.</summary>
+    public virtual bool GainHealth(float gain)
+    {
+        UpdateHealth(gain);
+        return health >= maxHealth;
+    }
+
+    private void UpdateHealth(float deltaHealth)
+    {
+        float clampedDeltaHealth = Mathf.Clamp(deltaHealth, -health, maxHealth - health);
+        if (clampedDeltaHealth != 0) onHealthChanged.Invoke(health);
+        health += clampedDeltaHealth;
     }
 
     protected virtual void Die()

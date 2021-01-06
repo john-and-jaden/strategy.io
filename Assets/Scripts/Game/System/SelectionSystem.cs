@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionSystem : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class SelectionSystem : MonoBehaviour
 
     private Transform indicatorParent;
     public Transform IndicatorParent { get { return indicatorParent; } }
+    
+    private bool isOverUI;
+    public bool IsOverUI { get { return isOverUI; } }
 
     private ContactFilter2D selectionFilter;
     private List<Interactable> selection;
@@ -36,6 +40,8 @@ public class SelectionSystem : MonoBehaviour
 
     void Update()
     {
+        isOverUI = EventSystem.current.IsPointerOverGameObject();
+
         // Update the mouse position
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -43,7 +49,7 @@ public class SelectionSystem : MonoBehaviour
         UpdateHoverTargets();
 
         // Start selection box on left-click pressed
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && !isOverUI)
         {
             StartBoxSelect();
         }
@@ -69,7 +75,7 @@ public class SelectionSystem : MonoBehaviour
         {
             UpdateBoxHover();
         }
-        else
+        else if (!isOverUI)
         {
             UpdateMouseHover();
         }
@@ -136,7 +142,7 @@ public class SelectionSystem : MonoBehaviour
         boxSelectIndicator.enabled = false;
 
         // Cancel previous selections if not holding shift
-        if (!Input.GetKey(KeyCode.LeftShift))
+        if (!Input.GetKey(KeyCode.LeftShift) && !isOverUI)
         {
             for (int i = 0; i < selection.Count; i++)
             {
@@ -183,19 +189,9 @@ public class SelectionSystem : MonoBehaviour
         return SelectionHelper.ConvertAll<Interactable, T>(selection);
     }
 
-    public bool HasSelectedOfType<T>() where T : Interactable
-    {
-        return SelectionHelper.ContainsAny<T>(selection);
-    }
-
     public List<T> GetHoverTargetsOfType<T>() where T : Interactable
     {
         return SelectionHelper.ConvertAll<Interactable, T>(hoverTargets);
-    }
-
-    public bool HasHoverTargetOfType<T>() where T : Interactable
-    {
-        return SelectionHelper.ContainsAny<T>(hoverTargets);
     }
 
     private static class SelectionHelper

@@ -13,6 +13,11 @@ public class Resource : Interactable
         set { cluster = value; }
     }
 
+    protected void Awake()
+    {
+        health = maxHealth;
+    }
+
     override protected void Die()
     {
         cluster.Resources.Remove(this);

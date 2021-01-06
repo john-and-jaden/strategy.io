@@ -17,6 +17,11 @@ public abstract class Unit : Interactable
 
     private Collider2D[] softCollisionTargets;
 
+    protected void Awake()
+    {
+        health = maxHealth;
+    }
+
     protected override void Start()
     {
         base.Start();
