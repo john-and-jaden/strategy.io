@@ -139,7 +139,10 @@ MonoBehaviour:
     type: 3}
   healthBarPrefab: {fileID: 7556473165191567762, guid: f6366fa182d994fdfb9a3eea1f65151a,
     type: 3}
-  initialDurability: 10
+  healthBarOffset: 0.7
+  healthBarFadeDelay: 2
+  maxHealth: 10
+  xpGain: 15
   softCollisionRadius: 0.5
   moveSpeed: 4
   gatherRate: 1

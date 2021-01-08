@@ -13,6 +13,7 @@ public abstract class Interactable : MonoBehaviour
     [SerializeField] protected float healthBarOffset = 0.7f;
     [SerializeField] private float healthBarFadeDelay = 2f;
     [SerializeField] private float maxHealth = 10;
+    [SerializeField] private int xpGain = 10;
 
     private float health;
     public float Health { get { return health; } }
@@ -24,7 +25,7 @@ public abstract class Interactable : MonoBehaviour
     protected SpriteRenderer healthBar;
 
     private float healthBarFadeTimer = 0f;
-    
+
     protected DestroyedEvent onDestroyed = new DestroyedEvent();
 
     protected void SpawnIndicators()
@@ -92,6 +93,7 @@ public abstract class Interactable : MonoBehaviour
     protected virtual void DestroySelf()
     {
         DestroyIndicators();
+        GameManager.XpSystem.IncrementXp(xpGain);
         onDestroyed.Invoke();
         Destroy(gameObject);
     }
