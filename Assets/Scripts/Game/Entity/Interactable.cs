@@ -16,10 +16,8 @@ public abstract class Interactable : MonoBehaviour
 
     private float health;
     public float Health { get { return health; } }
-    // The below public field should be deleted and replaced with the two lines below once we build multiplayer
-    public int playerId = 1;
-    // private int playerId;
-    // public int PlayerId { get { return playerId; } set { playerId = value; } }
+    [SerializeField] protected int playerId = 1;
+    public int PlayerId { get { return playerId; } }
 
     protected bool hovered;
     protected bool selected;
