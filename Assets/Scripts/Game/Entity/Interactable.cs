@@ -7,6 +7,10 @@ public abstract class Interactable : MonoBehaviour
 {
     private const float NON_INTERACTIVE_PERIOD = 0.1f;
 
+    [System.Serializable] public class SelectedEvent : UnityEvent { }
+    [System.Serializable] public class DeselectedEvent : UnityEvent { }
+    [System.Serializable] public class HoveredEvent : UnityEvent { }
+    [System.Serializable] public class UnhoveredEvent : UnityEvent { }
     [System.Serializable] public class DeathEvent : UnityEvent { }
     [System.Serializable] public class HealthChangedEvent : UnityEvent<float> { }
     [System.Serializable] public class MaxHealthChangedEvent : UnityEvent<float> { }
@@ -22,6 +26,10 @@ public abstract class Interactable : MonoBehaviour
 
     protected bool interactive = false;
 
+    private SelectedEvent onSelected = new SelectedEvent();
+    private DeselectedEvent onDeselected = new DeselectedEvent();
+    private HoveredEvent onHovered = new HoveredEvent();
+    private UnhoveredEvent onUnhovered = new UnhoveredEvent();
     private DeathEvent onDeath = new DeathEvent();
     private HealthChangedEvent onHealthChanged = new HealthChangedEvent();
     private MaxHealthChangedEvent onMaxHealthChanged = new MaxHealthChangedEvent();
@@ -33,24 +41,28 @@ public abstract class Interactable : MonoBehaviour
 
     public virtual void Hover()
     {
+        onHovered.Invoke();
         if (!interactive) return;
         if (hoverIndicator != null) hoverIndicator.enabled = true;
     }
 
     public virtual void Unhover()
     {
+        onUnhovered.Invoke();
         if (!interactive) return;
         if (hoverIndicator != null) hoverIndicator.enabled = false;
     }
 
     public virtual void Select()
     {
+        onSelected.Invoke();
         if (!interactive) return;
         if (selectIndicator != null) selectIndicator.enabled = true;
     }
 
     public virtual void Deselect()
     {
+        onDeselected.Invoke();
         if (!interactive) return;
         if (selectIndicator != null) selectIndicator.enabled = false;
     }
@@ -89,6 +101,46 @@ public abstract class Interactable : MonoBehaviour
         interactive = false;
         yield return new WaitForSeconds(NON_INTERACTIVE_PERIOD);
         interactive = true;
+    }
+
+    public void AddSelectedListener(UnityAction listener)
+    {
+        onSelected.AddListener(listener);
+    }
+
+    public void RemoveSelectedListener(UnityAction listener)
+    {
+        onSelected.RemoveListener(listener);
+    }
+
+    public void AddDeselectedListener(UnityAction listener)
+    {
+        onDeselected.AddListener(listener);
+    }
+
+    public void RemoveDeselectedListener(UnityAction listener)
+    {
+        onDeselected.RemoveListener(listener);
+    }
+
+    public void AddHoveredListener(UnityAction listener)
+    {
+        onHovered.AddListener(listener);
+    }
+
+    public void RemoveHoveredListener(UnityAction listener)
+    {
+        onHovered.RemoveListener(listener);
+    }
+
+    public void AddUnhoveredListener(UnityAction listener)
+    {
+        onUnhovered.AddListener(listener);
+    }
+
+    public void RemoveUnhoveredListener(UnityAction listener)
+    {
+        onUnhovered.RemoveListener(listener);
     }
 
     public void AddDeathListener(UnityAction listener)
