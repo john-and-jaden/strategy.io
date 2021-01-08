@@ -14,11 +14,9 @@ public class Fighter : Unit
     private bool canAttack = true;
     private WaitForSeconds cooldownWaitForSeconds;
 
-    new protected void Start()
+    void Awake()
     {
         cooldownWaitForSeconds = new WaitForSeconds(attackCooldown);
-
-        base.Start();
     }
 
     new protected void Update()
