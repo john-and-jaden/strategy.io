@@ -87,7 +87,7 @@ public class Fighter : Unit
     private void SeekNearbyEnemies()
     {
         List<Interactable> interactablesInAutoAttackRadius = Physics2D.OverlapCircleAll(transform.position, autoAttackRadius).Select(collider => collider.gameObject.GetComponent<Interactable>()).Where(interactable => interactable.playerId != playerId && interactable.playerId != -1).ToList();
-        Interactable closestEnemy = FindClosestInteractableInList(interactablesInAutoAttackRadius);
+        Interactable closestEnemy = Helpers.GetNearestInteractable(interactablesInAutoAttackRadius, transform.position);
         if (closestEnemy != null)
         {
             Attack(closestEnemy);

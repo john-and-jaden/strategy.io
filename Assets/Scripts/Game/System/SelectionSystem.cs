@@ -64,7 +64,7 @@ public class SelectionSystem : MonoBehaviour
         {
             // Get nearest object within range of cursor
             Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
-            Interactable nearest = GetNearestInteractable(FilterInteractables(overlapResults), mousePos);
+            Interactable nearest = Helpers.GetNearestInteractable(FilterInteractables(overlapResults), mousePos);
             if (nearest)
             {
                 if (nearest.GetType().IsSubclassOf(typeof(Resource)))
@@ -167,23 +167,6 @@ public class SelectionSystem : MonoBehaviour
         {
             return x.GetComponent<T>();
         }).ToList();
-    }
-
-    private Interactable GetNearestInteractable(List<Interactable> interactables, Vector2 targetPos)
-    {
-        int nearestIdx = -1;
-        float smallestDist = selectDistance * selectDistance + 1;
-        for (int i = 0; i < interactables.Count; i++)
-        {
-            Vector2 dir = targetPos - (Vector2)interactables[i].transform.position;
-            float sqrDist = dir.sqrMagnitude;
-            if (sqrDist < smallestDist)
-            {
-                nearestIdx = i;
-                smallestDist = sqrDist;
-            }
-        }
-        return nearestIdx >= 0 ? interactables[nearestIdx] : null;
     }
 
     private void HighlightCluster(Resource resource)

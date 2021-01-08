@@ -65,7 +65,7 @@ public class Worker : Unit
 
     private void AssignResource()
     {
-        assignedResource = (Resource)FindClosestInteractableInList(assignedCluster.Resources.ConvertAll(resource => (Interactable)resource));
+        assignedResource = Helpers.GetNearestInteractable(assignedCluster.Resources, transform.position);
         assignedResource.AddDestroyedListener(HandleResourceDestruction);
     }
 

@@ -66,22 +66,6 @@ public abstract class Unit : Interactable
         Relocate(targetPos);
     }
 
-    protected Interactable FindClosestInteractableInList(List<Interactable> interactables)
-    {
-        float minDistance = float.MaxValue;
-        Interactable closest = null;
-        foreach (Interactable interactable in interactables)
-        {
-            float distance = Vector3.Distance(transform.position, interactable.transform.position);
-            if (minDistance > distance)
-            {
-                minDistance = distance;
-                closest = interactable;
-            }
-        }
-        return closest;
-    }
-
     protected void UpdateRelocate()
     {
         float targetDistSqr = Vector3.SqrMagnitude(transform.position - targetPos);
