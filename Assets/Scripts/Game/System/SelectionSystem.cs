@@ -41,15 +41,15 @@ public class SelectionSystem : MonoBehaviour
     void Update()
     {
         isOverUI = EventSystem.current.IsPointerOverGameObject();
-
-        // Update the mouse position
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (GameManager.BuildingSystem.IsSelectionActive()) return;
 
         // Update the current hover targets
         UpdateHoverTargets();
 
         // Start selection box on left-click pressed
-        if (Input.GetButtonDown("Fire1") && !isOverUI)
+        if (Input.GetButtonDown("Fire1"))
         {
             StartBoxSelect();
         }
@@ -128,6 +128,8 @@ public class SelectionSystem : MonoBehaviour
 
     private void StartBoxSelect()
     {
+        if (isOverUI) return;
+
         isBoxSelectActive = true;
         boxSelectIndicator.enabled = true;
         boxSelectIndicator.transform.position = mousePos;
