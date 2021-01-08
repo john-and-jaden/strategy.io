@@ -13,10 +13,9 @@ public class SelectionSystem : MonoBehaviour
     public Transform IndicatorParent { get { return indicatorParent; } }
     private Cluster highlightedCluster;
     public Cluster HighlightedCluster { get { return highlightedCluster; } }
-    private List<Interactable> hoverTargets;
-    public List<Interactable> HoverTargets { get { return hoverTargets; } }
 
     private ContactFilter2D selectionFilter;
+    private List<Interactable> hoverTargets;
     private List<Interactable> selection;
     private List<Collider2D> overlapResults;
     private SpriteRenderer boxSelectIndicator;
