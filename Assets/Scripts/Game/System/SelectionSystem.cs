@@ -64,7 +64,7 @@ public class SelectionSystem : MonoBehaviour
         {
             // Get nearest object within range of cursor
             Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
-            Interactable nearest = Helpers.GetNearestInteractable(FilterInteractables(overlapResults), mousePos);
+            Interactable nearest = Helper.GetNearestInteractable(FilterInteractables(overlapResults), mousePos);
             if (nearest)
             {
                 if (nearest.GetType().IsSubclassOf(typeof(Resource)))

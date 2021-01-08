@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Helpers
+public static class Helper
 {
     public static T GetNearestInteractable<T>(List<T> interactables, Vector2 targetPos) where T : Interactable
     {
