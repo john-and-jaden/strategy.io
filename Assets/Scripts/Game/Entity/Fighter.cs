@@ -66,7 +66,7 @@ public class Fighter : Unit
             if (canAttack)
             {
                 StartCoroutine(AttackCooldown());
-                assignedEnemy.TakeDamage(damageAmount * Time.deltaTime);
+                assignedEnemy.TakeDamage(damageAmount);
             }
         }
         else
