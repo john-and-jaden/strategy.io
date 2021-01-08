@@ -13,18 +13,16 @@ public class Resource : Interactable
         set { cluster = value; }
     }
 
+    void Awake()
+    {
+        playerId = -1;
+    }
+
     override protected void DestroySelf()
     {
         cluster.Resources.Remove(this);
         SpawnResourceDrops();
         base.DestroySelf();
-    }
-
-    new protected void Start()
-    {
-        playerId = -1;
-        
-        base.Start();
     }
 
     private void SpawnResourceDrops()
