@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public static GridSystem GridSystem { get { return gridSystem; } }
     private static ResourceSystem resourceSystem;
     public static ResourceSystem ResourceSystem { get { return resourceSystem; } }
+    private static XpSystem xpSystem;
+    public static XpSystem XpSystem { get { return xpSystem; } }
 
     private static GameManager instance;
 
@@ -26,5 +28,6 @@ public class GameManager : MonoBehaviour
         unitSystem = GetComponent<UnitSystem>();
         gridSystem = GetComponent<GridSystem>();
         resourceSystem = GetComponent<ResourceSystem>();
+        xpSystem = GetComponent<XpSystem>();
     }
 }

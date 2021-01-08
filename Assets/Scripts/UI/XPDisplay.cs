@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using TMPro;
 
-public class XPDisplay : MonoBehaviour
+public class XpDisplay : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI XPText;
+    [SerializeField] private TextMeshProUGUI xpText;
 
     void Start()
     {
-        GameManager.ResourceSystem.AddWoodChangedListener(SetXPText);
+        GameManager.XpSystem.AddXpChangedListener(SetXpText);
     }
 
-    private void SetXPText(int XP)
+    private void SetXpText(int xp)
     {
-        XPText.text = XP.ToString();
+        xpText.text = xp.ToString();
     }
 }
