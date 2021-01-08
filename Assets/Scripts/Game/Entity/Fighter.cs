@@ -43,14 +43,14 @@ public class Fighter : Unit
     private void Attack(Interactable enemy)
     {
         assignedEnemy = enemy;
-        assignedEnemy.AddDestroyedListener(HandleEnemyDestruction);
+        assignedEnemy.AddDestroyedListener(HandleEnemyDeath);
         state = UnitState.ATTACKING;
     }
 
     private void StopAttacking()
     {
         if (assignedEnemy == null) return;
-        assignedEnemy.RemoveDestroyedListener(HandleEnemyDestruction);
+        assignedEnemy.RemoveDestroyedListener(HandleEnemyDeath);
         assignedEnemy = null;
         state = UnitState.IDLE;
     }
@@ -92,7 +92,7 @@ public class Fighter : Unit
         }
     }
 
-    private void HandleEnemyDestruction()
+    private void HandleEnemyDeath()
     {
         StopAttacking();
     }
