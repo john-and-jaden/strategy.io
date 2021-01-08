@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Building : Interactable
 {
-    [SerializeField] private float startAlpha = 0.3f;
+    [SerializeField] private float ghostAlpha = 0.2f;
+    [SerializeField] private float inProgressAlpha = 0.5f;
 
     private Color spriteColor;
 
@@ -14,13 +15,15 @@ public class Building : Interactable
         spriteColor = spriteRenderer.color;
 
         health = 0;
-        SetAlpha(startAlpha);
+        SetAlpha(ghostAlpha);
     }
 
     public override bool GainHealth(float gain)
     {
-        SetAlpha(Mathf.Lerp(startAlpha, 1f, health / maxHealth));
-        return base.GainHealth(gain);
+        bool completed = base.GainHealth(gain);
+        if (completed) SetAlpha(1f);
+        else SetAlpha(inProgressAlpha);
+        return completed;
     }
 
     private void SetAlpha(float alpha)

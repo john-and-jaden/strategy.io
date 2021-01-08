@@ -84,6 +84,13 @@ public abstract class Interactable : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private IEnumerator DelayInteractivity()
+    {
+        interactive = false;
+        yield return new WaitForSeconds(NON_INTERACTIVE_PERIOD);
+        interactive = true;
+    }
+
     public void AddDeathListener(UnityAction listener)
     {
         onDeath.AddListener(listener);
@@ -112,12 +119,5 @@ public abstract class Interactable : MonoBehaviour
     public void RemoveMaxHealthChangedListener(UnityAction<float> listener)
     {
         onMaxHealthChanged.RemoveListener(listener);
-    }
-
-    private IEnumerator DelayInteractivity()
-    {
-        interactive = false;
-        yield return new WaitForSeconds(NON_INTERACTIVE_PERIOD);
-        interactive = true;
     }
 }
