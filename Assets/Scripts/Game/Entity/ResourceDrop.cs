@@ -11,6 +11,7 @@ public abstract class ResourceDrop : MonoBehaviour
     [SerializeField] private float attractionForce = 1f;
     [SerializeField] private LayerMask attractionMask;
 
+    private Collider2D[] attractionTargets = new Collider2D[MAX_ATTRACTION_TARGETS];
     private new Rigidbody2D rigidbody2D;
 
     protected void Awake()
@@ -20,7 +21,7 @@ public abstract class ResourceDrop : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        Worker nearestWorker = Helper.GetNearestIfAround<Worker>(transform.position, attractionRadius, MAX_ATTRACTION_TARGETS, attractionMask);
+        Worker nearestWorker = Helper.GetNearestIfAround<Worker>(transform.position, attractionRadius, attractionTargets, attractionMask);
         if (nearestWorker != null)
         {
             // Get vector towards the nearest worker

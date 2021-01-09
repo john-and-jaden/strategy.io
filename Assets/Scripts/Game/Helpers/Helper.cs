@@ -19,15 +19,14 @@ public static class Helper
         return closest;
     }
 
-    public static T GetNearestIfAround<T>(Vector3 targetPos, float radius, int resultsSize, LayerMask layerMask, int playerId = -2) where T : Interactable
+    public static T GetNearestIfAround<T>(Vector3 targetPos, float radius, Collider2D[] collidersFound, LayerMask layerMask) where T : Interactable
     {
-        Collider2D[] results = new Collider2D[resultsSize];
-        Physics2D.OverlapCircleNonAlloc(targetPos, radius, results, layerMask);
+        int collidersCount = Physics2D.OverlapCircleNonAlloc(targetPos, radius, collidersFound, layerMask);
         float shortestDistSqr = float.MaxValue;
         T nearest = null;
-        foreach (Collider2D result in results)
+        for (int i = 0; i < collidersCount; i++)
         {
-            if (result.TryGetComponent<T>(out T t))
+            if (collidersFound[i].TryGetComponent<T>(out T t))
             {
                 float tDistSqr = (t.transform.position - targetPos).sqrMagnitude;
                 if (tDistSqr < shortestDistSqr)

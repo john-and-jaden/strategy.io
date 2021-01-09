@@ -9,7 +9,6 @@ public class Fighter : Unit
     [SerializeField] private float maxAttackDist = 2f;
     [SerializeField] private float autoAttackRadius = 10f;
     [SerializeField] private float attackCooldown = 1f;
-    [SerializeField] private LayerMask autoAttackMask;
 
     private Interactable assignedEnemy;
     private bool canAttack = true;
