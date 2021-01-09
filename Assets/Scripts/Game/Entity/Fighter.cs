@@ -29,7 +29,7 @@ public class Fighter : Unit
     public override void Interact(Vector3 targetPos)
     {
         List<Interactable> hoveredInteractables = GameManager.SelectionSystem.GetHoverTargetsOfType<Interactable>();
-        if (hoveredInteractables.Count > 0 && hoveredInteractables[0].PlayerId != playerId && hoveredInteractables[0].PlayerId != -1)
+        if (hoveredInteractables.Count > 0 && IsEnemy(hoveredInteractables[0]))
         {
             Attack(hoveredInteractables[0]);
         }
@@ -84,7 +84,7 @@ public class Fighter : Unit
 
     private void SeekNearbyEnemies()
     {
-        List<Interactable> interactablesInAutoAttackRadius = Physics2D.OverlapCircleAll(transform.position, autoAttackRadius).Select(collider => collider.gameObject.GetComponent<Interactable>()).Where(interactable => interactable.PlayerId != playerId && interactable.PlayerId != -1).ToList();
+        List<Interactable> interactablesInAutoAttackRadius = Physics2D.OverlapCircleAll(transform.position, autoAttackRadius).Select(collider => collider.gameObject.GetComponent<Interactable>()).Where(interactable => IsEnemy(interactable)).ToList();
         Interactable closestEnemy = Helper.GetNearestInteractable(interactablesInAutoAttackRadius, transform.position);
         if (closestEnemy != null)
         {
