@@ -104,14 +104,10 @@ public class SelectionSystem : MonoBehaviour
 
     private void UpdateMouseHover()
     {
-        // Get nearest object under cursor
-        Physics2D.OverlapPoint(mousePos, selectionFilter, overlapResults);
-        List<Interactable> cursorTargets = SelectionHelper.ConvertAll<Collider2D, Interactable>(overlapResults);
-        Interactable nearestTarget = SelectionHelper.GetNearest(cursorTargets, mousePos);
-
-        if (nearestTarget == null) return;
-
-        if (nearestTarget.TryGetComponent<Resource>(out Resource resource))
+        Collider2D mouseTarget = Physics2D.OverlapPoint(mousePos, selectionMask);
+        if (mouseTarget == null) return;
+ 
+        if (mouseTarget.TryGetComponent<Resource>(out Resource resource))
         {
             // Hover all resources in cluster
             List<Resource> resources = resource.Cluster.Resources;
@@ -120,9 +116,9 @@ public class SelectionSystem : MonoBehaviour
                 hoverTargets.Add(resources[i]);
             }
         }
-        else
+        else if (mouseTarget.TryGetComponent<Interactable>(out Interactable interactable))
         {
-            hoverTargets.Add(nearestTarget);
+            hoverTargets.Add(interactable);
         }
     }
 
@@ -226,25 +222,6 @@ public class SelectionSystem : MonoBehaviour
         public static List<Interactable> RemoveAll<T>(List<Interactable> interactables) where T : Interactable
         {
             return interactables.Where(x => !x.TryGetComponent<T>(out T t)).ToList();
-        }
-
-        /// <summary>Returns the nearest Interactable from <paramref name="interactables"/>
-        /// to the given <paramref name="targetPos"/>.</summary>
-        public static Interactable GetNearest(List<Interactable> interactables, Vector2 targetPos)
-        {
-            int nearestIdx = -1;
-            float minDist = float.MaxValue;
-            for (int i = 0; i < interactables.Count; i++)
-            {
-                Vector2 dir = targetPos - (Vector2)interactables[i].transform.position;
-                float sqrDist = dir.sqrMagnitude;
-                if (sqrDist < minDist)
-                {
-                    nearestIdx = i;
-                    minDist = sqrDist;
-                }
-            }
-            return nearestIdx >= 0 ? interactables[nearestIdx] : null;
         }
     }
 }
