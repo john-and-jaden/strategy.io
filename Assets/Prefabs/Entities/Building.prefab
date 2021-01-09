@@ -149,6 +149,8 @@ MonoBehaviour:
   hoverIndicator: {fileID: 8526973018468834605}
   selectIndicator: {fileID: 5967094903975915518}
   maxHealth: 10
+  ghostAlpha: 0.2
+  inProgressAlpha: 0.5
 --- !u!1 &5967094903975915517
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,6 +370,11 @@ PrefabInstance:
       propertyPath: parent
       value: 
       objectReference: {fileID: 2699085035380939592}
+    - target: {fileID: 2755119092871808994, guid: f6366fa182d994fdfb9a3eea1f65151a,
+        type: 3}
+      propertyPath: alwaysShowIfDamaged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6575012774223341719, guid: f6366fa182d994fdfb9a3eea1f65151a,
         type: 3}
       propertyPath: m_Name

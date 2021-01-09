@@ -86,8 +86,8 @@ public abstract class Interactable : MonoBehaviour
     private void UpdateHealth(float deltaHealth)
     {
         float clampedDeltaHealth = Mathf.Clamp(deltaHealth, -health, maxHealth - health);
-        if (clampedDeltaHealth != 0) onHealthChanged.Invoke(health);
         health += clampedDeltaHealth;
+        if (clampedDeltaHealth != 0) onHealthChanged.Invoke(health);
     }
 
     protected virtual void Die()

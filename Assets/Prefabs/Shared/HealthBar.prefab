@@ -210,5 +210,6 @@ MonoBehaviour:
   parent: {fileID: 0}
   fillBar: {fileID: 9162953849917972807}
   backgroundBar: {fileID: 6001389879698975535}
-  fadeDelay: 2
-  fadeDuration: 1
+  fadeDelay: 1
+  fadeDuration: 0.3
+  alwaysShowIfDamaged: 0
