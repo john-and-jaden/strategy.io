@@ -13,16 +13,17 @@ public class Resource : Interactable
         set { cluster = value; }
     }
 
-    void Awake()
+    protected void Awake()
     {
         playerId = -1;
+        health = maxHealth;
     }
 
-    override protected void DestroySelf()
+    override protected void Die()
     {
         cluster.Resources.Remove(this);
         SpawnResourceDrops();
-        base.DestroySelf();
+        base.Die();
     }
 
     private void SpawnResourceDrops()
@@ -30,9 +31,7 @@ public class Resource : Interactable
         for (int i = 0; i < resourceDropCount; i++)
         {
             ResourceDrop drop = Instantiate(resourceDropPrefab, transform.position, Quaternion.identity);
-            Vector2 forceDir = Random.insideUnitCircle.normalized;
-            float forceScale = Random.Range(0, 1f);
-            Vector2 popForce = forceDir * forceScale * resourceDropMaxPopForce;
+            Vector2 popForce = Random.insideUnitCircle * resourceDropMaxPopForce;
             drop.GetComponent<Rigidbody2D>().AddForce(popForce, ForceMode2D.Impulse);
         }
     }

@@ -26,7 +26,7 @@ public class UnitSystem : MonoBehaviour
         groupRadiusSqr = CalculateGroupRadiusSqr(numGathered);
 
         // If the user right clicks, move the selected units
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2") && !GameManager.SelectionSystem.IsOverUI && !GameManager.BuildingSystem.IsSelectionActive())
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 

@@ -1,27 +1,30 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionSystem : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer boxSelectIndicatorPrefab;
-    [SerializeField] private float selectDistance = 0.2f;
     [SerializeField] private int maxMouseHoverTargets = 8;
     [SerializeField] private LayerMask selectionMask;
 
     private Transform indicatorParent;
     public Transform IndicatorParent { get { return indicatorParent; } }
-    private Cluster highlightedCluster;
-    public Cluster HighlightedCluster { get { return highlightedCluster; } }
-    private List<Interactable> hoverTargets;
-    public List<Interactable> HoverTargets { get { return hoverTargets; } }
+    
+    private bool isOverUI;
+    public bool IsOverUI { get { return isOverUI; } }
 
     private ContactFilter2D selectionFilter;
     private List<Interactable> selection;
+    private List<Interactable> hoverTargets;
+
     private List<Collider2D> overlapResults;
     private SpriteRenderer boxSelectIndicator;
     private Vector2 boxSelectStartPos;
     private bool isBoxSelectActive;
+
+    private Vector2 mousePos;
 
     void Awake()
     {
@@ -37,144 +40,188 @@ public class SelectionSystem : MonoBehaviour
 
     void Update()
     {
-        // Cancel hover on previous selection
-        for (int i = 0; i < hoverTargets.Count; i++)
-        {
-            hoverTargets[i].SetHovered(false);
-        }
+        isOverUI = EventSystem.current.IsPointerOverGameObject();
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Calculate hover selection based on mouse position
-        hoverTargets.Clear();
-        highlightedCluster = null;
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (isBoxSelectActive && mousePos != boxSelectStartPos)
-        {
-            // Get all objects within selection box
-            Vector2 boxCenter = (boxSelectStartPos + mousePos) / 2;
-            Vector2 boxDiff = mousePos - boxSelectStartPos;
-            Vector2 boxSize = new Vector2(Mathf.Abs(boxDiff.x), Mathf.Abs(boxDiff.y));
-            Physics2D.OverlapBox(boxCenter, boxSize, 0, selectionFilter, overlapResults);
-            hoverTargets = FilterInteractables(overlapResults);
+        if (GameManager.BuildingSystem.IsSelectionActive()) return;
 
-            // Update indicator box
-            boxSelectIndicator.transform.position = boxCenter;
-            boxSelectIndicator.size = boxSize;
-        }
-        else
-        {
-            // Get nearest object within range of cursor
-            Physics2D.OverlapCircle(mousePos, selectDistance, selectionFilter, overlapResults);
-            Interactable nearest = Helper.GetNearestInteractable(FilterInteractables(overlapResults), mousePos);
-            if (nearest)
-            {
-                if (nearest.GetType().IsSubclassOf(typeof(Resource)))
-                {
-                    HighlightCluster((Resource)nearest);
-                }
-                else
-                {
-                    hoverTargets.Add(nearest);
-                }
-            }
-        }
-
-        // Update hover state
-        for (int i = 0; i < hoverTargets.Count; i++)
-        {
-            hoverTargets[i].SetHovered(true);
-        }
+        // Update the current hover targets
+        UpdateHoverTargets();
 
         // Start selection box on left-click pressed
         if (Input.GetButtonDown("Fire1"))
         {
-            isBoxSelectActive = true;
-            boxSelectIndicator.enabled = true;
-            boxSelectIndicator.transform.position = mousePos;
-            boxSelectIndicator.size = Vector2.zero;
-            boxSelectStartPos = mousePos;
+            StartBoxSelect();
         }
 
         // Select hovered objects on left-click released
         if (Input.GetButtonUp("Fire1"))
         {
-            // Cancel the selection box
-            isBoxSelectActive = false;
-            boxSelectIndicator.enabled = false;
+            SelectHovered();
+        }
+    }
 
-            // Cancel previous selections if not holding shift
-            if (!Input.GetKey(KeyCode.LeftShift))
-            {
-                for (int i = 0; i < selection.Count; i++)
-                {
-                    selection[i].SetSelected(false);
-                }
-                selection.Clear();
-            }
+    private void UpdateHoverTargets()
+    {
+        // Cancel hover on previous targets
+        for (int i = 0; i < hoverTargets.Count; i++)
+        {
+            hoverTargets[i].Unhover();
+        }
+        hoverTargets.Clear();
 
-            // Add hover targets to selection list
-            if (ContainsType<Unit>(hoverTargets) || ContainsType<Unit>(selection))
-            {
-                selection.AddRange(FilterType<Unit>(hoverTargets));
-                selection = selection.Distinct().ToList();
-            }
-            else if (ContainsType<Building>(hoverTargets) && !ContainsType<Unit>(selection))
-            {
-                selection.AddRange(FilterType<Building>(hoverTargets));
-                selection = selection.Distinct().ToList();
-            }
+        // Update hover targets based on selection type
+        if (isBoxSelectActive && mousePos != boxSelectStartPos)
+        {
+            UpdateBoxHover();
+        }
+        else if (!isOverUI)
+        {
+            UpdateMouseHover();
+        }
 
-            // Update selection states
+        // Update hover state for new targets
+        for (int i = 0; i < hoverTargets.Count; i++)
+        {
+            hoverTargets[i].Hover();
+        }
+    }
+
+    private void UpdateBoxHover()
+    {
+        // Get all objects within selection box
+        Vector2 boxCenter = (boxSelectStartPos + mousePos) / 2;
+        Vector2 boxDiff = mousePos - boxSelectStartPos;
+        Vector2 boxSize = new Vector2(Mathf.Abs(boxDiff.x), Mathf.Abs(boxDiff.y));
+        Physics2D.OverlapBox(boxCenter, boxSize, 0, selectionFilter, overlapResults);
+        hoverTargets = SelectionHelper.ConvertAll<Collider2D, Interactable>(overlapResults);
+        hoverTargets = SelectionHelper.RemoveAll<Resource>(hoverTargets);
+
+        // Update indicator box
+        boxSelectIndicator.transform.position = boxCenter;
+        boxSelectIndicator.size = boxSize;
+    }
+
+    private void UpdateMouseHover()
+    {
+        Collider2D mouseTarget = Physics2D.OverlapPoint(mousePos, selectionMask);
+        if (mouseTarget == null) return;
+ 
+        if (mouseTarget.TryGetComponent<Resource>(out Resource resource))
+        {
+            // Hover all resources in cluster
+            List<Resource> resources = resource.Cluster.Resources;
+            for (int i = 0; i < resources.Count; i++)
+            {
+                hoverTargets.Add(resources[i]);
+            }
+        }
+        else if (mouseTarget.TryGetComponent<Interactable>(out Interactable interactable))
+        {
+            hoverTargets.Add(interactable);
+        }
+    }
+
+    private void StartBoxSelect()
+    {
+        if (isOverUI) return;
+
+        isBoxSelectActive = true;
+        boxSelectIndicator.enabled = true;
+        boxSelectIndicator.transform.position = mousePos;
+        boxSelectIndicator.size = Vector2.zero;
+        boxSelectStartPos = mousePos;
+    }
+
+    private void SelectHovered()
+    {
+        // Cancel the selection box
+        isBoxSelectActive = false;
+        boxSelectIndicator.enabled = false;
+
+        // Cancel previous selections if not holding shift
+        if (!Input.GetKey(KeyCode.LeftShift) && !isOverUI)
+        {
             for (int i = 0; i < selection.Count; i++)
             {
-                selection[i].SetSelected(true);
+                selection[i].Deselect();
             }
+            selection.Clear();
+        }
+
+        // Add hover targets to selection list by priority
+        SelectByPriority();
+
+        // Update selection states
+        for (int i = 0; i < selection.Count; i++)
+        {
+            selection[i].Select();
+        }
+    }
+
+    private void SelectByPriority()
+    {
+        // We could make this generic using type reflection, however that would make the code substantially more confusing
+        if (SelectionHelper.ContainsAny<Unit>(hoverTargets) || SelectionHelper.ContainsOnly<Unit>(selection))
+        {
+            List<Unit> selectedUnits = SelectionHelper.ConvertAll<Interactable, Unit>(hoverTargets);
+            selection.AddRange(selectedUnits);
+            selection = selection.Distinct().ToList();
+        }
+        else if (SelectionHelper.ContainsAny<Building>(hoverTargets) || SelectionHelper.ContainsOnly<Building>(selection))
+        {
+            List<Building> selectedBuildings = SelectionHelper.ConvertAll<Interactable, Building>(hoverTargets);
+            selection.AddRange(selectedBuildings);
+            selection = selection.Distinct().ToList();
+        }
+        else if (SelectionHelper.ContainsAny<Resource>(hoverTargets) || SelectionHelper.ContainsOnly<Resource>(selection))
+        {
+            List<Resource> selectedResources = SelectionHelper.ConvertAll<Interactable, Resource>(hoverTargets);
+            selection.AddRange(selectedResources);
+            selection = selection.Distinct().ToList();
         }
     }
 
     public List<T> GetSelectionOfType<T>() where T : Interactable
     {
-        return selection.Select(s => s.GetComponent<T>()).ToList();
+        return SelectionHelper.ConvertAll<Interactable, T>(selection);
     }
 
-    private List<Interactable> FilterInteractables(List<Collider2D> colliders)
+    public List<T> GetHoverTargetsOfType<T>() where T : Interactable
     {
-        return colliders.Where(c =>
-        {
-            Interactable s;
-            return c.TryGetComponent<Interactable>(out s);
-        }).Select(x =>
-        {
-            return x.GetComponent<Interactable>();
-        }).ToList();
+        return SelectionHelper.ConvertAll<Interactable, T>(hoverTargets);
     }
 
-    private bool ContainsType<T>(List<Interactable> interactables) where T : Interactable
+    private static class SelectionHelper
     {
-        return interactables.Any(s =>
+        /// <summary>Returns whether a list contains any interactables of type T.</summary>
+        public static bool ContainsAny<T>(List<Interactable> interactables) where T : Interactable
         {
-            T t;
-            return s.TryGetComponent<T>(out t);
-        });
-    }
+            return interactables.Any(x => x.TryGetComponent<T>(out T t));
+        }
 
-    private List<T> FilterType<T>(List<Interactable> interactables) where T : Interactable
-    {
-        return interactables.Where(x =>
+        /// <summary>Returns whether a list contains only interactables of type T.</summary>
+        public static bool ContainsOnly<T>(List<Interactable> interactables) where T : Interactable
         {
-            T t;
-            return x.TryGetComponent<T>(out t);
-        }).Select(x =>
-        {
-            return x.GetComponent<T>();
-        }).ToList();
-    }
+            return interactables.Any(x => x.TryGetComponent<T>(out T t));
+        }
 
-    private void HighlightCluster(Resource resource)
-    {
-        highlightedCluster = resource.Cluster;
-        for (int i = 0; i < highlightedCluster.Resources.Count; i++)
+        /// <summary>Converts all <paramref name="components"/> of type C to interactables of type T.</summary>
+        /// <returns>List of interactables of type T.</returns>
+        public static List<T> ConvertAll<C, T>(List<C> components)
+            where C : Component
+            where T : Interactable
         {
-            hoverTargets.Add(highlightedCluster.Resources[i]);
+            return components
+                .Where(x => x.TryGetComponent<T>(out T t))
+                .Select(x => x.GetComponent<T>())
+                .ToList();
+        }
+
+        /// <summary>Filters out all interactables of type T from a list.</summary>
+        public static List<Interactable> RemoveAll<T>(List<Interactable> interactables) where T : Interactable
+        {
+            return interactables.Where(x => !x.TryGetComponent<T>(out T t)).ToList();
         }
     }
 }

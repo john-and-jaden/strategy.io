@@ -28,7 +28,7 @@ public class Fighter : Unit
 
     public override void Interact(Vector3 targetPos)
     {
-        List<Interactable> hoveredInteractables = GameManager.SelectionSystem.HoverTargets;
+        List<Interactable> hoveredInteractables = GameManager.SelectionSystem.GetHoverTargetsOfType<Interactable>();
         if (hoveredInteractables.Count > 0 && hoveredInteractables[0].PlayerId != playerId && hoveredInteractables[0].PlayerId != -1)
         {
             Attack(hoveredInteractables[0]);
@@ -43,14 +43,14 @@ public class Fighter : Unit
     private void Attack(Interactable enemy)
     {
         assignedEnemy = enemy;
-        assignedEnemy.AddDestroyedListener(HandleEnemyDeath);
+        assignedEnemy.AddDeathListener(HandleEnemyDeath);
         state = UnitState.ATTACKING;
     }
 
     private void StopAttacking()
     {
         if (assignedEnemy == null) return;
-        assignedEnemy.RemoveDestroyedListener(HandleEnemyDeath);
+        assignedEnemy.RemoveDeathListener(HandleEnemyDeath);
         assignedEnemy = null;
         state = UnitState.IDLE;
     }
