@@ -5,104 +5,171 @@ using UnityEngine.Events;
 
 public abstract class Interactable : MonoBehaviour
 {
-    [System.Serializable] public class DestroyedEvent : UnityEvent { }
+    private const float NON_INTERACTIVE_PERIOD = 0.1f;
 
-    [SerializeField] private SpriteRenderer hoverIndicatorPrefab;
-    [SerializeField] private SpriteRenderer selectIndicatorPrefab;
-    [SerializeField] private SpriteRenderer healthBarPrefab;
-    [SerializeField] protected float healthBarOffset = 0.7f;
-    [SerializeField] private float healthBarFadeDelay = 2f;
-    [SerializeField] private float maxHealth = 10;
+    [System.Serializable] public class SelectedEvent : UnityEvent { }
+    [System.Serializable] public class DeselectedEvent : UnityEvent { }
+    [System.Serializable] public class HoveredEvent : UnityEvent { }
+    [System.Serializable] public class UnhoveredEvent : UnityEvent { }
+    [System.Serializable] public class DeathEvent : UnityEvent { }
+    [System.Serializable] public class HealthChangedEvent : UnityEvent<float> { }
+    [System.Serializable] public class MaxHealthChangedEvent : UnityEvent<float> { }
 
-    private float health;
+    [SerializeField] private SpriteRenderer hoverIndicator;
+    [SerializeField] private SpriteRenderer selectIndicator;
+
+    [SerializeField] protected float maxHealth = 10;
+    public float MaxHealth { get { return maxHealth; } }
+
+    protected float health;
     public float Health { get { return health; } }
 
-    protected bool hovered;
-    protected bool selected;
-    protected SpriteRenderer hoverIndicator;
-    protected SpriteRenderer selectIndicator;
-    protected SpriteRenderer healthBar;
+    protected bool interactive = false;
 
-    private float healthBarFadeTimer = 0f;
-    
-    protected DestroyedEvent onDestroyed = new DestroyedEvent();
+    private SelectedEvent onSelected = new SelectedEvent();
+    private DeselectedEvent onDeselected = new DeselectedEvent();
+    private HoveredEvent onHovered = new HoveredEvent();
+    private UnhoveredEvent onUnhovered = new UnhoveredEvent();
+    private DeathEvent onDeath = new DeathEvent();
+    private HealthChangedEvent onHealthChanged = new HealthChangedEvent();
+    private MaxHealthChangedEvent onMaxHealthChanged = new MaxHealthChangedEvent();
 
-    protected void SpawnIndicators()
+    protected virtual void Start()
     {
-        hoverIndicator = Instantiate(hoverIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        selectIndicator = Instantiate(selectIndicatorPrefab, GameManager.SelectionSystem.IndicatorParent);
-        hoverIndicator.transform.position = transform.position;
-        selectIndicator.transform.position = transform.position;
-
-        Vector2 healthBarPos = transform.position + Vector3.up * healthBarOffset;
-        healthBar = Instantiate(healthBarPrefab, healthBarPos, Quaternion.identity, GameManager.SelectionSystem.IndicatorParent);
-        healthBar.enabled = false;
+        StartCoroutine(DelayInteractivity());
     }
 
-    protected void UpdateIndicators()
+    public virtual void Hover()
     {
-        hoverIndicator.enabled = hovered;
-        selectIndicator.enabled = selected;
+        onHovered.Invoke();
+        if (!interactive) return;
+        if (hoverIndicator != null) hoverIndicator.enabled = true;
     }
 
-    protected void DestroyIndicators()
+    public virtual void Unhover()
     {
-        Destroy(hoverIndicator.gameObject);
-        Destroy(selectIndicator.gameObject);
-        Destroy(healthBar.gameObject);
+        onUnhovered.Invoke();
+        if (!interactive) return;
+        if (hoverIndicator != null) hoverIndicator.enabled = false;
     }
 
-    protected void Start()
+    public virtual void Select()
     {
-        health = maxHealth;
-        SpawnIndicators();
+        onSelected.Invoke();
+        if (!interactive) return;
+        if (selectIndicator != null) selectIndicator.enabled = true;
     }
 
-    protected void Update()
+    public virtual void Deselect()
     {
-        UpdateIndicators();
-
-        healthBarFadeTimer += Time.deltaTime;
-        if (healthBarFadeTimer >= healthBarFadeDelay)
-        {
-            healthBar.enabled = false;
-        }
+        onDeselected.Invoke();
+        if (!interactive) return;
+        if (selectIndicator != null) selectIndicator.enabled = false;
     }
 
-    public void SetHovered(bool hovered)
+    ///<summary>Returns true if the interactable died.</summary>
+    public virtual bool TakeDamage(float damage)
     {
-        this.hovered = hovered;
+        UpdateHealth(-damage);
+        bool dead = health <= 0;
+        if (dead) Die();
+        return dead;
     }
 
-    public void SetSelected(bool selected)
+    ///<summary>Returns true if the interactable reached max health.</summary>
+    public virtual bool GainHealth(float gain)
     {
-        this.selected = selected;
+        UpdateHealth(gain);
+        return health >= maxHealth;
     }
 
-    public void TakeDamage(float damage)
+    private void UpdateHealth(float deltaHealth)
     {
-        health -= damage;
-        if (health <= 0) DestroySelf();
-
-        healthBarFadeTimer = 0f;
-        healthBar.size = new Vector2(health / maxHealth, healthBar.size.y);
-        healthBar.enabled = true;
+        float clampedDeltaHealth = Mathf.Clamp(deltaHealth, -health, maxHealth - health);
+        health += clampedDeltaHealth;
+        if (clampedDeltaHealth != 0) onHealthChanged.Invoke(health);
     }
 
-    protected virtual void DestroySelf()
+    protected virtual void Die()
     {
-        DestroyIndicators();
-        onDestroyed.Invoke();
+        onDeath.Invoke();
         Destroy(gameObject);
     }
 
-    public void AddDestroyedListener(UnityAction listener)
+    private IEnumerator DelayInteractivity()
     {
-        onDestroyed.AddListener(listener);
+        interactive = false;
+        yield return new WaitForSeconds(NON_INTERACTIVE_PERIOD);
+        interactive = true;
     }
 
-    public void RemoveDestroyedListener(UnityAction listener)
+    public void AddSelectedListener(UnityAction listener)
     {
-        onDestroyed.RemoveListener(listener);
+        onSelected.AddListener(listener);
+    }
+
+    public void RemoveSelectedListener(UnityAction listener)
+    {
+        onSelected.RemoveListener(listener);
+    }
+
+    public void AddDeselectedListener(UnityAction listener)
+    {
+        onDeselected.AddListener(listener);
+    }
+
+    public void RemoveDeselectedListener(UnityAction listener)
+    {
+        onDeselected.RemoveListener(listener);
+    }
+
+    public void AddHoveredListener(UnityAction listener)
+    {
+        onHovered.AddListener(listener);
+    }
+
+    public void RemoveHoveredListener(UnityAction listener)
+    {
+        onHovered.RemoveListener(listener);
+    }
+
+    public void AddUnhoveredListener(UnityAction listener)
+    {
+        onUnhovered.AddListener(listener);
+    }
+
+    public void RemoveUnhoveredListener(UnityAction listener)
+    {
+        onUnhovered.RemoveListener(listener);
+    }
+
+    public void AddDeathListener(UnityAction listener)
+    {
+        onDeath.AddListener(listener);
+    }
+
+    public void RemoveDeathListener(UnityAction listener)
+    {
+        onDeath.RemoveListener(listener);
+    }
+
+    public void AddHealthChangedListener(UnityAction<float> listener)
+    {
+        onHealthChanged.AddListener(listener);
+    }
+
+    public void RemoveHealthChangedListener(UnityAction<float> listener)
+    {
+        onHealthChanged.RemoveListener(listener);
+    }
+
+    public void AddMaxHealthChangedListener(UnityAction<float> listener)
+    {
+        onMaxHealthChanged.AddListener(listener);
+    }
+
+    public void RemoveMaxHealthChangedListener(UnityAction<float> listener)
+    {
+        onMaxHealthChanged.RemoveListener(listener);
     }
 }
