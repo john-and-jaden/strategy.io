@@ -129,7 +129,7 @@ public class Worker : Unit
 
     private void AssignResource()
     {
-        assignedResource = Helper.GetNearestInteractable(assignedCluster.Resources, transform.position);
+        assignedResource = Helper.GetNearestInList(assignedCluster.Resources, transform.position);
         assignedResource.AddDeathListener(HandleResourceDestruction);
     }
 

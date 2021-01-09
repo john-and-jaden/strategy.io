@@ -9,6 +9,7 @@ public class Fighter : Unit
     [SerializeField] private float maxAttackDist = 2f;
     [SerializeField] private float autoAttackRadius = 10f;
     [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private LayerMask autoAttackMask;
 
     private Interactable assignedEnemy;
     private bool canAttack = true;
@@ -86,7 +87,7 @@ public class Fighter : Unit
     private void SeekNearbyEnemies()
     {
         List<Interactable> interactablesInAutoAttackRadius = Physics2D.OverlapCircleAll(transform.position, autoAttackRadius).Select(collider => collider.gameObject.GetComponent<Interactable>()).Where(interactable => IsEnemy(interactable)).ToList();
-        Interactable closestEnemy = Helper.GetNearestInteractable(interactablesInAutoAttackRadius, transform.position);
+        Interactable closestEnemy = Helper.GetNearestInList(interactablesInAutoAttackRadius, transform.position);
         if (closestEnemy != null)
         {
             Attack(closestEnemy);
