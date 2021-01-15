@@ -95,6 +95,7 @@ public abstract class Interactable : MonoBehaviour
     protected virtual void Die()
     {
         onDeath.Invoke();
+        GameManager.SelectionSystem.RemoveInteractable(this);
         Destroy(gameObject);
     }
 
