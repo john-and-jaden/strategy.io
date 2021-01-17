@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -129,8 +128,24 @@ public class Worker : Unit
 
     private void AssignResource()
     {
-        assignedResource = Helper.GetNearestInList(assignedCluster.Resources, transform.position);
+        assignedResource = GetNearestResource();
         assignedResource.AddDeathListener(HandleResourceDestruction);
+    }
+
+    public Resource GetNearestResource()
+    {
+        float shortestDistSqr = float.MaxValue;
+        Resource nearest = null;
+        foreach (Resource r in assignedCluster.Resources)
+        {
+            float rDistSqr = (r.transform.position - transform.position).sqrMagnitude;
+            if (rDistSqr < shortestDistSqr)
+            {
+                shortestDistSqr = rDistSqr;
+                nearest = r;
+            }
+        }
+        return nearest;
     }
 
     private void HandleResourceDestruction()

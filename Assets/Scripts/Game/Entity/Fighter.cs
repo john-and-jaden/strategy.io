@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class Fighter : Unit
 {
@@ -9,6 +8,7 @@ public class Fighter : Unit
     [SerializeField] private float maxAttackDist = 2f;
     [SerializeField] private float autoAttackRadius = 10f;
     [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private LayerMask attackMask;
 
     private Interactable assignedEnemy;
     private bool canAttack = true;
@@ -85,11 +85,10 @@ public class Fighter : Unit
 
     private void SeekNearbyEnemies()
     {
-        List<Interactable> interactablesInAutoAttackRadius = Physics2D.OverlapCircleAll(transform.position, autoAttackRadius).Select(collider => collider.gameObject.GetComponent<Interactable>()).Where(interactable => IsEnemy(interactable)).ToList();
-        Interactable closestEnemy = Helper.GetNearestInList(interactablesInAutoAttackRadius, transform.position);
-        if (closestEnemy != null)
+        Interactable enemy = Utils.GetNearest<Interactable>(transform.position, autoAttackRadius, attackMask, (Interactable t) => IsEnemy(t));
+        if (enemy != null)
         {
-            Attack(closestEnemy);
+            Attack(enemy);
         }
     }
 
