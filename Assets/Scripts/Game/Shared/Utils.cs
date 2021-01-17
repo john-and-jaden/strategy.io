@@ -8,7 +8,7 @@ public static class Utils
 
     public static T GetNearest<T>(Vector3 pos, float radius, LayerMask mask) where T : Interactable
     {
-        return GetNearest<T>(pos, radius, mask, (Interactable t) => true);
+        return GetNearest<T>(pos, radius, mask, (t) => true);
     }
     public static T GetNearest<T>(Vector3 pos, float radius, LayerMask mask, MatchCondition matchCondition) where T : Interactable
     {

@@ -85,7 +85,7 @@ public class Fighter : Unit
 
     private void SeekNearbyEnemies()
     {
-        Interactable enemy = Utils.GetNearest<Interactable>(transform.position, autoAttackRadius, attackMask, (Interactable t) => IsEnemy(t));
+        Interactable enemy = Utils.GetNearest<Interactable>(transform.position, autoAttackRadius, attackMask, (t) => IsEnemy(t));
         if (enemy != null)
         {
             Attack(enemy);
