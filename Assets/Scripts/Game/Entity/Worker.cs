@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,7 +18,7 @@ public class Worker : Unit
     {
         if (state == UnitState.GATHERING) UpdateGather();
         if (state == UnitState.BUILDING) UpdateBuild();
-        
+
         base.Update();
     }
 
@@ -57,7 +56,7 @@ public class Worker : Unit
     public override void Deselect()
     {
         if (!interactive) return;
-        
+
         HUD.BuildingMenu.Close();
 
         base.Deselect();
@@ -129,19 +128,24 @@ public class Worker : Unit
 
     private void AssignResource()
     {
-        float minDistance = float.MaxValue;
-        Resource closestResource = null;
-        foreach (Resource resource in assignedCluster.Resources)
+        assignedResource = GetNearestResource();
+        assignedResource.AddDeathListener(HandleResourceDestruction);
+    }
+
+    public Resource GetNearestResource()
+    {
+        float shortestDistSqr = float.MaxValue;
+        Resource nearest = null;
+        foreach (Resource r in assignedCluster.Resources)
         {
-            float distanceToNode = Vector3.Distance(resource.transform.position, transform.position);
-            if (minDistance > distanceToNode)
+            float rDistSqr = (r.transform.position - transform.position).sqrMagnitude;
+            if (rDistSqr < shortestDistSqr)
             {
-                minDistance = distanceToNode;
-                closestResource = resource;
+                shortestDistSqr = rDistSqr;
+                nearest = r;
             }
         }
-        assignedResource = closestResource;
-        assignedResource.AddDeathListener(HandleResourceDestruction);
+        return nearest;
     }
 
     private void HandleResourceDestruction()

@@ -15,6 +15,7 @@ public class Resource : Interactable
 
     protected void Awake()
     {
+        playerId = -1;
         health = maxHealth;
     }
 

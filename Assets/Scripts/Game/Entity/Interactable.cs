@@ -23,6 +23,8 @@ public abstract class Interactable : MonoBehaviour
 
     protected float health;
     public float Health { get { return health; } }
+    [SerializeField] protected int playerId = 1;
+    public int PlayerId { get { return playerId; } }
 
     protected bool interactive = false;
 
@@ -93,6 +95,7 @@ public abstract class Interactable : MonoBehaviour
     protected virtual void Die()
     {
         onDeath.Invoke();
+        GameManager.SelectionSystem.RemoveInteractable(this);
         Destroy(gameObject);
     }
 

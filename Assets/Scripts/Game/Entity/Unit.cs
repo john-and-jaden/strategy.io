@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class Unit : Interactable
 {
@@ -74,5 +75,10 @@ public abstract class Unit : Interactable
             return;
         }
         transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+    }
+
+    protected bool IsEnemy(Interactable target)
+    {
+        return target.PlayerId != playerId && target.PlayerId != -1;
     }
 }

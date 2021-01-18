@@ -192,6 +192,12 @@ public class SelectionSystem : MonoBehaviour
         return SelectionHelper.ConvertAll<Interactable, T>(hoverTargets);
     }
 
+    public void RemoveInteractable(Interactable interactable)
+    {
+        selection.Remove(interactable);
+        hoverTargets.Remove(interactable);
+    }
+
     private static class SelectionHelper
     {
         /// <summary>Returns whether a list contains any interactables of type T.</summary>
