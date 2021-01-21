@@ -1501,7 +1501,7 @@ GameObject:
   - component: {fileID: 1023637039}
   - component: {fileID: 1023637040}
   m_Layer: 5
-  m_Name: XPDisplay
+  m_Name: XpDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1540,6 +1540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97e724694006b4614a8913bee8151e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xpText: {fileID: 0}
 --- !u!1 &1081297831
 GameObject:
   m_ObjectHideFlags: 0
