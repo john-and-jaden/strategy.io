@@ -3,9 +3,11 @@ using UnityEngine.Events;
 
 public class XpSystem : MonoBehaviour
 {
-    private int xp;
     [System.Serializable] public class XpChangedEvent : UnityEvent<int> { }
+
+    private int xp;
     private XpChangedEvent onXpChanged = new XpChangedEvent();
+
     public void IncrementXp(int amount)
     {
         xp += amount;
