@@ -7,6 +7,6 @@ public class TreeDrop : ResourceDrop
     protected override void Collect()
     {
         GameManager.ResourceSystem.AddWood(resourceAmount);
-        GameManager.XpSystem.IncrementXp(xpGain);
+        base.Collect();
     }
 }

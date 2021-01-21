@@ -41,5 +41,8 @@ public abstract class ResourceDrop : MonoBehaviour
         }
     }
 
-    protected abstract void Collect();
+    protected virtual void Collect()
+    {
+        GameManager.XpSystem.IncrementXp(xpGain);
+    }
 }

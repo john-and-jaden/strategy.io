@@ -149,6 +149,8 @@ MonoBehaviour:
   hoverIndicator: {fileID: 8526973018468834605}
   selectIndicator: {fileID: 5967094903975915518}
   maxHealth: 10
+  xpGain: 50
+  playerId: 1
   ghostAlpha: 0.2
   inProgressAlpha: 0.5
 --- !u!1 &5967094903975915517
