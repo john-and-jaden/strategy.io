@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class Unit : Interactable
 {
@@ -17,21 +18,21 @@ public abstract class Unit : Interactable
 
     private Collider2D[] softCollisionTargets;
 
-    new void Start()
+    protected void Awake()
+    {
+        health = maxHealth;
+    }
+
+    protected override void Start()
     {
         base.Start();
         targetPos = transform.position;
+        state = UnitState.IDLE;
     }
 
-    new protected void Update()
+    protected virtual void Update()
     {
-        hoverIndicator.transform.position = transform.position;
-        selectIndicator.transform.position = transform.position;
-        healthBar.transform.position = transform.position + Vector3.up * healthBarOffset;
-
         if (state == UnitState.RELOCATING) UpdateRelocate();
-
-        base.Update();
     }
 
     void FixedUpdate()
@@ -74,5 +75,10 @@ public abstract class Unit : Interactable
             return;
         }
         transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+    }
+
+    protected bool IsEnemy(Interactable target)
+    {
+        return target.PlayerId != playerId && target.PlayerId != -1;
     }
 }
