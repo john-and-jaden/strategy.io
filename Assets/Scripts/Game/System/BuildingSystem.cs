@@ -64,7 +64,7 @@ public class BuildingSystem : MonoBehaviour
         GameManager.ResourceSystem.SpendStone(buildingType.StoneCost);
 
         // Spawn the building object
-        Building building = Instantiate(buildingType.BuildingPrefab, placementPos, Quaternion.identity, buildingParent);
+        Building building = Instantiate(buildingType.InteractablePrefab, placementPos, Quaternion.identity, buildingParent) as Building;
 
         // Assign the selected worker(s)
         List<Worker> selectedWorkers = GameManager.SelectionSystem.GetSelectionOfType<Worker>();

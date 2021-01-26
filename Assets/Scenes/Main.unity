@@ -424,7 +424,7 @@ PrefabInstance:
     - target: {fileID: 2562082639131175980, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
       propertyPath: m_Name
-      value: BuildingSelector3
+      value: ConstructionSelector3
       objectReference: {fileID: 0}
     - target: {fileID: 2562082639131175981, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
@@ -817,7 +817,7 @@ GameObject:
   - component: {fileID: 481216396}
   - component: {fileID: 481216397}
   m_Layer: 5
-  m_Name: BuildingSelectors
+  m_Name: ConstructionSelectors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1332,7 +1332,7 @@ GameObject:
   - component: {fileID: 1081297834}
   - component: {fileID: 1081297833}
   m_Layer: 5
-  m_Name: BuildingMenu
+  m_Name: ConstructionMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1780,7 +1780,7 @@ PrefabInstance:
     - target: {fileID: 2562082639131175980, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
       propertyPath: m_Name
-      value: BuildingSelector4
+      value: ConstructionSelector4
       objectReference: {fileID: 0}
     - target: {fileID: 2562082639131175981, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
@@ -2080,7 +2080,7 @@ PrefabInstance:
     - target: {fileID: 2562082639131175980, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
       propertyPath: m_Name
-      value: BuildingSelector5
+      value: ConstructionSelector5
       objectReference: {fileID: 0}
     - target: {fileID: 2562082639131175981, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
@@ -2426,7 +2426,7 @@ PrefabInstance:
     - target: {fileID: 2562082639131175980, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
       propertyPath: m_Name
-      value: BuildingSelector2
+      value: ConstructionSelector2
       objectReference: {fileID: 0}
     - target: {fileID: 2562082639131175981, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
@@ -2965,7 +2965,7 @@ PrefabInstance:
     - target: {fileID: 2562082639131175980, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}
       propertyPath: m_Name
-      value: BuildingSelector1
+      value: ConstructionSelector1
       objectReference: {fileID: 0}
     - target: {fileID: 2562082639131175981, guid: d0fab9261fcea6e49b4e0677d3739caa,
         type: 3}

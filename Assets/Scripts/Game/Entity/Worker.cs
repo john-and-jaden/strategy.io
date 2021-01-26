@@ -47,8 +47,8 @@ public class Worker : Unit
     {
         if (!interactive) return;
 
-        HUD.BuildingMenu.SetBuildingTypes(buildingTypes);
-        HUD.BuildingMenu.Open();
+        HUD.ConstructionMenu.SetConstructionList(buildingTypes);
+        HUD.ConstructionMenu.Open();
 
         base.Select();
     }
@@ -57,7 +57,7 @@ public class Worker : Unit
     {
         if (!interactive) return;
 
-        HUD.BuildingMenu.Close();
+        HUD.ConstructionMenu.Close();
 
         base.Deselect();
     }

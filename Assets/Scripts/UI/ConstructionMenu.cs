@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingMenu : HUDMenu
+public class ConstructionMenu : HUDMenu
 {
-    [SerializeField] private BuildingSelector[] selectors;
+    [SerializeField] private ConstructionSelector[] selectors;
 
     private int numActive;
 
@@ -14,9 +14,9 @@ public class BuildingMenu : HUDMenu
         GameManager.ResourceSystem.AddStoneChangedListener(HandleResourceChanged);
     }
 
-    public void SetBuildingTypes(BuildingType[] buildingTypes)
+    public void SetConstructionList<T>(T[] interactableTypes) where T : InteractableType
     {
-        if (buildingTypes.Length > selectors.Length)
+        if (interactableTypes.Length > selectors.Length)
         {
             Debug.LogError($"Number of building types exceeded menu capacity of {selectors.Length} building selectors!");
             return;
@@ -29,10 +29,10 @@ public class BuildingMenu : HUDMenu
         }
 
         // Show and update however many selectors we need
-        numActive = buildingTypes.Length;
+        numActive = interactableTypes.Length;
         for (int i = 0; i < numActive; i++)
         {
-            selectors[i].SetBuildingType(buildingTypes[i]);
+            selectors[i].SetInteractableType(interactableTypes[i]);
             selectors[i].Open();
         }
     }
