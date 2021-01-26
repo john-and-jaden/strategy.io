@@ -20,6 +20,7 @@ public abstract class Interactable : MonoBehaviour
 
     [SerializeField] protected float maxHealth = 10;
     public float MaxHealth { get { return maxHealth; } }
+    [SerializeField] protected int xpGain = 10;
 
     protected float health;
     public float Health { get { return health; } }
@@ -96,6 +97,7 @@ public abstract class Interactable : MonoBehaviour
     {
         onDeath.Invoke();
         GameManager.SelectionSystem.RemoveInteractable(this);
+        GameManager.XpSystem.IncrementXp(xpGain);
         Destroy(gameObject);
     }
 

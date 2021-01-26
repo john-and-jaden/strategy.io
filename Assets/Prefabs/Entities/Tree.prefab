@@ -139,6 +139,8 @@ MonoBehaviour:
   hoverIndicator: {fileID: 5212944366957777654}
   selectIndicator: {fileID: 4964319501085181466}
   maxHealth: 10
+  xpGain: 0
+  playerId: 1
   resourceDropPrefab: {fileID: 8065496059092633356, guid: f66cc822aea8349c6810ad227ff4f913,
     type: 3}
   resourceDropCount: 2

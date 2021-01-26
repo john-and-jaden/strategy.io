@@ -6,6 +6,7 @@ public abstract class ResourceDrop : MonoBehaviour
     private const float DESTROY_DIST_SQR = 0.1f;
 
     [SerializeField] protected int resourceAmount = 1;
+    [SerializeField] protected int xpGain = 10;
     [SerializeField] private float attractionRadius = 1f;
     [SerializeField] private float attractionForce = 1f;
     [SerializeField] private LayerMask attractionMask;
@@ -40,5 +41,8 @@ public abstract class ResourceDrop : MonoBehaviour
         }
     }
 
-    protected abstract void Collect();
+    protected virtual void Collect()
+    {
+        GameManager.XpSystem.IncrementXp(xpGain);
+    }
 }
