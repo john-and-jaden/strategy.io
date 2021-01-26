@@ -318,6 +318,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2488506801796859145, guid: 22a73c782fdcf405f93c959d65bc4f53,
+        type: 3}
+      propertyPath: sceneId
+      value: 1712876431
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22a73c782fdcf405f93c959d65bc4f53, type: 3}
 --- !u!1 &143241105
@@ -1119,7 +1124,8 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 9077838036330746613, guid: e79c0739bb3bb422ea4b271431bab0eb,
+    type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
@@ -1710,6 +1716,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488506801796859145, guid: 22a73c782fdcf405f93c959d65bc4f53,
+        type: 3}
+      propertyPath: sceneId
+      value: 3692124963
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22a73c782fdcf405f93c959d65bc4f53, type: 3}
@@ -2422,6 +2433,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488506801796859145, guid: 22a73c782fdcf405f93c959d65bc4f53,
+        type: 3}
+      propertyPath: sceneId
+      value: 2834857300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22a73c782fdcf405f93c959d65bc4f53, type: 3}
