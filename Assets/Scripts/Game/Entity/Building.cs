@@ -1,6 +1,8 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-public class Building : Interactable
+public abstract class Building : Interactable
 {
     [SerializeField] private float ghostAlpha = 0.2f;
     [SerializeField] private float inProgressAlpha = 0.5f;

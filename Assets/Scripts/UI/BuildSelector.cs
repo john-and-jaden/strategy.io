@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ConstructionSelector : HUDMenu
+public class BuildSelector : HUDMenu
 {
     [SerializeField] private Image selectorIcon;
     [SerializeField] private TextMeshProUGUI selectorText;

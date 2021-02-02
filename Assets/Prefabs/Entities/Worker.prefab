@@ -139,10 +139,13 @@ MonoBehaviour:
   hoverIndicator: {fileID: 3269816437915353699}
   selectIndicator: {fileID: 6171772680368845979}
   maxHealth: 10
+  playerId: 1
   softCollisionRadius: 0.5
   moveSpeed: 4
   buildingTypes:
-  - {fileID: 11400000, guid: 97e9c9604d44c9f4d863ee5af980e906, type: 2}
+  - {fileID: 11400000, guid: 4abc87dd60ece47489c2f3a37b2be863, type: 2}
+  buildRate: 1
+  maxBuildDist: 2
   gatherRate: 5
   maxGatherDist: 1.2
 --- !u!1 &3269816437915353696

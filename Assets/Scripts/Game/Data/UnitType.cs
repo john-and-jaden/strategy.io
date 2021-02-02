@@ -10,6 +10,10 @@ public class UnitType : InteractableType
 
     public override void HandleSelect()
     {
-        //unit stuff
+        List<Spawner> selectedSpawners = GameManager.SelectionSystem.GetSelectionOfType<Spawner>();
+        foreach (Spawner spawner in selectedSpawners)
+        {
+            spawner.BuildUnit(this);
+        }
     }
 }

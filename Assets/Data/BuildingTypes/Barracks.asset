@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2460767be76444e4f8ad4d2229ac48d5, type: 3}
-  m_Name: Building
+  m_Name: Barracks
   m_EditorClassIdentifier: 
-  interactablePrefab: {fileID: 2699085035380939592, guid: 2deee38895e2ee04db9f5c1e1f899a11,
+  interactablePrefab: {fileID: 1008469898635516700, guid: 9b6238c093bb13e4a95da451a056220c,
     type: 3}
   selectorSprite: {fileID: 21300000, guid: 6fffd95378b142842b25a859ce53c677, type: 3}
   woodCost: 50
   stoneCost: 0
-  displayName: Temp Building
+  displayName: Barracks
   placementIndicatorSprite: {fileID: 21300000, guid: 6fffd95378b142842b25a859ce53c677,
     type: 3}
   sizeDimensions: {x: 2, y: 2}
