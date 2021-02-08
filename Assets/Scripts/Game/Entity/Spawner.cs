@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class Spawner : Building
 {
     [System.Serializable] public class BuildQueueChangedEvent : UnityEvent<Queue<UnitType>> { }
+    [System.Serializable] public class BuildProgressChangedEvent : UnityEvent<float> { }
 
     [SerializeField] private UnitType[] buildList;
     [SerializeField] private Transform buildSpawn;
@@ -14,6 +15,7 @@ public class Spawner : Building
     private bool isBuildCycleActive;
 
     private BuildQueueChangedEvent onBuildQueueChanged = new BuildQueueChangedEvent();
+    private BuildProgressChangedEvent onBuildProgressChanged = new BuildProgressChangedEvent();
 
     public override void Select()
     {
@@ -24,6 +26,7 @@ public class Spawner : Building
         HUD.BuildMenu.SetBuildQueue<UnitType>(buildQueue);
         HUD.BuildMenu.Open();
         onBuildQueueChanged.AddListener(HUD.BuildMenu.SetBuildQueue);
+        onBuildProgressChanged.AddListener(HUD.BuildMenu.SetBuildProgress);
 
         base.Select();
     }
@@ -33,6 +36,7 @@ public class Spawner : Building
         if (!interactive) return;
         if (!completed) return;
 
+        onBuildProgressChanged.RemoveListener(HUD.BuildMenu.SetBuildProgress);
         onBuildQueueChanged.RemoveListener(HUD.BuildMenu.SetBuildQueue);
         HUD.BuildMenu.Close();
 
@@ -53,12 +57,24 @@ public class Spawner : Building
         while (buildQueue.Count > 0)
         {
             UnitType current = buildQueue.Peek();
-            yield return new WaitForSeconds(current.BuildTime);
+            yield return StartCoroutine(ProcessBuild(current));
+
             buildQueue.Dequeue();
             onBuildQueueChanged.Invoke(buildQueue);
             Instantiate(current.InteractablePrefab, buildSpawn.position, Quaternion.identity);
         }
 
         isBuildCycleActive = false;
+    }
+
+    private IEnumerator ProcessBuild(UnitType unitType)
+    {
+        float elapsed = 0f;
+        while (elapsed < unitType.BuildTime)
+        {
+            yield return null;
+            elapsed += Time.deltaTime;
+            onBuildProgressChanged.Invoke(elapsed / unitType.BuildTime);
+        }
     }
 }

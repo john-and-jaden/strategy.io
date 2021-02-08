@@ -11,12 +11,12 @@ public class BuildQueueIndicator : HUDMenu
     public void SetInteractableType(InteractableType interactableType)
     {
         indicatorIcon.sprite = interactableType.SelectorSprite;
-        UpdateProgress(0.5f);
+        SetProgress(0);
     }
 
-    public void UpdateProgress(float progress)
+    public void SetProgress(float progress)
     {
-        // Set the height of the mask based on progress
+        // Set the width of the mask based on progress
         indicatorMask.rectTransform.anchorMax = new Vector2(progress, 0);
     }
 }

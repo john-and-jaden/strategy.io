@@ -36,6 +36,14 @@ public class BuildMenu : HUDMenu
         }
     }
 
+    public void SetBuildProgress(float progress)
+    {
+        if (buildQueueIndicators.Length > 0)
+        {
+            buildQueueIndicators[0].SetProgress(progress);
+        }
+    }
+
     public void SetBuildList<T>(T[] buildList) where T : InteractableType
     {
         if (buildList.Length > buildSelectors.Length)
