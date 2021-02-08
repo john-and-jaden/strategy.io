@@ -139,7 +139,7 @@ MonoBehaviour:
   hoverIndicator: {fileID: 4632113122304617424}
   selectIndicator: {fileID: 3322902312183683084}
   maxHealth: 10
-  playerId: 2
+  playerId: 1
   softCollisionRadius: 0.5
   moveSpeed: 5
   damageAmount: 2
