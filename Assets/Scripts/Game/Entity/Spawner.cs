@@ -10,12 +10,11 @@ public class Spawner : Building
 
     [SerializeField] private UnitType[] buildList;
     [SerializeField] private Transform buildSpawn;
+    [SerializeField] private BuildQueueChangedEvent onBuildQueueChanged = new BuildQueueChangedEvent();
+    [SerializeField] private BuildProgressChangedEvent onBuildProgressChanged = new BuildProgressChangedEvent();
 
     private Queue<UnitType> buildQueue = new Queue<UnitType>();
     private bool isBuildCycleActive;
-
-    private BuildQueueChangedEvent onBuildQueueChanged = new BuildQueueChangedEvent();
-    private BuildProgressChangedEvent onBuildProgressChanged = new BuildProgressChangedEvent();
 
     public override void Select()
     {
@@ -72,9 +71,12 @@ public class Spawner : Building
         float elapsed = 0f;
         while (elapsed < unitType.BuildTime)
         {
-            yield return null;
             elapsed += Time.deltaTime;
-            onBuildProgressChanged.Invoke(elapsed / unitType.BuildTime);
+            
+            float progress = Mathf.Clamp(elapsed / unitType.BuildTime, 0f, 1f);
+            onBuildProgressChanged.Invoke(progress);
+
+            yield return null;
         }
     }
 }
