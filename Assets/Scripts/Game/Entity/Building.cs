@@ -7,6 +7,7 @@ public abstract class Building : Interactable
     [SerializeField] private float ghostAlpha = 0.2f;
     [SerializeField] private float inProgressAlpha = 0.5f;
 
+    protected bool completed;
     private Color spriteColor;
 
     private SpriteRenderer spriteRenderer;
@@ -22,10 +23,22 @@ public abstract class Building : Interactable
 
     public override bool GainHealth(float gain)
     {
-        bool completed = base.GainHealth(gain);
-        if (completed) SetAlpha(1f);
-        else SetAlpha(inProgressAlpha);
-        return completed;
+        bool capped = base.GainHealth(gain);
+
+        if (!completed)
+        {
+            if (capped)
+            {
+                SetAlpha(1f);
+                completed = true;
+            }
+            else
+            {
+                SetAlpha(inProgressAlpha);
+            }
+        }
+
+        return capped;
     }
 
     private void SetAlpha(float alpha)
