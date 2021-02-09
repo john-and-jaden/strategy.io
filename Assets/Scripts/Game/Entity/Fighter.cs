@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Fighter : Unit
+public class Fighter : NetworkBehaviour
 {
     [SerializeField] private float damageAmount = 1f;
     [SerializeField] private float maxAttackDist = 2f;
