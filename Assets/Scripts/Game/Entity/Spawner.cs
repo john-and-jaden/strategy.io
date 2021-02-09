@@ -72,7 +72,7 @@ public class Spawner : Building
         while (elapsed < unitType.BuildTime)
         {
             elapsed += Time.deltaTime;
-            
+
             float progress = Mathf.Clamp(elapsed / unitType.BuildTime, 0f, 1f);
             onBuildProgressChanged.Invoke(progress);
 

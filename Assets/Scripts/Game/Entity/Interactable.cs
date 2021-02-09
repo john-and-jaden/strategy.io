@@ -20,14 +20,18 @@ public abstract class Interactable : MonoBehaviour
 
     [SerializeField] protected float maxHealth = 10;
     public float MaxHealth { get { return maxHealth; } }
+
     [SerializeField] protected int xpGain = 10;
 
     protected float health;
     public float Health { get { return health; } }
+
     [SerializeField] protected int playerId = 1;
     public int PlayerId { get { return playerId; } }
 
     protected bool interactive = false;
+    protected bool selected = false;
+    protected bool hovered = false;
 
     private SelectedEvent onSelected = new SelectedEvent();
     private DeselectedEvent onDeselected = new DeselectedEvent();
@@ -47,6 +51,7 @@ public abstract class Interactable : MonoBehaviour
         onHovered.Invoke();
         if (!interactive) return;
         if (hoverIndicator != null) hoverIndicator.enabled = true;
+        hovered = true;
     }
 
     public virtual void Unhover()
@@ -54,6 +59,7 @@ public abstract class Interactable : MonoBehaviour
         onUnhovered.Invoke();
         if (!interactive) return;
         if (hoverIndicator != null) hoverIndicator.enabled = false;
+        hovered = false;
     }
 
     public virtual void Select()
@@ -61,6 +67,7 @@ public abstract class Interactable : MonoBehaviour
         onSelected.Invoke();
         if (!interactive) return;
         if (selectIndicator != null) selectIndicator.enabled = true;
+        selected = true;
     }
 
     public virtual void Deselect()
@@ -68,6 +75,7 @@ public abstract class Interactable : MonoBehaviour
         onDeselected.Invoke();
         if (!interactive) return;
         if (selectIndicator != null) selectIndicator.enabled = false;
+        selected = false;
     }
 
     ///<summary>Returns true if the interactable died.</summary>
@@ -98,6 +106,7 @@ public abstract class Interactable : MonoBehaviour
         onDeath.Invoke();
         GameManager.SelectionSystem.RemoveInteractable(this);
         GameManager.XpSystem.IncrementXp(xpGain);
+        if (selected) Deselect();
         Destroy(gameObject);
     }
 
