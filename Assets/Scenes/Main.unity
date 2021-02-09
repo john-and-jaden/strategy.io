@@ -910,7 +910,7 @@ MonoBehaviour:
   invertScrolling: 0
   panDampTime: 0.2
   maxPanSpeed: 20
-  panAcceleration: 60
+  panAcceleration: 0
   worldPanMargin: 10
   panScreenEdgeProportion: 0.01
 --- !u!20 &519420031
