@@ -29,4 +29,11 @@ public static class Utils
         }
         return nearest;
     }
+
+    public static float GetSqrDistance(Interactable i1, Interactable i2)
+    {
+        Vector2 i1pos = i1.GetClosestPoint(i2.transform.position);
+        Vector2 i2pos = i2.GetClosestPoint(i1.transform.position);
+        return Vector2.SqrMagnitude(i1pos - i2pos);
+    }
 }

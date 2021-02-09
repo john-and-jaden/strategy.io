@@ -72,8 +72,7 @@ public class Worker : Unit
     {
         if (assignedBuilding == null) return;
 
-        Vector3 buildingPos = assignedBuilding.transform.position;
-        float buildDistSqr = Vector3.SqrMagnitude(transform.position - buildingPos);
+        float buildDistSqr = Utils.GetSqrDistance(this, assignedBuilding);
         if (buildDistSqr < maxBuildDist * maxBuildDist)
         {
             bool finished = assignedBuilding.GainHealth(buildRate * Time.deltaTime);
@@ -84,7 +83,8 @@ public class Worker : Unit
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, buildingPos, moveSpeed * Time.deltaTime);
+            Vector3 targetPos = assignedBuilding.transform.position;
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
         }
     }
 
@@ -105,15 +105,15 @@ public class Worker : Unit
     {
         if (assignedResource == null) return;
 
-        Vector3 resourcePos = assignedResource.transform.position;
-        float resourceDistSqr = Vector3.SqrMagnitude(transform.position - resourcePos);
+        float resourceDistSqr = Utils.GetSqrDistance(this, assignedResource);
         if (resourceDistSqr < maxGatherDist * maxGatherDist)
         {
             assignedResource.TakeDamage(gatherRate * Time.deltaTime);
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, resourcePos, moveSpeed * Time.deltaTime);
+            Vector3 targetPos = assignedResource.transform.position;
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
         }
     }
 

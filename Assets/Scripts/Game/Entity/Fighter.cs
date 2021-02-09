@@ -60,8 +60,7 @@ public class Fighter : Unit
     {
         if (assignedEnemy == null) return;
 
-        Vector3 enemyPos = assignedEnemy.GetClosestPoint(transform.position);
-        float enemyDistSqr = Vector3.SqrMagnitude(transform.position - enemyPos);
+        float enemyDistSqr = Utils.GetSqrDistance(this, assignedEnemy);
         if (enemyDistSqr < maxAttackDist * maxAttackDist)
         {
             if (canAttack)
@@ -72,7 +71,7 @@ public class Fighter : Unit
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, enemyPos, moveSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, assignedEnemy.transform.position, moveSpeed * Time.deltaTime);
         }
     }
 
