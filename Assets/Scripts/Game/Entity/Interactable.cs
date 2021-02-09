@@ -41,6 +41,13 @@ public abstract class Interactable : MonoBehaviour
     private HealthChangedEvent onHealthChanged = new HealthChangedEvent();
     private MaxHealthChangedEvent onMaxHealthChanged = new MaxHealthChangedEvent();
 
+    private new Collider2D collider2D;
+
+    protected virtual void Awake()
+    {
+        collider2D = GetComponent<Collider2D>();
+    }
+
     protected virtual void Start()
     {
         StartCoroutine(DelayInteractivity());
@@ -92,6 +99,12 @@ public abstract class Interactable : MonoBehaviour
     {
         UpdateHealth(gain);
         return health >= maxHealth;
+    }
+
+    ///<summary>Returns the nearest point to the given target on the edge of this interactable's collider.</summary>
+    public Vector2 GetClosestPoint(Vector2 target)
+    {
+        return Physics2D.ClosestPoint(target, collider2D);
     }
 
     private void UpdateHealth(float deltaHealth)

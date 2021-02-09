@@ -5,7 +5,7 @@ using UnityEngine;
 public class Fighter : Unit
 {
     [SerializeField] private float damageAmount = 1f;
-    [SerializeField] private float maxAttackDist = 2f;
+    [SerializeField] private float maxAttackDist = 1f;
     [SerializeField] private float autoAttackRadius = 10f;
     [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private LayerMask attackMask;
@@ -60,7 +60,7 @@ public class Fighter : Unit
     {
         if (assignedEnemy == null) return;
 
-        Vector3 enemyPos = assignedEnemy.transform.position;
+        Vector3 enemyPos = assignedEnemy.GetClosestPoint(transform.position);
         float enemyDistSqr = Vector3.SqrMagnitude(transform.position - enemyPos);
         if (enemyDistSqr < maxAttackDist * maxAttackDist)
         {

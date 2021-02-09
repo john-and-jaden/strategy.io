@@ -150,8 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIndicator: {fileID: 5749284412359813225}
   selectIndicator: {fileID: 7733536311839972026}
-  maxHealth: 10
-  xpGain: 10
+  maxHealth: 50
+  xpGain: 25
   playerId: 1
   ghostAlpha: 0.2
   inProgressAlpha: 0.5

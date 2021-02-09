@@ -12,13 +12,15 @@ public abstract class Building : Interactable
 
     private SpriteRenderer spriteRenderer;
 
-    protected void Awake()
+    protected override void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteColor = spriteRenderer.color;
 
         health = 0;
         SetAlpha(ghostAlpha);
+
+        base.Awake();
     }
 
     public override bool GainHealth(float gain)
