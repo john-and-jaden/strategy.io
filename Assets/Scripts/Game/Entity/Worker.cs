@@ -5,7 +5,7 @@ using UnityEngine;
 public class Worker : Unit
 {
     [SerializeField] private BuildingType[] buildingTypes;
-    [SerializeField] private float buildRate = 1f;
+    [SerializeField] private float buildSpeedMultiplier = 1f;
     [SerializeField] private float maxBuildDist = 2f;
     [SerializeField] private float gatherRate = 1f;
     [SerializeField] private float maxGatherDist = 2f;
@@ -13,6 +13,7 @@ public class Worker : Unit
     private Building assignedBuilding;
     private Cluster assignedCluster;
     private Resource assignedResource;
+    private float buildRate;
 
     protected override void Update()
     {
@@ -65,6 +66,7 @@ public class Worker : Unit
     public void Build(Building building)
     {
         assignedBuilding = building;
+        buildRate = building.MaxHealth / building.BuildTime;
         state = UnitState.BUILDING;
     }
 
@@ -75,7 +77,7 @@ public class Worker : Unit
         float buildDistSqr = Utils.GetSqrDistance(this, assignedBuilding);
         if (buildDistSqr < maxBuildDist * maxBuildDist)
         {
-            bool finished = assignedBuilding.GainHealth(buildRate * Time.deltaTime);
+            bool finished = assignedBuilding.GainHealth(buildRate * buildSpeedMultiplier * Time.deltaTime);
             if (finished)
             {
                 StopBuilding();

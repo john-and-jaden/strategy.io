@@ -145,7 +145,7 @@ MonoBehaviour:
   moveSpeed: 4
   buildingTypes:
   - {fileID: 11400000, guid: 4abc87dd60ece47489c2f3a37b2be863, type: 2}
-  buildRate: 1
+  buildSpeedMultiplier: 1
   maxBuildDist: 0.2
   gatherRate: 5
   maxGatherDist: 0.05

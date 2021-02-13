@@ -55,12 +55,18 @@ public class Spawner : Building
 
         while (buildQueue.Count > 0)
         {
+            // Wait for the build time
             UnitType current = buildQueue.Peek();
             yield return StartCoroutine(ProcessBuild(current));
 
+            // Create the unit and expend resources
+            GameManager.ResourceSystem.SpendWood(current.WoodCost);
+            GameManager.ResourceSystem.SpendStone(current.StoneCost);
+            Instantiate(current.InteractablePrefab, buildSpawn.position, Quaternion.identity);
+
+            // Update the build queue
             buildQueue.Dequeue();
             onBuildQueueChanged.Invoke(buildQueue);
-            Instantiate(current.InteractablePrefab, buildSpawn.position, Quaternion.identity);
         }
 
         isBuildCycleActive = false;

@@ -65,6 +65,7 @@ public class BuildingSystem : MonoBehaviour
 
         // Spawn the building object
         Building building = Instantiate(buildingType.InteractablePrefab, placementPos, Quaternion.identity, buildingParent) as Building;
+        building.BuildTime = buildingType.BuildTime;
 
         // Assign the selected worker(s)
         List<Worker> selectedWorkers = GameManager.SelectionSystem.GetSelectionOfType<Worker>();

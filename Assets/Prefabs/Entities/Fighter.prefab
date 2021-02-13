@@ -144,7 +144,7 @@ MonoBehaviour:
   softCollisionRadius: 0.5
   moveSpeed: 5
   damageAmount: 2
-  maxAttackDist: 0.1
+  maxAttackDist: 0.2
   autoAttackRadius: 10
   attackCooldown: 1
   attackMask:

@@ -7,6 +7,8 @@ public abstract class Building : Interactable
     [SerializeField] private float ghostAlpha = 0.2f;
     [SerializeField] private float inProgressAlpha = 0.5f;
 
+    public float BuildTime { get; set; }
+
     protected bool completed;
     private Color spriteColor;
 
