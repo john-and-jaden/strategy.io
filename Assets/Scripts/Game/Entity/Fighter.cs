@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class Fighter : NetworkBehaviour
+public class Fighter : Unit
 {
     [SerializeField] private float damageAmount = 1f;
     [SerializeField] private float maxAttackDist = 2f;
