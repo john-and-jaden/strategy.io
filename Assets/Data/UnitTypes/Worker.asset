@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2fb45c2185a77749a4715f24db23cc2, type: 3}
-  m_Name: Fighter
+  m_Name: Worker
   m_EditorClassIdentifier: 
-  displayName: Fighter
-  interactablePrefab: {fileID: -3458963288451728480, guid: 22a73c782fdcf405f93c959d65bc4f53,
+  displayName: Worker
+  interactablePrefab: {fileID: 181007309694338732, guid: 0ddf7816daec3cb40be8736ccce72f96,
     type: 3}
   selectorSprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
-  woodCost: 40
-  stoneCost: 20
-  buildTime: 6
+  woodCost: 30
+  stoneCost: 0
+  buildTime: 10

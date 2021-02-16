@@ -143,7 +143,7 @@ MonoBehaviour:
   playerId: 1
   softCollisionRadius: 0.5
   moveSpeed: 5
-  damageAmount: 2
+  damageAmount: 3
   maxAttackDist: 0.2
   autoAttackRadius: 10
   attackCooldown: 1
