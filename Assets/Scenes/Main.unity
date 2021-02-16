@@ -203,6 +203,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treePrefab: {fileID: 4848408111497684340, guid: b5e14c866a9d844c887ec36ab418f021,
     type: 3}
+  stonePrefab: {fileID: 5398939585221833059, guid: b2733c241401fc94aa638cda89c3e50b,
+    type: 3}
   clusterRichness: 5
   clusterFrequency: 5
   clusterSparseness: 5
