@@ -13,10 +13,11 @@ public class Resource : Interactable
         set { cluster = value; }
     }
 
-    protected void Awake()
+    protected override void Awake()
     {
         playerId = -1;
         health = maxHealth;
+        base.Awake();
     }
 
     override protected void Die()

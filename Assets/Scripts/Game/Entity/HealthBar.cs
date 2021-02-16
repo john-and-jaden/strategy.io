@@ -106,10 +106,11 @@ public class HealthBar : MonoBehaviour
         float fadeTimer = 0;
         while (fadeTimer <= fadeDuration)
         {
+            fadeTimer += Time.deltaTime;
+            
             alpha = Mathf.Lerp(1f, 0, fadeTimer / fadeDuration);
             UpdateDisplay();
 
-            fadeTimer += Time.deltaTime;
             yield return null;
         }
     }

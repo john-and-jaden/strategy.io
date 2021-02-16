@@ -12,12 +12,12 @@ public abstract class HUDMenu : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
-    public void Open()
+    public virtual void Open()
     {
         SetMenuActive(true);
     }
 
-    public void Close()
+    public virtual void Close()
     {
         SetMenuActive(false);
     }

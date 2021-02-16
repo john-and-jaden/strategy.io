@@ -20,14 +20,18 @@ public abstract class Interactable : MonoBehaviour
 
     [SerializeField] protected float maxHealth = 10;
     public float MaxHealth { get { return maxHealth; } }
+
     [SerializeField] protected int xpGain = 10;
 
     protected float health;
     public float Health { get { return health; } }
+
     [SerializeField] protected int playerId = 1;
     public int PlayerId { get { return playerId; } }
 
     protected bool interactive = false;
+    protected bool selected = false;
+    protected bool hovered = false;
 
     private SelectedEvent onSelected = new SelectedEvent();
     private DeselectedEvent onDeselected = new DeselectedEvent();
@@ -36,6 +40,13 @@ public abstract class Interactable : MonoBehaviour
     private DeathEvent onDeath = new DeathEvent();
     private HealthChangedEvent onHealthChanged = new HealthChangedEvent();
     private MaxHealthChangedEvent onMaxHealthChanged = new MaxHealthChangedEvent();
+
+    private new Collider2D collider2D;
+
+    protected virtual void Awake()
+    {
+        collider2D = GetComponent<Collider2D>();
+    }
 
     protected virtual void Start()
     {
@@ -47,6 +58,7 @@ public abstract class Interactable : MonoBehaviour
         onHovered.Invoke();
         if (!interactive) return;
         if (hoverIndicator != null) hoverIndicator.enabled = true;
+        hovered = true;
     }
 
     public virtual void Unhover()
@@ -54,6 +66,7 @@ public abstract class Interactable : MonoBehaviour
         onUnhovered.Invoke();
         if (!interactive) return;
         if (hoverIndicator != null) hoverIndicator.enabled = false;
+        hovered = false;
     }
 
     public virtual void Select()
@@ -61,6 +74,7 @@ public abstract class Interactable : MonoBehaviour
         onSelected.Invoke();
         if (!interactive) return;
         if (selectIndicator != null) selectIndicator.enabled = true;
+        selected = true;
     }
 
     public virtual void Deselect()
@@ -68,6 +82,7 @@ public abstract class Interactable : MonoBehaviour
         onDeselected.Invoke();
         if (!interactive) return;
         if (selectIndicator != null) selectIndicator.enabled = false;
+        selected = false;
     }
 
     ///<summary>Returns true if the interactable died.</summary>
@@ -86,6 +101,12 @@ public abstract class Interactable : MonoBehaviour
         return health >= maxHealth;
     }
 
+    ///<summary>Returns the nearest point to the given target on the edge of this interactable's collider.</summary>
+    public Vector2 GetClosestPoint(Vector2 target)
+    {
+        return Physics2D.ClosestPoint(target, collider2D);
+    }
+
     private void UpdateHealth(float deltaHealth)
     {
         float clampedDeltaHealth = Mathf.Clamp(deltaHealth, -health, maxHealth - health);
@@ -98,6 +119,7 @@ public abstract class Interactable : MonoBehaviour
         onDeath.Invoke();
         GameManager.SelectionSystem.RemoveInteractable(this);
         GameManager.XpSystem.IncrementXp(xpGain);
+        if (selected) Deselect();
         Destroy(gameObject);
     }
 

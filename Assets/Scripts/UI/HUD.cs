@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class HUD : MonoBehaviour
 {
-    private static BuildingMenu buildingMenu;
-    public static BuildingMenu BuildingMenu { get { return buildingMenu; } }
+    private static BuildMenu buildMenu;
+    public static BuildMenu BuildMenu { get { return buildMenu; } }
 
     private static HUD instance;
 
@@ -18,6 +18,6 @@ public class HUD : MonoBehaviour
         }
         instance = this;
 
-        buildingMenu = GetComponentInChildren<BuildingMenu>();
+        buildMenu = GetComponentInChildren<BuildMenu>();
     }
 }
