@@ -368,8 +368,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 345502806}
-  groundTile: {fileID: 11400000, guid: 0d58421a54bb2fe4bb82e1a12db809b8, type: 2}
-  borderTile: {fileID: 11400000, guid: 6f0270913afe62141bcb98dba76a7d9d, type: 2}
+  groundTile: {fileID: 11400000, guid: 481e2f314dee91842b93f3432d981a1c, type: 2}
+  borderTile: {fileID: 11400000, guid: e0de9ef12c11a1146adbcf4347db0801, type: 2}
   width: 120
   height: 120
   borderSize: 6
