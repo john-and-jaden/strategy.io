@@ -5,11 +5,7 @@ public class MyPlayer : NetworkBehaviour
 {
     void Update()
     {
-        if (!isLocalPlayer)
-        {
-            // exit from update if this is not the local player
-            return;
-        }
+        if (!isLocalPlayer) return;
 
         Vector3 pos = transform.position;
         pos.x += Input.GetAxis("Horizontal") * Time.deltaTime * 10;
