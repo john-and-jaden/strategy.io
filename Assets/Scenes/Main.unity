@@ -350,6 +350,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treePrefab: {fileID: 4848408111497684340, guid: b5e14c866a9d844c887ec36ab418f021,
     type: 3}
+  stonePrefab: {fileID: 5398939585221833059, guid: b2733c241401fc94aa638cda89c3e50b,
+    type: 3}
   clusterRichness: 5
   clusterFrequency: 5
   clusterSparseness: 5
@@ -366,8 +368,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 345502806}
-  groundTile: {fileID: 11400000, guid: 0d58421a54bb2fe4bb82e1a12db809b8, type: 2}
-  borderTile: {fileID: 11400000, guid: 6f0270913afe62141bcb98dba76a7d9d, type: 2}
+  groundTile: {fileID: 11400000, guid: 481e2f314dee91842b93f3432d981a1c, type: 2}
+  borderTile: {fileID: 11400000, guid: e0de9ef12c11a1146adbcf4347db0801, type: 2}
   width: 120
   height: 120
   borderSize: 6
