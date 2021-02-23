@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4848408111497684336
+--- !u!1 &9167722872783796292
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4848408111497684342}
-  - component: {fileID: 4848408111497684337}
-  - component: {fileID: -6563189969867783765}
-  - component: {fileID: 8065496059092633356}
+  - component: {fileID: 9167722872783796290}
+  - component: {fileID: 9167722872783796293}
+  - component: {fileID: 1772614379283324063}
+  - component: {fileID: 9167722872783796294}
   m_Layer: 0
-  m_Name: TreeDrop
+  m_Name: StoneDrop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4848408111497684342
+--- !u!4 &9167722872783796290
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848408111497684336}
+  m_GameObject: {fileID: 9167722872783796292}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
@@ -33,13 +33,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &4848408111497684337
+--- !u!212 &9167722872783796293
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848408111497684336}
+  m_GameObject: {fileID: 9167722872783796292}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2cf661bf2967dae4c837d57c6d7e6e3d, type: 3}
-  m_Color: {r: 0.09970412, g: 0.5188679, b: 0, a: 1}
+  m_Color: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,14 +83,14 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &-6563189969867783765
+--- !u!50 &1772614379283324063
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848408111497684336}
+  m_GameObject: {fileID: 9167722872783796292}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -104,20 +104,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8065496059092633356
+--- !u!114 &9167722872783796294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848408111497684336}
+  m_GameObject: {fileID: 9167722872783796292}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93b3fef14f8f33c40ba6f1c7081da187, type: 3}
+  m_Script: {fileID: 11500000, guid: fe368b56bad2b7b42bb08d6f4683d1ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   resourceAmount: 5
-  xpGain: 2
+  xpGain: 10
   attractionRadius: 1.5
   attractionForce: 1
   attractionMask:

@@ -7,6 +7,7 @@ public class ResourceSystem : MonoBehaviour
     [System.Serializable] public class StoneChangedEvent : UnityEvent<int> { }
 
     [SerializeField] private Tree treePrefab;
+    [SerializeField] private Stone stonePrefab;
 
     [Tooltip("A multiplier for the maximum amount of resources per cluster from 1 to 10")]
     [SerializeField] [Range(1, 10)] private int clusterRichness = 5;
@@ -42,9 +43,14 @@ public class ResourceSystem : MonoBehaviour
         {
             for (float j = -halfHeight + 0.5f; j < halfHeight + 0.5f; j++)
             {
+                // Determine whether to spawn a cluster at the current location
                 if (Random.Range(0f, 1f) > 1 - clusterFrequency / 1000f)
                 {
-                    GenerateCluster(i, j, treePrefab);
+                    // Determine which type of resource to spawn
+                    Resource r;
+                    if (Random.value < 0.5f) r = treePrefab;
+                    else r = stonePrefab;
+                    GenerateCluster(i, j, r);
                 }
             }
         }

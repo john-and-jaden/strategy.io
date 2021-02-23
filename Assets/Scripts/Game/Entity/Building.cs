@@ -1,29 +1,48 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-public class Building : Interactable
+public abstract class Building : Interactable
 {
     [SerializeField] private float ghostAlpha = 0.2f;
     [SerializeField] private float inProgressAlpha = 0.5f;
 
+    public float BuildTime { get; set; }
+
+    protected bool completed;
     private Color spriteColor;
 
     private SpriteRenderer spriteRenderer;
 
-    protected void Awake()
+    protected override void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteColor = spriteRenderer.color;
 
         health = 0;
         SetAlpha(ghostAlpha);
+
+        base.Awake();
     }
 
     public override bool GainHealth(float gain)
     {
-        bool completed = base.GainHealth(gain);
-        if (completed) SetAlpha(1f);
-        else SetAlpha(inProgressAlpha);
-        return completed;
+        bool capped = base.GainHealth(gain);
+
+        if (!completed)
+        {
+            if (capped)
+            {
+                SetAlpha(1f);
+                completed = true;
+            }
+            else
+            {
+                SetAlpha(inProgressAlpha);
+            }
+        }
+
+        return capped;
     }
 
     private void SetAlpha(float alpha)

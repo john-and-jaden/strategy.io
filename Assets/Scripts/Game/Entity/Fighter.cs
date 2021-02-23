@@ -6,7 +6,7 @@ using Mirror;
 public class Fighter : Unit
 {
     [SerializeField] private float damageAmount = 1f;
-    [SerializeField] private float maxAttackDist = 2f;
+    [SerializeField] private float maxAttackDist = 1f;
     [SerializeField] private float autoAttackRadius = 10f;
     [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private LayerMask attackMask;
@@ -61,8 +61,7 @@ public class Fighter : Unit
     {
         if (assignedEnemy == null) return;
 
-        Vector3 enemyPos = assignedEnemy.transform.position;
-        float enemyDistSqr = Vector3.SqrMagnitude(transform.position - enemyPos);
+        float enemyDistSqr = Utils.GetSqrDistance(this, assignedEnemy);
         if (enemyDistSqr < maxAttackDist * maxAttackDist)
         {
             if (canAttack)
@@ -73,7 +72,7 @@ public class Fighter : Unit
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, enemyPos, moveSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, assignedEnemy.transform.position, moveSpeed * Time.deltaTime);
         }
     }
 
