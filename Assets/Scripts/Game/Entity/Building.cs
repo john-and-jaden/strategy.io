@@ -6,10 +6,13 @@ public abstract class Building : Interactable
 {
     [SerializeField] private float ghostAlpha = 0.2f;
     [SerializeField] private float inProgressAlpha = 0.5f;
+    [SerializeField] private bool preBuilt = false;
 
     public float BuildTime { get; set; }
 
     protected bool completed;
+    public bool Completed { get { return completed; } }
+
     private Color spriteColor;
 
     private SpriteRenderer spriteRenderer;
@@ -19,8 +22,9 @@ public abstract class Building : Interactable
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteColor = spriteRenderer.color;
 
-        health = 0;
-        SetAlpha(ghostAlpha);
+        if (!preBuilt) SetAlpha(ghostAlpha);
+        health = preBuilt ? maxHealth : 0;
+        completed = preBuilt;
 
         base.Awake();
     }

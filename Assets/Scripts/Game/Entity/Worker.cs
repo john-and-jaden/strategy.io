@@ -6,9 +6,11 @@ public class Worker : Unit
 {
     [SerializeField] private BuildingType[] buildingTypes;
     [SerializeField] private float buildSpeedMultiplier = 1f;
-    [SerializeField] private float maxBuildDist = 2f;
+    [SerializeField] private float maxBuildDist = 0.2f;
+    [SerializeField] private float repairRate = 1f;
+    [SerializeField] private float maxRepairDist = 0.2f;
     [SerializeField] private float gatherRate = 1f;
-    [SerializeField] private float maxGatherDist = 2f;
+    [SerializeField] private float maxGatherDist = 0.2f;
 
     private Building assignedBuilding;
     private Cluster assignedCluster;
@@ -19,6 +21,7 @@ public class Worker : Unit
     {
         if (state == UnitState.GATHERING) UpdateGather();
         if (state == UnitState.BUILDING) UpdateBuild();
+        if (state == UnitState.REPAIRING) UpdateRepair();
 
         base.Update();
     }
@@ -30,7 +33,9 @@ public class Worker : Unit
 
         if (hoveredBuildings.Count == 1)
         {
-            Build(hoveredBuildings.Single());
+            Building building = hoveredBuildings.Single();
+            if (!building.Completed) Build(building);
+            else Repair(building);
         }
         else if (hoveredResources.Count > 0)
         {
@@ -40,6 +45,7 @@ public class Worker : Unit
         {
             StopBuilding();
             StopGathering();
+            StopRepairing();
             base.Interact(targetPos);
         }
     }
@@ -91,6 +97,35 @@ public class Worker : Unit
     }
 
     private void StopBuilding()
+    {
+        assignedBuilding = null;
+        state = UnitState.IDLE;
+    }
+
+    public void Repair(Building building)
+    {
+        assignedBuilding = building;
+        state = UnitState.REPAIRING;
+    }
+
+    private void UpdateRepair()
+    {
+        if (assignedBuilding == null) return;
+
+        float repairDistSqr = Utils.GetSqrDistance(this, assignedBuilding);
+        if (repairDistSqr < maxRepairDist * maxRepairDist)
+        {
+            bool finished = assignedBuilding.GainHealth(repairRate * Time.deltaTime);
+            if (finished) StopRepairing();
+        }
+        else
+        {
+            Vector3 targetPos = assignedBuilding.transform.position;
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        }
+    }
+
+    private void StopRepairing()
     {
         assignedBuilding = null;
         state = UnitState.IDLE;
