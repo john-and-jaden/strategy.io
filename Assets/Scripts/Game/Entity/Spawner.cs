@@ -44,8 +44,15 @@ public class Spawner : Building
 
     public void BuildUnit(UnitType unitType)
     {
+        // Update the build queue
         buildQueue.Enqueue(unitType);
         onBuildQueueChanged.Invoke(buildQueue);
+
+        // Expend resources
+        GameManager.ResourceSystem.SpendWood(unitType.WoodCost);
+        GameManager.ResourceSystem.SpendStone(unitType.StoneCost);
+
+        // Start build cycle if not already active
         if (!isBuildCycleActive) StartCoroutine(BuildCycle());
     }
 
@@ -59,9 +66,7 @@ public class Spawner : Building
             UnitType current = buildQueue.Peek();
             yield return StartCoroutine(ProcessBuild(current));
 
-            // Create the unit and expend resources
-            GameManager.ResourceSystem.SpendWood(current.WoodCost);
-            GameManager.ResourceSystem.SpendStone(current.StoneCost);
+            // Create the unit gameobject
             Instantiate(current.InteractablePrefab, buildSpawn.position, Quaternion.identity);
 
             // Update the build queue
