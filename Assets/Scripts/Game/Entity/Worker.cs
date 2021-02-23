@@ -116,10 +116,7 @@ public class Worker : Unit
         if (repairDistSqr < maxRepairDist * maxRepairDist)
         {
             bool finished = assignedBuilding.GainHealth(repairRate * Time.deltaTime);
-            if (finished)
-            {
-                StopRepairing();
-            }
+            if (finished) StopRepairing();
         }
         else
         {
