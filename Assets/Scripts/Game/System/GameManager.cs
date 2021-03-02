@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using Mirror;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkManager
 {
     private static SelectionSystem selectionSystem;
     public static SelectionSystem SelectionSystem { get { return selectionSystem; } }
@@ -17,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     private static GameManager instance;
 
-    void Awake()
+    public override void Awake()
     {
         if (instance != null)
         {
@@ -32,5 +33,15 @@ public class GameManager : MonoBehaviour
         resourceSystem = GetComponent<ResourceSystem>();
         xpSystem = GetComponent<XpSystem>();
         buildingSystem = GetComponent<BuildingSystem>();
+    }
+
+    public override void OnStartServer()
+    {
+        Debug.Log("Server started");
+    }
+
+    public override void OnStartClient()
+    {
+        Debug.Log("Client started");
     }
 }
