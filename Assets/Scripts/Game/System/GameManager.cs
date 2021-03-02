@@ -38,6 +38,7 @@ public class GameManager : NetworkManager
     public override void OnStartServer()
     {
         Debug.Log("Server started");
+        resourceSystem.SpawnResources();
     }
 
     public override void OnStartClient()

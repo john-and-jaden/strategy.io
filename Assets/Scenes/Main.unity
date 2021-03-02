@@ -278,14 +278,14 @@ GameObject:
   m_Component:
   - component: {fileID: 28465053}
   - component: {fileID: 28465058}
+  - component: {fileID: 28465062}
+  - component: {fileID: 28465061}
   - component: {fileID: 28465054}
   - component: {fileID: 28465055}
   - component: {fileID: 28465057}
   - component: {fileID: 28465056}
   - component: {fileID: 28465059}
   - component: {fileID: 28465060}
-  - component: {fileID: 28465062}
-  - component: {fileID: 28465061}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -350,6 +350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dae3b6bdb22fc34591f66e2361c698a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   treePrefab: {fileID: 4848408111497684340, guid: b5e14c866a9d844c887ec36ab418f021,
     type: 3}
   stonePrefab: {fileID: 5398939585221833059, guid: b2733c241401fc94aa638cda89c3e50b,
@@ -404,7 +406,9 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 4848408111497684336, guid: b5e14c866a9d844c887ec36ab418f021, type: 3}
+  - {fileID: 5398939585221833057, guid: b2733c241401fc94aa638cda89c3e50b, type: 3}
 --- !u!114 &28465059
 MonoBehaviour:
   m_ObjectHideFlags: 0

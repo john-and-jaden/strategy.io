@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 7566497068988620456}
   - component: {fileID: 5676862364284312431}
   - component: {fileID: 5398939585221833059}
+  - component: {fileID: 8953468576781428183}
   m_Layer: 9
   m_Name: Stone
   m_TagString: Untagged
@@ -307,6 +308,22 @@ MonoBehaviour:
     type: 3}
   resourceDropCount: 2
   resourceDropMaxPopForce: 3
+--- !u!114 &8953468576781428183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5398939585221833057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!1 &5515581959606700773
 GameObject:
   m_ObjectHideFlags: 0

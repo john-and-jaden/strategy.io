@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using Mirror;
 
-public class ResourceSystem : MonoBehaviour
+public class ResourceSystem : NetworkBehaviour
 {
     [System.Serializable] public class WoodChangedEvent : UnityEvent<int> { }
     [System.Serializable] public class StoneChangedEvent : UnityEvent<int> { }
 
-    [SerializeField] private Tree treePrefab;
-    [SerializeField] private Stone stonePrefab;
+    [SerializeField] private Resource treePrefab;
+    [SerializeField] private Resource stonePrefab;
 
     [Tooltip("A multiplier for the maximum amount of resources per cluster from 1 to 10")]
     [SerializeField] [Range(1, 10)] private int clusterRichness = 5;
@@ -27,34 +28,9 @@ public class ResourceSystem : MonoBehaviour
     public int Stone { get { return stone; } }
 
     private float halfWidth, halfHeight;
-    private Transform resourcesParent;
 
     private WoodChangedEvent onWoodChanged = new WoodChangedEvent();
     private StoneChangedEvent onStoneChanged = new StoneChangedEvent();
-
-    void Start()
-    {
-        resourcesParent = new GameObject("Resource Clusters").transform;
-
-        halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
-        halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
-
-        for (float i = -halfWidth + 0.5f; i < halfWidth + 0.5f; i++)
-        {
-            for (float j = -halfHeight + 0.5f; j < halfHeight + 0.5f; j++)
-            {
-                // Determine whether to spawn a cluster at the current location
-                if (Random.Range(0f, 1f) > 1 - clusterFrequency / 1000f)
-                {
-                    // Determine which type of resource to spawn
-                    Resource r;
-                    if (Random.value < 0.5f) r = treePrefab;
-                    else r = stonePrefab;
-                    GenerateCluster(i, j, r);
-                }
-            }
-        }
-    }
 
     void Update()
     {
@@ -127,16 +103,34 @@ public class ResourceSystem : MonoBehaviour
         onStoneChanged.RemoveListener(listener);
     }
 
+    [Server]
+    public void SpawnResources()
+    {
+        halfWidth = GameManager.GridSystem.GetDimensions().x / 2;
+        halfHeight = GameManager.GridSystem.GetDimensions().y / 2;
+
+        for (float i = -halfWidth + 0.5f; i < halfWidth + 0.5f; i++)
+        {
+            for (float j = -halfHeight + 0.5f; j < halfHeight + 0.5f; j++)
+            {
+                // Determine whether to spawn a cluster at the current location
+                if (Random.Range(0f, 1f) > 1 - clusterFrequency / 1000f)
+                {
+                    // Determine which type of resource to spawn
+                    Resource r;
+                    if (Random.value < 0.5f) r = treePrefab;
+                    else r = stonePrefab;
+                    GenerateCluster(i, j, r);
+                }
+            }
+        }
+    }
+
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
         // Initialize cluster object
         int clusterSize = Random.Range(1, clusterRichness * 30);
         Cluster cluster = new Cluster(clusterSize);
-
-        // Add cluster parent transforms for better scene organization
-        string parentName = string.Format("Cluster [{0},{1}] ({2}) ", clusterPosX, clusterPosY, clusterSize);
-        Transform clusterParent = new GameObject(parentName).transform;
-        clusterParent.parent = resourcesParent;
 
         // Spawn resources and fill cluster
         for (int resourceNum = 0; resourceNum < clusterSize; resourceNum++)
@@ -145,10 +139,12 @@ public class ResourceSystem : MonoBehaviour
             float distanceFromClusterCenterY = Random.Range(-resourceNum, resourceNum) * clusterSparseness / 150f;
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
-            Resource resource = Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity, clusterParent);
+            Resource resource = Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity);
+            // TODO: Make these properties apply on the clients
             resource.GetComponent<SpriteRenderer>().sortingOrder = resourceNum;
             resource.Cluster = cluster;
             cluster.Resources.Add(resource);
+            NetworkServer.Spawn(resource.gameObject);
         }
     }
 }
