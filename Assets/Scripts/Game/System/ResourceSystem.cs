@@ -126,6 +126,7 @@ public class ResourceSystem : NetworkBehaviour
         }
     }
 
+    [Server]
     private void GenerateCluster(float clusterPosX, float clusterPosY, Resource resourcePrefab)
     {
         // Initialize cluster object
@@ -140,11 +141,9 @@ public class ResourceSystem : NetworkBehaviour
             float resourcePosX = Mathf.Clamp(clusterPosX + distanceFromClusterCenterX, -halfWidth + 0.5f, halfWidth + 0.5f);
             float resourcePosY = Mathf.Clamp(clusterPosY + distanceFromClusterCenterY, -halfHeight + 0.5f, halfHeight + 0.5f);
             Resource resource = Instantiate(resourcePrefab, new Vector2(resourcePosX, resourcePosY), Quaternion.identity);
-            // TODO: Make these properties apply on the clients
-            resource.GetComponent<SpriteRenderer>().sortingOrder = resourceNum;
-            resource.Cluster = cluster;
-            cluster.Resources.Add(resource);
             NetworkServer.Spawn(resource.gameObject);
+            resource.Initialize(resourceNum, cluster);
+            cluster.Resources.Add(resource);
         }
     }
 }

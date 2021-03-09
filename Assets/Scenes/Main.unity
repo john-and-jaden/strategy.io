@@ -352,6 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  resourceParent: {fileID: 1646616286}
   treePrefab: {fileID: 4848408111497684340, guid: b5e14c866a9d844c887ec36ab418f021,
     type: 3}
   stonePrefab: {fileID: 5398939585221833059, guid: b2733c241401fc94aa638cda89c3e50b,
@@ -4602,6 +4603,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3ee5138c68308458693637af8bda79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1646616285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1646616286}
+  m_Layer: 0
+  m_Name: Resources
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1646616286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646616285}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1668779033
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Mirror;
 
 public class Resource : Interactable
 {
@@ -12,6 +13,9 @@ public class Resource : Interactable
         get { return cluster; }
         set { cluster = value; }
     }
+
+    [SyncVar(hook = nameof(HandleZIndexChanged))]
+    private int zIndex;
 
     protected override void Awake()
     {
@@ -27,6 +31,13 @@ public class Resource : Interactable
         base.Die();
     }
 
+    [Server]
+    public void Initialize(int zIndex, Cluster cluster)
+    {
+        this.zIndex = zIndex;
+        this.cluster = cluster;
+    }
+
     private void SpawnResourceDrops()
     {
         for (int i = 0; i < resourceDropCount; i++)
@@ -35,5 +46,10 @@ public class Resource : Interactable
             Vector2 popForce = Random.insideUnitCircle * resourceDropMaxPopForce;
             drop.GetComponent<Rigidbody2D>().AddForce(popForce, ForceMode2D.Impulse);
         }
+    }
+
+    private void HandleZIndexChanged(int oldZIndex, int newZIndex)
+    {
+        GetComponent<SpriteRenderer>().sortingOrder = newZIndex;
     }
 }
