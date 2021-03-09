@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Mirror;
 
 public class Spawner : Building
 {
@@ -67,7 +68,7 @@ public class Spawner : Building
             yield return StartCoroutine(ProcessBuild(current));
 
             // Create the unit gameobject
-            Instantiate(current.InteractablePrefab, buildSpawn.position, Quaternion.identity);
+            Instantiate(current.InteractablePrefab, buildSpawn.position, Quaternion.identity, ClientScene.localPlayer.transform);
 
             // Update the build queue
             buildQueue.Dequeue();
